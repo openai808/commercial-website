@@ -1,0 +1,1033 @@
+"use client";
+
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+
+type AccordionItem = {
+  title: string;
+  links?: { label: string; href: string }[];
+};
+
+type MegaColumn =
+  | { kind: "accordion"; heading: string; items: AccordionItem[]; viewAll?: { label: string; href: string } }
+  | { kind: "links"; heading: string; items: { label: string; href: string }[] }
+  | {
+      kind: "featured";
+      heading: string;
+      imageSrc: string;
+      imageAlt: string;
+      tag: string;
+      title: string;
+      excerpt: string;
+      href: string;
+      readMore?: string;
+    };
+
+type MegaMenu = {
+  columns: MegaColumn[];
+  footer: { text: string; buttonLabel: string; buttonHref: string };
+};
+
+const navConfig: { id: string; href: string; label: string; mega: MegaMenu }[] = [
+  {
+    id: "services",
+    href: "/services",
+    label: "Services",
+    mega: {
+      columns: [
+        {
+          kind: "accordion",
+          heading: "How we can help",
+          viewAll: { label: "View all services", href: "/services" },
+          items: [
+            {
+              title: "Value and invest in real estate",
+              links: [
+                { label: "Capital Markets and Investment Services", href: "/services/capital-markets" },
+                { label: "Valuation Services", href: "/services/valuation" },
+              ],
+            },
+            {
+              title: "Lease, occupy, and optimise space",
+              links: [
+                { label: "Tenant representation", href: "/services/tenant" },
+                { label: "Occupier solutions", href: "/services/occupier" },
+              ],
+            },
+            {
+              title: "Manage your property",
+              links: [
+                { label: "Property management", href: "/services/management" },
+                { label: "Facilities services", href: "/services/facilities" },
+              ],
+            },
+            {
+              title: "Engineer and manage your project",
+              links: [
+                { label: "Project management", href: "/services/projects" },
+                { label: "Development advisory", href: "/services/development" },
+              ],
+            },
+          ],
+        },
+        {
+          kind: "links",
+          heading: "Property types",
+          items: [
+            { label: "Office", href: "/properties/office" },
+            { label: "Industrial and Logistics", href: "/properties/industrial" },
+            { label: "Hotels and Hospitality", href: "/properties/hospitality" },
+            { label: "Retail", href: "/properties/retail" },
+            { label: "Residential", href: "/properties/residential" },
+          ],
+        },
+        {
+          kind: "featured",
+          heading: "Featured article",
+          imageSrc: "/remax-ph.png",
+          imageAlt: "RE/MAX Philippines",
+          tag: "Research & Insights",
+          title: "2026 Asia Pacific Workplace Insights",
+          excerpt: "Perspectives from Office Occupier Survey",
+          href: "/insights/workplace-2026",
+          readMore: "Read more",
+        },
+      ],
+      footer: {
+        text: "Find out how we can help you achieve more",
+        buttonLabel: "VIEW ALL SERVICES",
+        buttonHref: "/services",
+      },
+    },
+  },
+  {
+    id: "properties",
+    href: "/properties",
+    label: "Properties",
+    mega: {
+      columns: [
+        {
+          kind: "accordion",
+          heading: "Find a property",
+          viewAll: { label: "View all listings", href: "/properties" },
+          items: [
+            {
+              title: "Buy",
+              links: [
+                { label: "Residential for sale", href: "/properties/buy/residential" },
+                { label: "Commercial for sale", href: "/properties/buy/commercial" },
+              ],
+            },
+            {
+              title: "Rent",
+              links: [
+                { label: "Long-term rentals", href: "/properties/rent" },
+                { label: "Short-stay", href: "/properties/short-stay" },
+              ],
+            },
+            { title: "New developments", links: [{ label: "Pre-selling", href: "/properties/new" }] },
+          ],
+        },
+        {
+          kind: "links",
+          heading: "Popular searches",
+          items: [
+            { label: "Metro Manila", href: "/properties?area=ncr" },
+            { label: "Cebu", href: "/properties?area=cebu" },
+            { label: "Davao", href: "/properties?area=davao" },
+            { label: "Clark / Pampanga", href: "/properties?area=clark" },
+            { label: "Beach & leisure", href: "/properties?type=leisure" },
+          ],
+        },
+        {
+          kind: "featured",
+          heading: "Featured article",
+          imageSrc: "/remax-black.png",
+          imageAlt: "RE/MAX",
+          tag: "Market spotlight",
+          title: "Q1 2026 Metro Manila residential outlook",
+          excerpt: "Pricing, inventory, and buyer demand at a glance",
+          href: "/insights/metro-manila-q1-2026",
+          readMore: "Read more",
+        },
+      ],
+      footer: {
+        text: "Browse curated listings and connect with an agent",
+        buttonLabel: "VIEW ALL PROPERTIES",
+        buttonHref: "/properties",
+      },
+    },
+  },
+  {
+    id: "insights",
+    href: "/insights",
+    label: "Insights",
+    mega: {
+      columns: [
+        {
+          kind: "accordion",
+          heading: "Explore insights",
+          viewAll: { label: "View all insights", href: "/insights" },
+          items: [
+            {
+              title: "Research & reports",
+              links: [
+                { label: "Market reports", href: "/insights/reports" },
+                { label: "Sector briefings", href: "/insights/sectors" },
+              ],
+            },
+            {
+              title: "News & commentary",
+              links: [
+                { label: "Company news", href: "/insights/news" },
+                { label: "Expert opinion", href: "/insights/commentary" },
+              ],
+            },
+            { title: "Events & webinars", links: [{ label: "Upcoming sessions", href: "/insights/events" }] },
+          ],
+        },
+        {
+          kind: "links",
+          heading: "Topics",
+          items: [
+            { label: "Workplace", href: "/insights/workplace" },
+            { label: "Capital markets", href: "/insights/capital-markets" },
+            { label: "Sustainability", href: "/insights/sustainability" },
+            { label: "Technology", href: "/insights/technology" },
+            { label: "Economy", href: "/insights/economy" },
+          ],
+        },
+        {
+          kind: "featured",
+          heading: "Featured article",
+          imageSrc: "/remax-ph.png",
+          imageAlt: "Insights",
+          tag: "Research & Insights",
+          title: "2026 Asia Pacific Workplace Insights",
+          excerpt: "Perspectives from Office Occupier Survey",
+          href: "/insights/workplace-2026",
+          readMore: "Read more",
+        },
+      ],
+      footer: {
+        text: "Stay ahead with data-driven perspectives",
+        buttonLabel: "VIEW ALL INSIGHTS",
+        buttonHref: "/insights",
+      },
+    },
+  },
+  {
+    id: "experts",
+    href: "/experts",
+    label: "Experts",
+    mega: {
+      columns: [
+        {
+          kind: "accordion",
+          heading: "Meet our people",
+          viewAll: { label: "View directory", href: "/experts" },
+          items: [
+            {
+              title: "Leadership",
+              links: [
+                { label: "Executive team", href: "/experts/leadership" },
+                { label: "Regional heads", href: "/experts/regional" },
+              ],
+            },
+            {
+              title: "Advisory",
+              links: [
+                { label: "Capital markets", href: "/experts/capital-markets" },
+                { label: "Valuation", href: "/experts/valuation" },
+              ],
+            },
+            { title: "Client services", links: [{ label: "Account teams", href: "/experts/accounts" }] },
+          ],
+        },
+        {
+          kind: "links",
+          heading: "Office expertise",
+          items: [
+            { label: "Brokerage", href: "/experts/brokerage" },
+            { label: "Property management", href: "/experts/management" },
+            { label: "Project services", href: "/experts/projects" },
+            { label: "Research", href: "/experts/research" },
+          ],
+        },
+        {
+          kind: "featured",
+          heading: "Featured article",
+          imageSrc: "/remax-black.png",
+          imageAlt: "Experts",
+          tag: "People",
+          title: "How our specialists partner with occupiers",
+          excerpt: "A closer look at integrated client teams",
+          href: "/insights/expert-teams",
+          readMore: "Read more",
+        },
+      ],
+      footer: {
+        text: "Connect with the right specialist for your goals",
+        buttonLabel: "VIEW ALL EXPERTS",
+        buttonHref: "/experts",
+      },
+    },
+  },
+  {
+    id: "office-locations",
+    href: "/office-locations",
+    label: "Office locations",
+    mega: {
+      columns: [
+        {
+          kind: "accordion",
+          heading: "Regions",
+          viewAll: { label: "View global footprint", href: "/office-locations" },
+          items: [
+            {
+              title: "Philippines",
+              links: [
+                { label: "Metro Manila", href: "/office-locations/metro-manila" },
+                { label: "Visayas & Mindanao", href: "/office-locations/vismin" },
+              ],
+            },
+            {
+              title: "Asia Pacific",
+              links: [
+                { label: "Singapore", href: "/office-locations/singapore" },
+                { label: "Hong Kong", href: "/office-locations/hong-kong" },
+              ],
+            },
+            { title: "Americas & EMEA", links: [{ label: "International offices", href: "/office-locations/global" }] },
+          ],
+        },
+        {
+          kind: "links",
+          heading: "Visit us",
+          items: [
+            { label: "Book a meeting", href: "/contact" },
+            { label: "New business enquiries", href: "/contact/business" },
+            { label: "Media enquiries", href: "/contact/media" },
+            { label: "Careers", href: "/careers" },
+          ],
+        },
+        {
+          kind: "featured",
+          heading: "Featured article",
+          imageSrc: "/remax-ph.png",
+          imageAlt: "Offices",
+          tag: "Locations",
+          title: "Opening our newest flagship workspace",
+          excerpt: "Designed for collaboration and client experience",
+          href: "/insights/new-office",
+          readMore: "Read more",
+        },
+      ],
+      footer: {
+        text: "Find an office near you",
+        buttonLabel: "VIEW ALL OFFICES",
+        buttonHref: "/office-locations",
+      },
+    },
+  },
+  {
+    id: "about-us",
+    href: "/about-us",
+    label: "About us",
+    mega: {
+      columns: [
+        {
+          kind: "accordion",
+          heading: "Who we are",
+          viewAll: { label: "About RE/MAX", href: "/about-us" },
+          items: [
+            {
+              title: "Our company",
+              links: [
+                { label: "Purpose & values", href: "/about-us/values" },
+                { label: "History", href: "/about-us/history" },
+              ],
+            },
+            {
+              title: "Responsibility",
+              links: [
+                { label: "ESG & sustainability", href: "/about-us/esg" },
+                { label: "Community", href: "/about-us/community" },
+              ],
+            },
+            { title: "Investors", links: [{ label: "Reports & governance", href: "/about-us/investors" }] },
+          ],
+        },
+        {
+          kind: "links",
+          heading: "Quick links",
+          items: [
+            { label: "Newsroom", href: "/news" },
+            { label: "Careers", href: "/careers" },
+            { label: "Contact", href: "/contact" },
+            { label: "Brand centre", href: "/about-us/brand" },
+          ],
+        },
+        {
+          kind: "featured",
+          heading: "Featured article",
+          imageSrc: "/remax-black.png",
+          imageAlt: "About",
+          tag: "Company",
+          title: "Building trust in every transaction",
+          excerpt: "How we support clients across the property lifecycle",
+          href: "/insights/trust",
+          readMore: "Read more",
+        },
+      ],
+      footer: {
+        text: "Learn more about our network and culture",
+        buttonLabel: "VIEW ABOUT US",
+        buttonHref: "/about-us",
+      },
+    },
+  },
+];
+
+function Chevron({ open }: { open: boolean }) {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      aria-hidden
+      className={`shrink-0 text-[#000759] transition-transform ${open ? "rotate-180" : ""}`}
+    >
+      <path d="M2 4.5L6 8.5L10 4.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function AccordionColumn({
+  heading,
+  items,
+  viewAll,
+}: {
+  heading: string;
+  items: AccordionItem[];
+  viewAll?: { label: string; href: string };
+}) {
+  const [openIndex, setOpenIndex] = useState(0);
+
+  return (
+    <div className="min-w-0 border-r border-zinc-200 pr-8 lg:pr-12">
+      <h3 className="font-serif text-xl font-normal tracking-tight text-[#000759] dark:text-[#c8d4ff]">{heading}</h3>
+      <ul className="mt-6 space-y-0">
+        {items.map((item, i) => {
+          const isExpanded = openIndex === i;
+          const sublistId = `mega-accordion-panel-${heading.replace(/\s+/g, "-").toLowerCase()}-${i}`;
+          return (
+            <li key={item.title} className="border-b border-zinc-200 first:border-t">
+              <button
+                type="button"
+                className="flex w-full items-center justify-between gap-3 py-4 text-left text-base font-medium text-[#000759] transition hover:text-[#001a8f] dark:text-zinc-100 dark:hover:text-white"
+                onClick={() => setOpenIndex(isExpanded ? -1 : i)}
+                aria-expanded={isExpanded ? "true" : "false"}
+                {...(item.links?.length ? { "aria-controls": sublistId } : {})}
+              >
+                <span>{item.title}</span>
+                <Chevron open={isExpanded} />
+              </button>
+              {item.links && item.links.length > 0 && (
+                <ul id={sublistId} hidden={!isExpanded} className="space-y-2 pb-4 pl-0">
+                  {item.links.map((l) => (
+                    <li key={l.href}>
+                      <Link href={l.href} className="text-sm font-medium text-[#2563eb] hover:underline dark:text-[#7ab3ff]">
+                        {l.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+      {viewAll && (
+        <Link
+          href={viewAll.href}
+          className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#000759] after:block after:h-px after:w-8 after:bg-[#000759] hover:opacity-80 dark:text-[#c8d4ff] dark:after:bg-[#c8d4ff]"
+        >
+          {viewAll.label}
+        </Link>
+      )}
+    </div>
+  );
+}
+
+function LinksColumn({ heading, items }: { heading: string; items: { label: string; href: string }[] }) {
+  return (
+    <div className="min-w-0 border-r border-zinc-200 px-8 lg:px-12">
+      <h3 className="font-serif text-xl font-normal tracking-tight text-[#000759] dark:text-[#c8d4ff]">{heading}</h3>
+      <ul className="mt-6">
+        {items.map((item) => (
+          <li key={item.href} className="border-b border-zinc-200 first:border-t">
+            <Link
+              href={item.href}
+              className="block py-4 text-base font-medium text-[#000759] transition hover:text-[#001a8f] dark:text-zinc-100 dark:hover:text-white"
+            >
+              {item.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function FeaturedColumn({
+  heading,
+  imageSrc,
+  imageAlt,
+  tag,
+  title,
+  excerpt,
+  href,
+  readMore = "Read more",
+}: {
+  heading: string;
+  imageSrc: string;
+  imageAlt: string;
+  tag: string;
+  title: string;
+  excerpt: string;
+  href: string;
+  readMore?: string;
+}) {
+  return (
+    <div className="min-w-0 pl-0 lg:pl-4">
+      <h3 className="font-serif text-xl font-normal tracking-tight text-[#000759] dark:text-[#c8d4ff]">{heading}</h3>
+      <Link href={href} className="mt-6 block group/card">
+        <div className="relative aspect-[16/10] w-full overflow-hidden bg-zinc-100">
+          <Image src={imageSrc} alt={imageAlt} fill className="object-cover transition duration-300 group-hover/card:scale-[1.02]" sizes="(min-width: 1024px) 320px, 100vw" />
+        </div>
+        <p className="mt-4 text-xs font-bold uppercase tracking-wide text-[#2563eb] dark:text-[#7ab3ff]">{tag}</p>
+        <p className="mt-2 text-lg font-bold leading-snug text-[#000759] dark:text-zinc-50">{title}</p>
+        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{excerpt}</p>
+        <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#000759] after:block after:h-px after:w-8 after:bg-[#000759] group-hover/card:opacity-80 dark:text-[#c8d4ff] dark:after:bg-[#c8d4ff]">
+          {readMore}
+        </span>
+      </Link>
+    </div>
+  );
+}
+
+function PhilippinesFlagIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 900 600" className={className} aria-hidden>
+      <rect fill="#0038a8" width="900" height="300" />
+      <rect fill="#ce1126" y="300" width="900" height="300" />
+      <path fill="#fff" d="M0 0 L450 300 L0 600Z" />
+      <circle fill="#fcd116" cx="180" cy="300" r="65" />
+    </svg>
+  );
+}
+
+function HamburgerIcon({ open }: { open: boolean }) {
+  if (open) {
+    return (
+      <svg className="h-6 w-6 text-[#000759]" viewBox="0 0 24 24" aria-hidden>
+        <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      </svg>
+    );
+  }
+  return (
+    <svg className="h-6 w-6 text-[#000759]" viewBox="0 0 24 24" aria-hidden>
+      <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function MobileMenuRowArrow({ expanded }: { expanded: boolean }) {
+  return (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      aria-hidden
+      className={`shrink-0 text-[#000759] transition-transform duration-200 ${expanded ? "rotate-90" : ""}`}
+    >
+      <path
+        d="M5 12h14M13 6l6 6-6 6"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function MobileSearchIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} width="22" height="22" viewBox="0 0 24 24" aria-hidden>
+      <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" strokeWidth="1.75" />
+      <path d="M16 16l5 5" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function CloseSearchIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} width="22" height="22" viewBox="0 0 24 24" aria-hidden>
+      <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function MobileNavGroup({
+  item,
+  onNavigate,
+}: {
+  item: (typeof navConfig)[number];
+  onNavigate: () => void;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const mega = item.mega;
+  const [c1, c2, c3] = mega.columns;
+  if (!c1 || !c2 || !c3) return null;
+
+  return (
+    <div className="border-b border-[#000759]/25 dark:border-white/20">
+      <button
+        type="button"
+        className="flex w-full items-center justify-between gap-4 py-5 text-left text-xl font-normal tracking-tight text-[#000759] dark:text-[#c8d4ff] sm:py-6 sm:text-2xl"
+        onClick={() => setExpanded((v) => !v)}
+        aria-expanded={expanded ? "true" : "false"}
+        {...(expanded ? { "aria-controls": `mobile-nav-section-${item.id}` } : {})}
+      >
+        <span>{item.label}</span>
+        <MobileMenuRowArrow expanded={expanded} />
+      </button>
+      {expanded && (
+        <div id={`mobile-nav-section-${item.id}`} className="space-y-6 pb-4 pl-1">
+          {c1.kind === "accordion" && (
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">{c1.heading}</p>
+              <ul className="mt-2 space-y-1">
+                {c1.items.map((acc) => (
+                  <li key={acc.title}>
+                    <p className="py-2 text-sm font-semibold text-[#000759] dark:text-zinc-200">{acc.title}</p>
+                    {acc.links && (
+                      <ul className="space-y-1 border-l-2 border-zinc-200 pl-3 dark:border-white/10">
+                        {acc.links.map((l) => (
+                          <li key={l.href}>
+                            <Link
+                              href={l.href}
+                              className="block py-1.5 text-sm text-[#2563eb] hover:underline dark:text-[#7ab3ff]"
+                              onClick={onNavigate}
+                            >
+                              {l.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                ))}
+              </ul>
+              {c1.viewAll && (
+                <Link
+                  href={c1.viewAll.href}
+                  className="mt-3 inline-block text-sm font-semibold text-[#000759] underline dark:text-[#c8d4ff]"
+                  onClick={onNavigate}
+                >
+                  {c1.viewAll.label}
+                </Link>
+              )}
+            </div>
+          )}
+          {c2.kind === "links" && (
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">{c2.heading}</p>
+              <ul className="mt-2">
+                {c2.items.map((l) => (
+                  <li key={l.href} className="border-b border-zinc-100 last:border-0 dark:border-white/10">
+                    <Link
+                      href={l.href}
+                      className="block py-2.5 text-sm font-medium text-[#000759] dark:text-zinc-200"
+                      onClick={onNavigate}
+                    >
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {c3.kind === "featured" && (
+            <Link href={c3.href} className="block rounded-lg border border-zinc-200 p-3 dark:border-white/10" onClick={onNavigate}>
+              <p className="text-xs font-bold uppercase tracking-wide text-[#2563eb] dark:text-[#7ab3ff]">{c3.tag}</p>
+              <p className="mt-1 text-sm font-bold text-[#000759] dark:text-zinc-50">{c3.title}</p>
+              <span className="mt-2 inline-block text-xs font-semibold text-[#000759] underline dark:text-[#c8d4ff]">{c3.readMore ?? "Read more"}</span>
+            </Link>
+          )}
+          <Link
+            href={mega.footer.buttonHref}
+            className="inline-flex w-full items-center justify-center rounded-md bg-[#000759] px-4 py-3 text-xs font-bold uppercase tracking-wider text-white dark:bg-[#c8d4ff] dark:text-[#000759]"
+            onClick={onNavigate}
+          >
+            {mega.footer.buttonLabel}
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MegaMenuPanel({ mega }: { mega: MegaMenu }) {
+  const [c1, c2, c3] = mega.columns;
+  if (!c1 || !c2 || !c3) return null;
+
+  return (
+    <div className="border-t border-zinc-200 bg-white shadow-[0_24px_48px_-12px_rgba(0,0,0,0.12)] dark:border-white/10 dark:bg-zinc-950 dark:shadow-black/40">
+      <div className="mx-auto w-full px-6">
+        <div className="mx-auto w-full px-7 py-10 lg:py-12">
+        <div className="grid gap-10 lg:grid-cols-[1.15fr_1fr_1fr] lg:gap-0">
+          {c1.kind === "accordion" && <AccordionColumn heading={c1.heading} items={c1.items} viewAll={c1.viewAll} />}
+          {c2.kind === "links" && <LinksColumn heading={c2.heading} items={c2.items} />}
+          {c3.kind === "featured" && (
+            <FeaturedColumn
+              heading={c3.heading}
+              imageSrc={c3.imageSrc}
+              imageAlt={c3.imageAlt}
+              tag={c3.tag}
+              title={c3.title}
+              excerpt={c3.excerpt}
+              href={c3.href}
+              readMore={c3.readMore}
+            />
+          )}
+        </div>
+        </div>
+      </div>
+      <div className="border-t border-zinc-200 bg-zinc-50/80 dark:border-white/10 dark:bg-zinc-900/50">
+        <div className="mx-auto w-full px-6 py-6">
+        <div className="mx-auto flex w-full flex-col items-start justify-between gap-6 px-7 sm:flex-row sm:items-center">
+          <p className="max-w-xl font-serif text-lg text-[#000759] dark:text-[#c8d4ff]">{mega.footer.text}</p>
+          <Link
+            href={mega.footer.buttonHref}
+            className="inline-flex shrink-0 items-center justify-center rounded-md bg-[#000759] px-8 py-3 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-[#001a8f] dark:bg-[#c8d4ff] dark:text-[#000759] dark:hover:bg-white"
+          >
+            {mega.footer.buttonLabel}
+          </Link>
+        </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function Header() {
+  const pathname = usePathname();
+  const [openId, setOpenId] = useState<string | null>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [desktopSearchOpen, setDesktopSearchOpen] = useState(false);
+  const [mobileDrawerSearchOpen, setMobileDrawerSearchOpen] = useState(false);
+  const desktopSearchInputRef = useRef<HTMLInputElement>(null);
+  const mobileSearchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (desktopSearchOpen) {
+      desktopSearchInputRef.current?.focus();
+    }
+  }, [desktopSearchOpen]);
+
+  useEffect(() => {
+    if (mobileDrawerSearchOpen) {
+      mobileSearchInputRef.current?.focus();
+    }
+  }, [mobileDrawerSearchOpen]);
+
+  useEffect(() => {
+    if (!mobileOpen) setMobileDrawerSearchOpen(false);
+  }, [mobileOpen]);
+
+  useEffect(() => {
+    if (!desktopSearchOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setDesktopSearchOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [desktopSearchOpen]);
+
+  const handleEnter = useCallback((id: string) => {
+    setOpenId(id);
+  }, []);
+
+  const handleLeave = useCallback(() => {
+    setOpenId(null);
+  }, []);
+
+  const closeMobile = useCallback(() => setMobileOpen(false), []);
+
+  useEffect(() => {
+    closeMobile();
+  }, [pathname, closeMobile]);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeMobile();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [mobileOpen, closeMobile]);
+
+  const openMega = openId ? navConfig.find((n) => n.id === openId)?.mega : null;
+
+  return (
+    <header className="relative z-50 border-b border-black/10 bg-white dark:border-white/15 dark:bg-white">
+      <div className="relative" onMouseLeave={handleLeave}>
+        <div className="mx-auto w-full px-6">
+          <div
+            id="site-header-bar"
+            className="mx-auto flex w-full items-center justify-between gap-4 px-7 py-3 sm:py-5 lg:gap-8 lg:py-7"
+          >
+          <div className="flex min-w-0 flex-1 items-center gap-6 lg:gap-12">
+            <Link href="/" className="shrink-0 text-lg font-semibold tracking-tight">
+              <Image
+                src="/remax-black.png"
+                alt="RE/MAX"
+                width={120}
+                height={40}
+                className="h-8 w-auto sm:h-9 lg:h-12"
+                priority
+              />
+            </Link>
+
+            <nav
+              aria-label="Main navigation"
+              className={`hidden min-w-0 lg:block ${desktopSearchOpen ? "lg:hidden" : ""}`}
+            >
+              <ul className="flex flex-wrap items-center gap-x-6 gap-y-2 text-base font-medium text-[#000759] xl:gap-x-10 xl:text-xl">
+                {navConfig.map((item) => (
+                  <li key={item.id} onMouseEnter={() => handleEnter(item.id)} className="relative">
+                    <Link
+                      href={item.href}
+                      className={`decoration-2 transition-colors ${openId === item.id ? "font-semibold text-[#000759] decoration-[#000759]" : "text-[#000759] no-underline hover:underline hover:decoration-[#000759]"} after:absolute after:left-0 after:-bottom-1
+                      after:h-[2px] after:w-0 after:bg-[#000759]
+                      after:transition-all after:duration-300
+                      hover:after:w-full hover:font-bold"`}
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            {desktopSearchOpen && (
+              <form
+                role="search"
+                className="mx-auto hidden min-w-0 flex-1 items-center gap-3 lg:flex"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                <label className="sr-only" htmlFor="header-search">
+                  Search
+                </label>
+                <input
+                  ref={desktopSearchInputRef}
+                  id="header-search"
+                  type="search"
+                  placeholder="What are you looking for?"
+                  className="min-h-11 min-w-0 flex-1 border border-[#000759] bg-white px-4 py-2.5 text-sm text-[#000759] outline-none placeholder:text-[#000759]/65 focus:ring-2 focus:ring-[#000759]/25 dark:border-[#c8d4ff] dark:bg-zinc-950 dark:text-[#c8d4ff] dark:placeholder:text-[#c8d4ff]/65 dark:focus:ring-[#c8d4ff]/25"
+                />
+                <button
+                  type="submit"
+                  className="shrink-0 p-2 text-[#000759] transition hover:opacity-70 dark:text-[#c8d4ff]"
+                  aria-label="Submit search"
+                >
+                  <MobileSearchIcon className="h-6 w-6" />
+                </button>
+                <button
+                  type="button"
+                  className="shrink-0 p-2 text-[#000759] transition hover:opacity-70 dark:text-[#c8d4ff]"
+                  aria-label="Close search"
+                  onClick={() => setDesktopSearchOpen(false)}
+                >
+                  <CloseSearchIcon />
+                </button>
+              </form>
+            )}
+          </div>
+
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            <div className="hidden items-center gap-3 lg:flex">
+              {!desktopSearchOpen && (
+                <button
+                  type="button"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#c5d3f0] bg-white text-[#000759] shadow-sm transition hover:border-[#000759]/40 hover:bg-zinc-50 dark:border-[#4a5a8a] dark:bg-zinc-900 dark:text-[#c8d4ff] dark:hover:border-[#c8d4ff]/50 dark:hover:bg-zinc-800"
+                  aria-label="Open search"
+                  onClick={() => {
+                    setOpenId(null);
+                    setDesktopSearchOpen(true);
+                  }}
+                >
+                  <MobileSearchIcon className="h-[22px] w-[22px]" />
+                </button>
+              )}
+            </div>
+
+            <div className="flex items-center gap-3 lg:hidden">
+              <Link
+                href="/office-locations"
+                className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-zinc-200 bg-white shadow-sm ring-1 ring-black/5 dark:border-white/15 dark:bg-zinc-900 dark:ring-white/10"
+                aria-label="Philippines — office locations"
+                onClick={closeMobile}
+              >
+                <PhilippinesFlagIcon className="h-full min-h-[2.5rem] w-[140%] max-w-none -translate-x-[12%]" />
+              </Link>
+              <button
+                type="button"
+                className="flex h-10 w-10 items-center justify-center rounded-md text-[#000759] transition hover:bg-zinc-100 dark:text-[#c8d4ff] dark:hover:bg-white/10"
+                aria-expanded={mobileOpen ? "true" : "false"}
+                {...(mobileOpen ? { "aria-controls": "mobile-navigation" } : {})}
+                onClick={() => setMobileOpen((o) => !o)}
+              >
+                <span className="sr-only">{mobileOpen ? "Close menu" : "Open menu"}</span>
+                <HamburgerIcon open={mobileOpen} />
+              </button>
+            </div>
+          </div>
+          </div>
+        </div>
+
+        {openMega && (
+          <div className="absolute left-0 right-0 top-full hidden lg:block" role="region" aria-label="Submenu">
+            <MegaMenuPanel mega={openMega} />
+          </div>
+        )}
+
+        {mounted &&
+          mobileOpen &&
+          createPortal(
+            <div
+              id="mobile-navigation"
+              className="fixed inset-0 z-[200] flex max-h-[100dvh] flex-col bg-white lg:hidden dark:bg-zinc-950"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Menu"
+            >
+              <div className="mx-auto w-full shrink-0 px-6">
+                <div className="mx-auto flex w-full items-center justify-between gap-4 px-7 py-3 sm:py-5">
+                <Link href="/" className="shrink-0" onClick={closeMobile}>
+                  <Image
+                    src="/remax-black.png"
+                    alt="RE/MAX"
+                    width={120}
+                    height={40}
+                    className="h-8 w-auto sm:h-9"
+                  />
+                </Link>
+                <div className="flex shrink-0 items-center gap-3">
+                  <Link
+                    href="/office-locations"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-zinc-200 bg-white shadow-sm ring-1 ring-black/5 dark:border-white/15 dark:bg-zinc-900 dark:ring-white/10"
+                    aria-label="Philippines — office locations"
+                    onClick={closeMobile}
+                  >
+                    <PhilippinesFlagIcon className="h-full min-h-[2.5rem] w-[140%] max-w-none -translate-x-[12%]" />
+                  </Link>
+                  <button
+                    type="button"
+                    className="flex h-10 w-10 items-center justify-center rounded-md text-[#000759] transition hover:bg-zinc-100 dark:text-[#c8d4ff] dark:hover:bg-white/10"
+                    onClick={closeMobile}
+                    aria-label="Close menu"
+                  >
+                    <svg className="h-6 w-6" viewBox="0 0 24 24" aria-hidden>
+                      <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    </svg>
+                  </button>
+                </div>
+                </div>
+              </div>
+
+              <div className="mx-auto w-full shrink-0 px-6 pb-2 pt-2">
+                <div className="mx-auto w-full px-7">
+                {!mobileDrawerSearchOpen ? (
+                  <div className="flex justify-center pt-1 sm:justify-start">
+                    <button
+                      type="button"
+                      className="flex h-11 w-11 items-center justify-center rounded-full border border-[#c5d3f0] bg-white text-[#000759] shadow-sm dark:border-[#4a5a8a] dark:bg-zinc-900 dark:text-[#c8d4ff]"
+                      aria-label="Open search"
+                      onClick={() => setMobileDrawerSearchOpen(true)}
+                    >
+                      <MobileSearchIcon className="h-[22px] w-[22px]" />
+                    </button>
+                  </div>
+                ) : (
+                  <form
+                    role="search"
+                    className="flex items-center gap-2 border border-[#000759] bg-white px-3 py-2 dark:border-[#c8d4ff] dark:bg-zinc-950"
+                    onSubmit={(e) => e.preventDefault()}
+                  >
+                    <label className="sr-only" htmlFor="header-search-mobile">
+                      Search
+                    </label>
+                    <input
+                      ref={mobileSearchInputRef}
+                      id="header-search-mobile"
+                      type="search"
+                      placeholder="What are you looking for?"
+                      className="min-w-0 flex-1 border-0 bg-transparent py-1 text-sm text-[#000759] placeholder:text-[#000759]/70 outline-none dark:text-[#c8d4ff] dark:placeholder:text-[#c8d4ff]/70"
+                    />
+                    <button
+                      type="submit"
+                      className="shrink-0 p-1 text-[#000759] transition hover:opacity-70 dark:text-[#c8d4ff]"
+                      aria-label="Submit search"
+                    >
+                      <MobileSearchIcon />
+                    </button>
+                    <button
+                      type="button"
+                      className="shrink-0 p-1 text-[#000759] transition hover:opacity-70 dark:text-[#c8d4ff]"
+                      aria-label="Close search"
+                      onClick={() => setMobileDrawerSearchOpen(false)}
+                    >
+                      <CloseSearchIcon />
+                    </button>
+                  </form>
+                )}
+                </div>
+              </div>
+
+              <nav
+                className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain px-6 pb-10 pt-2"
+                aria-label="Mobile navigation"
+              >
+                <div className="mx-auto w-full px-7">
+                {navConfig.map((item) => (
+                  <MobileNavGroup key={item.id} item={item} onNavigate={closeMobile} />
+                ))}
+                </div>
+              </nav>
+            </div>,
+            document.body
+          )}
+      </div>
+    </header>
+  );
+}
