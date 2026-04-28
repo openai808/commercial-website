@@ -22,10 +22,10 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t">
+    <footer>
       <div className="mx-auto flex w-full items-center border-b-1 border-black justify-between px-6 py-2 text-sm text-zinc-600 dark:text-zinc-400">
-        <div className="mx-auto flex w-full items-center justify-between px-7 py-7">
-          <div className="flex items-center gap-12">
+        <div className="mx-auto flex flex-col md:flex-row gap-12 w-full items-center justify-between px-7 py-7">
+          <div className="flex flex-col md:flex-row items-center gap-8">
             <Link href="/" className="text-lg font-semibold tracking-tight">
               <Image
                 src="/remax-black.png"
@@ -38,7 +38,7 @@ export default function Footer() {
             </Link>
 
             <nav aria-label="Footer navigation">
-              <ul className="flex items-center gap-12 text-xl font-medium text-zinc-700 dark:text-zinc-300">
+              <ul className="flex flex-col sm:flex-row items-center gap-6 text-xl font-medium text-zinc-700 dark:text-zinc-300">
                 {navItems.map((item) => (
                   <li key={item.label}>
                     <Link
@@ -80,9 +80,9 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <div className="mx-auto flex w-full items-center justify-between px-12 py-8 text-sm">
+      <div className="mx-auto flex flex-col md:flex-row md:justify-between gap-10 items-center px-12 py-8 text-sm">
         <nav aria-label="Footer policies">
-          <ul className="flex items-center gap-4">
+          <ul className="flex flex-col sm:flex-row w-full justify-between items-center gap-4 sm:gap-12 md:gap-6">
             <li>
               <a href="#" className="hover:underline hover:text-[#000759]">
                 Cookie Policy
@@ -105,7 +105,7 @@ export default function Footer() {
             </li>
           </ul>
         </nav>
-        <p>Copyright {year} RE/MAX</p>
+        <p>Copyright &copy; {year} RE/MAX</p>
       </div>
     </footer>
   );

@@ -534,7 +534,7 @@ function PhilippinesFlagIcon({ className }: { className?: string }) {
 function HamburgerIcon({ open }: { open: boolean }) {
   if (open) {
     return (
-      <svg className="h-6 w-6 text-[#000759]" viewBox="0 0 24 24" aria-hidden>
+      <svg className="cursor-pointer h-6 w-6 text-[#000759]" viewBox="0 0 24 24" aria-hidden>
         <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
       </svg>
     );
@@ -553,7 +553,7 @@ function MobileMenuRowArrow({ expanded }: { expanded: boolean }) {
       height="22"
       viewBox="0 0 24 24"
       aria-hidden
-      className={`shrink-0 text-[#000759] transition-transform duration-200 ${expanded ? "rotate-90" : ""}`}
+      className={`cursor-pointer shrink-0 text-[#000759] transition-transform duration-200 ${expanded ? "rotate-90" : ""}`}
     >
       <path
         d="M5 12h14M13 6l6 6-6 6"
@@ -569,9 +569,14 @@ function MobileMenuRowArrow({ expanded }: { expanded: boolean }) {
 
 function MobileSearchIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} width="22" height="22" viewBox="0 0 24 24" aria-hidden>
-      <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" strokeWidth="1.75" />
-      <path d="M16 16l5 5" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
+    <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5V10.5Z"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
@@ -597,10 +602,10 @@ function MobileNavGroup({
   if (!c1 || !c2 || !c3) return null;
 
   return (
-    <div className="border-b border-[#000759]/25 dark:border-white/20">
+    <div className="border-b border-[#000759]/25">
       <button
         type="button"
-        className="flex w-full items-center justify-between gap-4 py-5 text-left text-xl font-normal tracking-tight text-[#000759] dark:text-[#c8d4ff] sm:py-6 sm:text-2xl"
+        className="flex w-full items-center justify-between gap-4 py-5 text-left text-xl font-normal tracking-tight text-[#000759] sm:py-6 sm:text-2xl"
         onClick={() => setExpanded((v) => !v)}
         aria-expanded={expanded ? "true" : "false"}
         {...(expanded ? { "aria-controls": `mobile-nav-section-${item.id}` } : {})}
@@ -612,18 +617,18 @@ function MobileNavGroup({
         <div id={`mobile-nav-section-${item.id}`} className="space-y-6 pb-4 pl-1">
           {c1.kind === "accordion" && (
             <div>
-              <p className="text-xs font-bold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">{c1.heading}</p>
+              <p className="text-xs font-bold uppercase tracking-wide text-zinc-500">{c1.heading}</p>
               <ul className="mt-2 space-y-1">
                 {c1.items.map((acc) => (
                   <li key={acc.title}>
-                    <p className="py-2 text-sm font-semibold text-[#000759] dark:text-zinc-200">{acc.title}</p>
+                    <p className="py-2 text-sm font-semibold text-[#000759]">{acc.title}</p>
                     {acc.links && (
-                      <ul className="space-y-1 border-l-2 border-zinc-200 pl-3 dark:border-white/10">
+                      <ul className="space-y-1 border-l-2 border-zinc-200 pl-3">
                         {acc.links.map((l) => (
                           <li key={l.href}>
                             <Link
                               href={l.href}
-                              className="block py-1.5 text-sm text-[#2563eb] hover:underline dark:text-[#7ab3ff]"
+                              className="block py-1.5 text-sm text-[#2563eb] hover:underline"
                               onClick={onNavigate}
                             >
                               {l.label}
@@ -638,7 +643,7 @@ function MobileNavGroup({
               {c1.viewAll && (
                 <Link
                   href={c1.viewAll.href}
-                  className="mt-3 inline-block text-sm font-semibold text-[#000759] underline dark:text-[#c8d4ff]"
+                  className="mt-3 inline-block text-sm font-semibold text-[#000759] underline"
                   onClick={onNavigate}
                 >
                   {c1.viewAll.label}
@@ -648,13 +653,13 @@ function MobileNavGroup({
           )}
           {c2.kind === "links" && (
             <div>
-              <p className="text-xs font-bold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">{c2.heading}</p>
+              <p className="text-xs font-bold uppercase tracking-wide text-zinc-500">{c2.heading}</p>
               <ul className="mt-2">
                 {c2.items.map((l) => (
-                  <li key={l.href} className="border-b border-zinc-100 last:border-0 dark:border-white/10">
+                  <li key={l.href} className="border-b border-zinc-100 last:border-0">
                     <Link
                       href={l.href}
-                      className="block py-2.5 text-sm font-medium text-[#000759] dark:text-zinc-200"
+                      className="block py-2.5 text-sm font-medium text-[#000759]"
                       onClick={onNavigate}
                     >
                       {l.label}
@@ -665,15 +670,15 @@ function MobileNavGroup({
             </div>
           )}
           {c3.kind === "featured" && (
-            <Link href={c3.href} className="block rounded-lg border border-zinc-200 p-3 dark:border-white/10" onClick={onNavigate}>
-              <p className="text-xs font-bold uppercase tracking-wide text-[#2563eb] dark:text-[#7ab3ff]">{c3.tag}</p>
-              <p className="mt-1 text-sm font-bold text-[#000759] dark:text-zinc-50">{c3.title}</p>
-              <span className="mt-2 inline-block text-xs font-semibold text-[#000759] underline dark:text-[#c8d4ff]">{c3.readMore ?? "Read more"}</span>
+            <Link href={c3.href} className="block rounded-lg border border-zinc-200 p-3" onClick={onNavigate}>
+              <p className="text-xs font-bold uppercase tracking-wide text-[#2563eb]">{c3.tag}</p>
+              <p className="mt-1 text-sm font-bold text-[#000759]">{c3.title}</p>
+              <span className="mt-2 inline-block text-xs font-semibold text-[#000759] underline">{c3.readMore ?? "Read more"}</span>
             </Link>
           )}
           <Link
             href={mega.footer.buttonHref}
-            className="inline-flex w-full items-center justify-center rounded-md bg-[#000759] px-4 py-3 text-xs font-bold uppercase tracking-wider text-white dark:bg-[#c8d4ff] dark:text-[#000759]"
+            className="inline-flex w-full items-center justify-center rounded-md bg-[#000759] px-4 py-3 text-xs font-bold uppercase tracking-wider text-white"
             onClick={onNavigate}
           >
             {mega.footer.buttonLabel}
@@ -733,7 +738,6 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [desktopSearchOpen, setDesktopSearchOpen] = useState(false);
-  const [mobileDrawerSearchOpen, setMobileDrawerSearchOpen] = useState(false);
   const desktopSearchInputRef = useRef<HTMLInputElement>(null);
   const mobileSearchInputRef = useRef<HTMLInputElement>(null);
 
@@ -746,16 +750,6 @@ export default function Header() {
       desktopSearchInputRef.current?.focus();
     }
   }, [desktopSearchOpen]);
-
-  useEffect(() => {
-    if (mobileDrawerSearchOpen) {
-      mobileSearchInputRef.current?.focus();
-    }
-  }, [mobileDrawerSearchOpen]);
-
-  useEffect(() => {
-    if (!mobileOpen) setMobileDrawerSearchOpen(false);
-  }, [mobileOpen]);
 
   useEffect(() => {
     if (!desktopSearchOpen) return;
@@ -840,7 +834,7 @@ export default function Header() {
             {desktopSearchOpen && (
               <form
                 role="search"
-                className="mx-auto hidden min-w-0 flex-1 items-center gap-3 lg:flex"
+                className="mx-auto hidden min-w-0 flex-1 items-center lg:flex"
                 onSubmit={(e) => {
                   e.preventDefault();
                 }}
@@ -853,22 +847,22 @@ export default function Header() {
                   id="header-search"
                   type="search"
                   placeholder="What are you looking for?"
-                  className="min-h-11 min-w-0 flex-1 border border-[#000759] bg-white px-4 py-2.5 text-sm text-[#000759] outline-none placeholder:text-[#000759]/65 focus:ring-2 focus:ring-[#000759]/25 dark:border-[#c8d4ff] dark:bg-zinc-950 dark:text-[#c8d4ff] dark:placeholder:text-[#c8d4ff]/65 dark:focus:ring-[#c8d4ff]/25"
+                  className="cursor-pointer min-h-11 min-w-0 flex-1 border-b-2 border-t-none border-b-[#000759] bg-white px-4 py-2.5 text-base text-[#000759] outline-none placeholder:text-[#000759]/65 focus:ring-2 focus:border-1"
                 />
                 <button
                   type="submit"
-                  className="shrink-0 p-2 text-[#000759] transition hover:opacity-70 dark:text-[#c8d4ff]"
+                  className="shrink-0 px-3 py-2 text-[#000759] transition hover:opacity-70 cursor-pointer"
                   aria-label="Submit search"
                 >
-                  <MobileSearchIcon className="h-6 w-6" />
+                  <MobileSearchIcon className="h-5 w-5" />
                 </button>
                 <button
                   type="button"
-                  className="shrink-0 p-2 text-[#000759] transition hover:opacity-70 dark:text-[#c8d4ff]"
+                  className="cursor-pointer shrink-0 px-2 py-2 text-[#000759] transition hover:opacity-70"
                   aria-label="Close search"
                   onClick={() => setDesktopSearchOpen(false)}
                 >
-                  <CloseSearchIcon />
+                  <CloseSearchIcon className="h-5 w-5" />
                 </button>
               </form>
             )}
@@ -879,7 +873,7 @@ export default function Header() {
               {!desktopSearchOpen && (
                 <button
                   type="button"
-                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#c5d3f0] bg-white text-[#000759] shadow-sm transition hover:border-[#000759]/40 hover:bg-zinc-50 dark:border-[#4a5a8a] dark:bg-zinc-900 dark:text-[#c8d4ff] dark:hover:border-[#c8d4ff]/50 dark:hover:bg-zinc-800"
+                  className="cursor-pointer flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#c5d3f0] bg-white text-[#000759] shadow-sm transition-colors hover:border-[#000759] hover:bg-[#000759] hover:text-white dark:border-[#4a5a8a] dark:text-[#000759] dark:hover:border-[#000759] dark:hover:bg-[#000759] dark:hover:text-white"
                   aria-label="Open search"
                   onClick={() => {
                     setOpenId(null);
@@ -892,17 +886,9 @@ export default function Header() {
             </div>
 
             <div className="flex items-center gap-3 lg:hidden">
-              <Link
-                href="/office-locations"
-                className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-zinc-200 bg-white shadow-sm ring-1 ring-black/5 dark:border-white/15 dark:bg-zinc-900 dark:ring-white/10"
-                aria-label="Philippines — office locations"
-                onClick={closeMobile}
-              >
-                <PhilippinesFlagIcon className="h-full min-h-[2.5rem] w-[140%] max-w-none -translate-x-[12%]" />
-              </Link>
               <button
                 type="button"
-                className="flex h-10 w-10 items-center justify-center rounded-md text-[#000759] transition hover:bg-zinc-100 dark:text-[#c8d4ff] dark:hover:bg-white/10"
+                className="flex h-10 w-10 items-center justify-center rounded-md text-[#000759] transition hover:bg-zinc-100"
                 aria-expanded={mobileOpen ? "true" : "false"}
                 {...(mobileOpen ? { "aria-controls": "mobile-navigation" } : {})}
                 onClick={() => setMobileOpen((o) => !o)}
@@ -926,7 +912,7 @@ export default function Header() {
           createPortal(
             <div
               id="mobile-navigation"
-              className="fixed inset-0 z-[200] flex max-h-[100dvh] flex-col bg-white lg:hidden dark:bg-zinc-950"
+              className="fixed inset-0 z-[200] flex max-h-[100dvh] flex-col bg-white text-[#000759] lg:hidden"
               role="dialog"
               aria-modal="true"
               aria-label="Menu"
@@ -945,7 +931,7 @@ export default function Header() {
                 <div className="flex shrink-0 items-center gap-3">
                   <Link
                     href="/office-locations"
-                    className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-zinc-200 bg-white shadow-sm ring-1 ring-black/5 dark:border-white/15 dark:bg-zinc-900 dark:ring-white/10"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-zinc-200 bg-white shadow-sm ring-1 ring-black/5"
                     aria-label="Philippines — office locations"
                     onClick={closeMobile}
                   >
@@ -953,11 +939,11 @@ export default function Header() {
                   </Link>
                   <button
                     type="button"
-                    className="flex h-10 w-10 items-center justify-center rounded-md text-[#000759] transition hover:bg-zinc-100 dark:text-[#c8d4ff] dark:hover:bg-white/10"
+                    className="cursor-pointer flex h-10 w-10 items-center justify-center rounded-md text-[#000759] transition hover:bg-zinc-100"
                     onClick={closeMobile}
                     aria-label="Close menu"
                   >
-                    <svg className="h-6 w-6" viewBox="0 0 24 24" aria-hidden>
+                    <svg className="cursor-pointer h-6 w-6" viewBox="0 0 24 24" aria-hidden>
                       <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                     </svg>
                   </button>
@@ -967,50 +953,29 @@ export default function Header() {
 
               <div className="mx-auto w-full shrink-0 px-6 pb-2 pt-2">
                 <div className="mx-auto w-full px-7">
-                {!mobileDrawerSearchOpen ? (
-                  <div className="flex justify-center pt-1 sm:justify-start">
-                    <button
-                      type="button"
-                      className="flex h-11 w-11 items-center justify-center rounded-full border border-[#c5d3f0] bg-white text-[#000759] shadow-sm dark:border-[#4a5a8a] dark:bg-zinc-900 dark:text-[#c8d4ff]"
-                      aria-label="Open search"
-                      onClick={() => setMobileDrawerSearchOpen(true)}
-                    >
-                      <MobileSearchIcon className="h-[22px] w-[22px]" />
-                    </button>
-                  </div>
-                ) : (
-                  <form
-                    role="search"
-                    className="flex items-center gap-2 border border-[#000759] bg-white px-3 py-2 dark:border-[#c8d4ff] dark:bg-zinc-950"
-                    onSubmit={(e) => e.preventDefault()}
-                  >
-                    <label className="sr-only" htmlFor="header-search-mobile">
-                      Search
-                    </label>
-                    <input
-                      ref={mobileSearchInputRef}
-                      id="header-search-mobile"
-                      type="search"
-                      placeholder="What are you looking for?"
-                      className="min-w-0 flex-1 border-0 bg-transparent py-1 text-sm text-[#000759] placeholder:text-[#000759]/70 outline-none dark:text-[#c8d4ff] dark:placeholder:text-[#c8d4ff]/70"
-                    />
-                    <button
-                      type="submit"
-                      className="shrink-0 p-1 text-[#000759] transition hover:opacity-70 dark:text-[#c8d4ff]"
-                      aria-label="Submit search"
-                    >
-                      <MobileSearchIcon />
-                    </button>
-                    <button
-                      type="button"
-                      className="shrink-0 p-1 text-[#000759] transition hover:opacity-70 dark:text-[#c8d4ff]"
-                      aria-label="Close search"
-                      onClick={() => setMobileDrawerSearchOpen(false)}
-                    >
-                      <CloseSearchIcon />
-                    </button>
+                  <form role="search" className="pt-1" onSubmit={(e) => e.preventDefault()}>
+                    <div className="ml-auto flex h-11 w-full items-center overflow-hidden border-b border-[#000759] bg-white">
+                      <label className="sr-only" htmlFor="header-search-mobile">
+                        Search
+                      </label>
+                      <input
+                        ref={mobileSearchInputRef}
+                        id="header-search-mobile"
+                        type="text"
+                        inputMode="search"
+                        enterKeyHint="search"
+                        placeholder="What are you looking for?"
+                        className="min-w-0 flex-1 border-0 bg-transparent py-1 pr-2 text-base text-[#000759] placeholder:text-[#000759]/70 outline-none"
+                      />
+                      <button
+                        type="submit"
+                        className="shrink-0 px-2 py-1 text-[#000759] transition hover:opacity-70"
+                        aria-label="Submit search"
+                      >
+                        <MobileSearchIcon className="h-5 w-5" />
+                      </button>
+                    </div>
                   </form>
-                )}
                 </div>
               </div>
 
