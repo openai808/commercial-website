@@ -23,7 +23,7 @@ export default function Footer() {
 
   return (
     <footer>
-      <div className="mx-auto flex w-full items-center border-b-1 border-black justify-between px-6 py-2 text-sm text-zinc-600 dark:text-zinc-400">
+      <div className="mx-auto flex w-full items-center border-b-1 border-[#000759] justify-between px-6 py-2 text-sm">
         <div className="mx-auto flex flex-col md:flex-row gap-12 w-full items-center justify-between px-7 py-7">
           <div className="flex flex-col md:flex-row items-center gap-8">
             <Link href="/" className="text-lg font-semibold tracking-tight">
