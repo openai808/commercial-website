@@ -89,7 +89,7 @@ const navConfig: NavItem[] = [
         {
           kind: "featured",
           heading: "Featured article",
-          imageSrc: "/remax-ph.png",
+          imageSrc: "/REMAX Commercial Logo.png",
           imageAlt: "RE/MAX Philippines",
           tag: "Research & Insights",
           title: "2026 Asia Pacific Workplace Insights",
@@ -147,7 +147,7 @@ const navConfig: NavItem[] = [
         {
           kind: "featured",
           heading: "Featured article",
-          imageSrc: "/remax-black.png",
+          imageSrc: "/REMAX Commercial Logo.png",
           imageAlt: "RE/MAX",
           tag: "Market spotlight",
           title: "Q1 2026 Metro Manila residential outlook",
@@ -205,7 +205,7 @@ const navConfig: NavItem[] = [
         {
           kind: "featured",
           heading: "Featured article",
-          imageSrc: "/remax-ph.png",
+          imageSrc: "/REMAX Commercial Logo.png",
           imageAlt: "Insights",
           tag: "Research & Insights",
           title: "2026 Asia Pacific Workplace Insights",
@@ -262,7 +262,7 @@ const navConfig: NavItem[] = [
         {
           kind: "featured",
           heading: "Featured article",
-          imageSrc: "/remax-black.png",
+          imageSrc: "/REMAX Commercial Logo.png",
           imageAlt: "Experts",
           tag: "People",
           title: "How our specialists partner with occupiers",
@@ -319,7 +319,7 @@ const navConfig: NavItem[] = [
         {
           kind: "featured",
           heading: "Featured article",
-          imageSrc: "/remax-ph.png",
+          imageSrc: "/REMAX Commercial Logo.png",
           imageAlt: "Offices",
           tag: "Locations",
           title: "Opening our newest flagship workspace",
@@ -376,7 +376,7 @@ const navConfig: NavItem[] = [
         {
           kind: "featured",
           heading: "Featured article",
-          imageSrc: "/remax-black.png",
+          imageSrc: "/REMAX Commercial Logo.png",
           imageAlt: "About",
           tag: "Company",
           title: "Building trust in every transaction",
@@ -754,11 +754,11 @@ function DesktopHeaderSection({
       <div className="hidden min-w-0 flex-1 items-center gap-6 lg:flex">
         <Link href="/" className="shrink-0 text-lg font-semibold tracking-tight">
           <Image
-            src="/remax-black.png"
+            src="/REMAX Commercial Logo.png"
             alt="RE/MAX"
-            width={120}
-            height={40}
-            className="h-8 w-auto sm:h-9 lg:h-12"
+            width={200}
+            height={200}
+            // className="h-8 w-auto sm:h-9 lg:h-12"
             priority
           />
         </Link>
@@ -805,11 +805,11 @@ function DesktopHeaderSection({
       <div className="flex min-w-0 flex-1 items-center gap-6 lg:gap-12">
         <Link href="/" className="shrink-0 text-lg font-semibold tracking-tight">
           <Image
-            src="/remax-black.png"
+            src="/REMAX Commercial Logo.png"
             alt="RE/MAX"
-            width={120}
-            height={40}
-            className="h-8 w-auto sm:h-9 lg:h-12"
+            width={200}
+            height={200}
+            // className="h-8 w-auto sm:h-9 lg:h-12"
             priority
           />
         </Link>
@@ -888,7 +888,7 @@ function MobileHeaderSection({
             <div className="mx-auto w-full shrink-0 px-6">
               <div className="mx-auto flex w-full items-center justify-between gap-4 px-7 py-3 sm:py-5">
                 <Link href="/" className="shrink-0" onClick={closeMobile}>
-                  <Image src="/remax-black.png" alt="RE/MAX" width={120} height={40} className="h-8 w-auto sm:h-9" />
+                  <Image src="/REMAX Commcercial Logo.png" alt="RE/MAX" width={120} height={40} className="h-8 w-auto sm:h-9" />
                 </Link>
                 <div className="flex shrink-0 items-center gap-3">
                   <Link

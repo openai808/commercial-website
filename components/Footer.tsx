@@ -28,11 +28,11 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row items-center gap-8">
             <Link href="/" className="text-lg font-semibold tracking-tight">
               <Image
-                src="/remax-black.png"
+                src="/REMAX Commercial Logo.png"
                 alt="RE/MAX"
-                width={120}
-                height={40}
-                className="h-8 w-auto sm:h-10 md:h-12"
+                width={200}
+                height={200}
+                // className="h-8 w-auto sm:h-10 md:h-12"
                 priority
               />
             </Link>
