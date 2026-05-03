@@ -19,7 +19,12 @@ type AccordionItem = {
 };
 
 type MegaColumn =
-  | { kind: "accordion"; heading: string; items: AccordionItem[]; viewAll?: { label: string; href: string } }
+  | {
+      kind: "accordion";
+      heading: string;
+      items: AccordionItem[];
+      viewAll?: { label: string; href: string };
+    }
   | { kind: "links"; heading: string; items: { label: string; href: string }[] }
   | {
       kind: "featured";
@@ -55,7 +60,10 @@ const navConfig: NavItem[] = [
             {
               title: "Value and invest in real estate",
               links: [
-                { label: "Capital Markets and Investment Services", href: "/services/capital-markets" },
+                {
+                  label: "Capital Markets and Investment Services",
+                  href: "/services/capital-markets",
+                },
                 { label: "Valuation Services", href: "/services/valuation" },
               ],
             },
@@ -77,7 +85,10 @@ const navConfig: NavItem[] = [
               title: "Engineer and manage your project",
               links: [
                 { label: "Project management", href: "/services/projects" },
-                { label: "Development advisory", href: "/services/development" },
+                {
+                  label: "Development advisory",
+                  href: "/services/development",
+                },
               ],
             },
           ],
@@ -87,8 +98,14 @@ const navConfig: NavItem[] = [
           heading: "Property types",
           items: [
             { label: "Office", href: "/properties/office" },
-            { label: "Industrial and Logistics", href: "/properties/industrial" },
-            { label: "Hotels and Hospitality", href: "/properties/hospitality" },
+            {
+              label: "Industrial and Logistics",
+              href: "/properties/industrial",
+            },
+            {
+              label: "Hotels and Hospitality",
+              href: "/properties/hospitality",
+            },
             { label: "Retail", href: "/properties/retail" },
             { label: "Residential", href: "/properties/residential" },
           ],
@@ -126,8 +143,14 @@ const navConfig: NavItem[] = [
             {
               title: "Buy",
               links: [
-                { label: "Residential for sale", href: "/properties/buy/residential" },
-                { label: "Commercial for sale", href: "/properties/buy/commercial" },
+                {
+                  label: "Residential for sale",
+                  href: "/properties/buy/residential",
+                },
+                {
+                  label: "Commercial for sale",
+                  href: "/properties/buy/commercial",
+                },
               ],
             },
             {
@@ -137,7 +160,10 @@ const navConfig: NavItem[] = [
                 { label: "Short-stay", href: "/properties/short-stay" },
               ],
             },
-            { title: "New developments", links: [{ label: "Pre-selling", href: "/properties/new" }] },
+            {
+              title: "New developments",
+              links: [{ label: "Pre-selling", href: "/properties/new" }],
+            },
           ],
         },
         {
@@ -195,7 +221,10 @@ const navConfig: NavItem[] = [
                 { label: "Expert opinion", href: "/insights/commentary" },
               ],
             },
-            { title: "Events & webinars", links: [{ label: "Upcoming sessions", href: "/insights/events" }] },
+            {
+              title: "Events & webinars",
+              links: [{ label: "Upcoming sessions", href: "/insights/events" }],
+            },
           ],
         },
         {
@@ -253,7 +282,10 @@ const navConfig: NavItem[] = [
                 { label: "Valuation", href: "/experts/valuation" },
               ],
             },
-            { title: "Client services", links: [{ label: "Account teams", href: "/experts/accounts" }] },
+            {
+              title: "Client services",
+              links: [{ label: "Account teams", href: "/experts/accounts" }],
+            },
           ],
         },
         {
@@ -294,13 +326,22 @@ const navConfig: NavItem[] = [
         {
           kind: "accordion",
           heading: "Regions",
-          viewAll: { label: "View global footprint", href: "/office-locations" },
+          viewAll: {
+            label: "View global footprint",
+            href: "/office-locations",
+          },
           items: [
             {
               title: "Philippines",
               links: [
-                { label: "Metro Manila", href: "/office-locations/metro-manila" },
-                { label: "Visayas & Mindanao", href: "/office-locations/vismin" },
+                {
+                  label: "Metro Manila",
+                  href: "/office-locations/metro-manila",
+                },
+                {
+                  label: "Visayas & Mindanao",
+                  href: "/office-locations/vismin",
+                },
               ],
             },
             {
@@ -310,7 +351,15 @@ const navConfig: NavItem[] = [
                 { label: "Hong Kong", href: "/office-locations/hong-kong" },
               ],
             },
-            { title: "Americas & EMEA", links: [{ label: "International offices", href: "/office-locations/global" }] },
+            {
+              title: "Americas & EMEA",
+              links: [
+                {
+                  label: "International offices",
+                  href: "/office-locations/global",
+                },
+              ],
+            },
           ],
         },
         {
@@ -367,7 +416,12 @@ const navConfig: NavItem[] = [
                 { label: "Community", href: "/about-us/community" },
               ],
             },
-            { title: "Investors", links: [{ label: "Reports & governance", href: "/about-us/investors" }] },
+            {
+              title: "Investors",
+              links: [
+                { label: "Reports & governance", href: "/about-us/investors" },
+              ],
+            },
           ],
         },
         {
@@ -410,7 +464,13 @@ function Chevron({ open }: { open: boolean }) {
       aria-hidden
       className={`shrink-0 text-[#000759] transition-transform duration-200 ease-in-out ${open ? "rotate-180" : ""}`}
     >
-      <path d="M2 4.5L6 8.5L10 4.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path
+        d="M2 4.5L6 8.5L10 4.5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -428,16 +488,21 @@ function AccordionColumn({
 
   return (
     <div className="min-w-0 border-r border-zinc-200 pr-8 lg:pr-12">
-      <h3 className="font-serif text-xl font-normal tracking-tight text-[#000759] dark:text-[#c8d4ff]">{heading}</h3>
+      <h3 className="font-serif text-xl font-normal tracking-tight text-[#000759]">
+        {heading}
+      </h3>
       <ul className="mt-6 space-y-0">
         {items.map((item, i) => {
           const isExpanded = openIndex === i;
           const sublistId = `mega-accordion-panel-${heading.replace(/\s+/g, "-").toLowerCase()}-${i}`;
           return (
-            <li key={item.title} className="border-b border-zinc-200 first:border-t">
+            <li
+              key={item.title}
+              className="border-b border-zinc-200 first:border-t"
+            >
               <button
                 type="button"
-                className="flex w-full items-center justify-between gap-3 py-4 text-left text-base font-medium text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f] dark:text-zinc-100 dark:hover:text-white"
+                className="flex w-full items-center justify-between gap-3 py-4 text-left text-base font-medium text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f]"
                 onClick={() => setOpenIndex(isExpanded ? -1 : i)}
                 aria-expanded={isExpanded}
                 {...(item.links?.length ? { "aria-controls": sublistId } : {})}
@@ -452,12 +517,16 @@ function AccordionColumn({
                   }`}
                 >
                   <div className="min-h-0 overflow-hidden">
-                    <ul id={sublistId} aria-hidden={!isExpanded} className="space-y-2 pb-4 pl-0">
+                    <ul
+                      id={sublistId}
+                      aria-hidden={!isExpanded}
+                      className="space-y-2 pb-4 pl-0"
+                    >
                       {item.links.map((l) => (
                         <li key={l.href}>
                           <Link
                             href={l.href}
-                            className="text-sm font-medium text-[#2563eb] transition-colors duration-200 ease-in-out hover:underline dark:text-[#7ab3ff]"
+                            className="text-sm font-medium text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f] hover:underline"
                           >
                             {l.label}
                           </Link>
@@ -474,7 +543,7 @@ function AccordionColumn({
       {viewAll && (
         <Link
           href={viewAll.href}
-          className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#000759] transition-opacity duration-200 ease-in-out after:block after:h-px after:w-8 after:bg-[#000759] hover:opacity-80 dark:text-[#c8d4ff] dark:after:bg-[#c8d4ff]"
+          className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#000759] transition-opacity duration-200 ease-in-out after:block after:h-px after:w-8 after:bg-[#000759] hover:opacity-80"
         >
           {viewAll.label}
         </Link>
@@ -483,16 +552,27 @@ function AccordionColumn({
   );
 }
 
-function LinksColumn({ heading, items }: { heading: string; items: { label: string; href: string }[] }) {
+function LinksColumn({
+  heading,
+  items,
+}: {
+  heading: string;
+  items: { label: string; href: string }[];
+}) {
   return (
     <div className="min-w-0 border-r border-zinc-200 px-8 lg:px-12">
-      <h3 className="font-serif text-xl font-normal tracking-tight text-[#000759] dark:text-[#c8d4ff]">{heading}</h3>
+      <h3 className="font-serif text-xl font-normal tracking-tight text-[#000759]">
+        {heading}
+      </h3>
       <ul className="mt-6">
         {items.map((item) => (
-          <li key={item.href} className="border-b border-zinc-200 first:border-t">
+          <li
+            key={item.href}
+            className="border-b border-zinc-200 first:border-t"
+          >
             <Link
               href={item.href}
-              className="block py-4 text-base font-medium text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f] dark:text-zinc-100 dark:hover:text-white"
+              className="block py-4 text-base font-medium text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f]"
             >
               {item.label}
             </Link>
@@ -524,15 +604,29 @@ function FeaturedColumn({
 }) {
   return (
     <div className="min-w-0 pl-0 lg:pl-4">
-      <h3 className="font-serif text-xl font-normal tracking-tight text-[#000759] dark:text-[#c8d4ff]">{heading}</h3>
+      <h3 className="font-serif text-xl font-normal tracking-tight text-[#000759]">
+        {heading}
+      </h3>
       <Link href={href} className="mt-6 block group/card">
         <div className="relative aspect-[16/10] w-full overflow-hidden bg-zinc-100">
-          <Image src={imageSrc} alt={imageAlt} fill className="object-cover transition duration-300 group-hover/card:scale-[1.02]" sizes="(min-width: 1024px) 320px, 100vw" />
+          <Image
+            src={imageSrc}
+            alt={imageAlt}
+            fill
+            className="object-cover transition duration-300 group-hover/card:scale-[1.02]"
+            sizes="(min-width: 1024px) 320px, 100vw"
+          />
         </div>
-        <p className="mt-4 text-xs font-bold uppercase tracking-wide text-[#2563eb] dark:text-[#7ab3ff]">{tag}</p>
-        <p className="mt-2 text-lg font-bold leading-snug text-[#000759] dark:text-zinc-50">{title}</p>
-        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{excerpt}</p>
-        <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#000759] after:block after:h-px after:w-8 after:bg-[#000759] group-hover/card:opacity-80 dark:text-[#c8d4ff] dark:after:bg-[#c8d4ff]">
+        <p className="mt-4 text-xs font-bold uppercase tracking-wide text-[#000759]">
+          {tag}
+        </p>
+        <p className="mt-2 text-lg font-bold leading-snug text-[#000759]">
+          {title}
+        </p>
+        <p className="mt-1 text-sm text-[#000759]">
+          {excerpt}
+        </p>
+        <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#000759] after:block after:h-px after:w-8 after:bg-[#000759] group-hover/card:opacity-80">
           {readMore}
         </span>
       </Link>
@@ -554,14 +648,30 @@ function PhilippinesFlagIcon({ className }: { className?: string }) {
 function HamburgerIcon({ open }: { open: boolean }) {
   if (open) {
     return (
-      <svg className="cursor-pointer h-6 w-6 text-[#000759]" viewBox="0 0 24 24" aria-hidden>
-        <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <svg
+        className="cursor-pointer h-6 w-6 text-[#000759]"
+        viewBox="0 0 24 24"
+        aria-hidden
+      >
+        <path
+          d="M6 6l12 12M18 6L6 18"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
       </svg>
     );
   }
   return (
     <svg className="h-6 w-6 text-[#000759]" viewBox="0 0 24 24" aria-hidden>
-      <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path
+        d="M4 7h16M4 12h16M4 17h16"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -589,7 +699,14 @@ function MobileMenuRowArrow({ expanded }: { expanded: boolean }) {
 
 function MobileSearchIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
+    <svg
+      className={className}
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden
+    >
       <path
         d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5V10.5Z"
         stroke="currentColor"
@@ -603,8 +720,20 @@ function MobileSearchIcon({ className }: { className?: string }) {
 
 function CloseSearchIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} width="22" height="22" viewBox="0 0 24 24" aria-hidden>
-      <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
+    <svg
+      className={className}
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      aria-hidden
+    >
+      <path
+        d="M6 6l12 12M18 6L6 18"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -628,7 +757,9 @@ function MobileNavGroup({
         className="flex w-full items-center justify-between gap-4 py-5 text-left text-xl font-normal tracking-tight text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f] sm:py-6 sm:text-2xl"
         onClick={() => setExpanded((v) => !v)}
         aria-expanded={expanded}
-        {...(expanded ? { "aria-controls": `mobile-nav-section-${item.id}` } : {})}
+        {...(expanded
+          ? { "aria-controls": `mobile-nav-section-${item.id}` }
+          : {})}
       >
         <span>{item.label}</span>
         <MobileMenuRowArrow expanded={expanded} />
@@ -636,80 +767,98 @@ function MobileNavGroup({
       <div
         className={`grid transition-[grid-template-rows] duration-300 ease-in-out motion-reduce:transition-none ${expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
       >
-        <div id={`mobile-nav-section-${item.id}`} className="min-h-0 overflow-hidden">
+        <div
+          id={`mobile-nav-section-${item.id}`}
+          className="min-h-0 overflow-hidden"
+        >
           <div className="space-y-6 pb-4 pl-1">
-          {c1.kind === "accordion" && (
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wide text-zinc-500">{c1.heading}</p>
-              <ul className="mt-2 space-y-1">
-                {c1.items.map((acc) => (
-                  <li key={acc.title}>
-                    <p className="py-2 text-sm font-semibold text-[#000759]">{acc.title}</p>
-                    {acc.links && (
-                      <ul className="space-y-1 border-l-2 border-zinc-200 pl-3">
-                        {acc.links.map((l) => (
-                          <li key={l.href}>
-                            <Link
-                              href={l.href}
-                              className="block py-1.5 text-sm text-[#2563eb] transition-colors duration-200 ease-in-out hover:underline"
-                              onClick={onNavigate}
-                            >
-                              {l.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </li>
-                ))}
-              </ul>
-              {c1.viewAll && (
-                <Link
-                  href={c1.viewAll.href}
-                  className="mt-3 inline-block text-sm font-semibold text-[#000759] underline transition-opacity duration-200 ease-in-out hover:opacity-80"
-                  onClick={onNavigate}
-                >
-                  {c1.viewAll.label}
-                </Link>
-              )}
-            </div>
-          )}
-          {c2.kind === "links" && (
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wide text-zinc-500">{c2.heading}</p>
-              <ul className="mt-2">
-                {c2.items.map((l) => (
-                  <li key={l.href} className="border-b border-zinc-100 last:border-0">
-                    <Link
-                      href={l.href}
-                      className="block py-2.5 text-sm font-medium text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f]"
-                      onClick={onNavigate}
+            {c1.kind === "accordion" && (
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wide text-zinc-500">
+                  {c1.heading}
+                </p>
+                <ul className="mt-2 space-y-1">
+                  {c1.items.map((acc) => (
+                    <li key={acc.title}>
+                      <p className="py-2 text-sm font-semibold text-[#000759]">
+                        {acc.title}
+                      </p>
+                      {acc.links && (
+                        <ul className="space-y-1 border-l-2 border-zinc-200 pl-3">
+                          {acc.links.map((l) => (
+                            <li key={l.href}>
+                              <Link
+                                href={l.href}
+                                className="block py-1.5 text-sm text-[#2563eb] transition-colors duration-200 ease-in-out hover:underline"
+                                onClick={onNavigate}
+                              >
+                                {l.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+                {c1.viewAll && (
+                  <Link
+                    href={c1.viewAll.href}
+                    className="mt-3 inline-block text-sm font-semibold text-[#000759] underline transition-opacity duration-200 ease-in-out hover:opacity-80"
+                    onClick={onNavigate}
+                  >
+                    {c1.viewAll.label}
+                  </Link>
+                )}
+              </div>
+            )}
+            {c2.kind === "links" && (
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wide text-zinc-500">
+                  {c2.heading}
+                </p>
+                <ul className="mt-2">
+                  {c2.items.map((l) => (
+                    <li
+                      key={l.href}
+                      className="border-b border-zinc-100 last:border-0"
                     >
-                      {l.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {c3.kind === "featured" && (
+                      <Link
+                        href={l.href}
+                        className="block py-2.5 text-sm font-medium text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f]"
+                        onClick={onNavigate}
+                      >
+                        {l.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {c3.kind === "featured" && (
+              <Link
+                href={c3.href}
+                className="block rounded-lg border border-zinc-200 p-3 transition-colors duration-200 ease-in-out hover:border-[#000759]/30 hover:bg-zinc-50"
+                onClick={onNavigate}
+              >
+                <p className="text-xs font-bold uppercase tracking-wide text-[#2563eb]">
+                  {c3.tag}
+                </p>
+                <p className="mt-1 text-sm font-bold text-[#000759]">
+                  {c3.title}
+                </p>
+                <span className="mt-2 inline-block text-xs font-semibold text-[#000759] underline">
+                  {c3.readMore ?? "Read more"}
+                </span>
+              </Link>
+            )}
             <Link
-              href={c3.href}
-              className="block rounded-lg border border-zinc-200 p-3 transition-colors duration-200 ease-in-out hover:border-[#000759]/30 hover:bg-zinc-50"
+              href={mega.footer.buttonHref}
+              className="inline-flex w-full items-center justify-center rounded-md bg-[#000759] px-4 py-3 text-xs font-bold uppercase tracking-wider text-white"
               onClick={onNavigate}
             >
-              <p className="text-xs font-bold uppercase tracking-wide text-[#2563eb]">{c3.tag}</p>
-              <p className="mt-1 text-sm font-bold text-[#000759]">{c3.title}</p>
-              <span className="mt-2 inline-block text-xs font-semibold text-[#000759] underline">{c3.readMore ?? "Read more"}</span>
+              {mega.footer.buttonLabel}
             </Link>
-          )}
-          <Link
-            href={mega.footer.buttonHref}
-            className="inline-flex w-full items-center justify-center rounded-md bg-[#000759] px-4 py-3 text-xs font-bold uppercase tracking-wider text-white"
-            onClick={onNavigate}
-          >
-            {mega.footer.buttonLabel}
-          </Link>
           </div>
         </div>
       </div>
@@ -717,7 +866,13 @@ function MobileNavGroup({
   );
 }
 
-function MegaMenuPanel({ mega, subReveal = true }: { mega: MegaMenu; subReveal?: boolean }) {
+function MegaMenuPanel({
+  mega,
+  subReveal = true,
+}: {
+  mega: MegaMenu;
+  subReveal?: boolean;
+}) {
   const [c1, c2, c3] = mega.columns;
   if (!c1 || !c2 || !c3) return null;
 
@@ -728,13 +883,17 @@ function MegaMenuPanel({ mega, subReveal = true }: { mega: MegaMenu; subReveal?:
     `${colMotion} ${subReveal ? `translate-y-0 opacity-100 ${delayClass}` : "translate-y-2 opacity-0 delay-0 lg:[transition-delay:0ms]"}`;
 
   return (
-    <div className="border-t border-zinc-200 bg-white shadow-[0_24px_48px_-12px_rgba(0,0,0,0.12)] dark:border-white/10 dark:bg-zinc-950 dark:shadow-black/40">
+    <div className="bg-white shadow-[0_24px_48px_-12px_rgba(0,0,0,0.12)]">
       <div className="mx-auto w-full px-6">
         <div className="mx-auto w-full px-7 py-10 lg:py-12">
           <div className="grid gap-10 lg:grid-cols-[1.15fr_1fr_1fr] lg:gap-0">
             {c1.kind === "accordion" && (
               <div className={colClass("delay-0 lg:[transition-delay:0ms]")}>
-                <AccordionColumn heading={c1.heading} items={c1.items} viewAll={c1.viewAll} />
+                <AccordionColumn
+                  heading={c1.heading}
+                  items={c1.items}
+                  viewAll={c1.viewAll}
+                />
               </div>
             )}
             {c2.kind === "links" && (
@@ -743,7 +902,9 @@ function MegaMenuPanel({ mega, subReveal = true }: { mega: MegaMenu; subReveal?:
               </div>
             )}
             {c3.kind === "featured" && (
-              <div className={colClass("delay-150 lg:[transition-delay:150ms]")}>
+              <div
+                className={colClass("delay-150 lg:[transition-delay:150ms]")}
+              >
                 <FeaturedColumn
                   heading={c3.heading}
                   imageSrc={c3.imageSrc}
@@ -760,14 +921,16 @@ function MegaMenuPanel({ mega, subReveal = true }: { mega: MegaMenu; subReveal?:
         </div>
       </div>
       <div
-        className={`border-t border-zinc-200 bg-zinc-50/80 transition-[opacity,transform] duration-200 ease-in-out motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:transition-none dark:border-white/10 dark:bg-zinc-900/50 ${subReveal ? "translate-y-0 opacity-100 delay-200 lg:[transition-delay:200ms]" : "translate-y-2 opacity-0 delay-0 lg:[transition-delay:0ms]"}`}
+        className={`border-t border-zinc-200 transition-[opacity,transform] duration-200 ease-in-out motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:transition-none dark:border-white/10 ${subReveal ? "translate-y-0 opacity-100 delay-200 lg:[transition-delay:200ms]" : "translate-y-2 opacity-0 delay-0 lg:[transition-delay:0ms]"}`}
       >
         <div className="mx-auto w-full px-6 py-6">
           <div className="mx-auto flex w-full flex-col items-start justify-between gap-6 px-7 sm:flex-row sm:items-center">
-            <p className="max-w-xl font-serif text-lg text-[#000759] dark:text-[#c8d4ff]">{mega.footer.text}</p>
+            <p className="max-w-xl font-serif text-lg text-[#000759]">
+              {mega.footer.text}
+            </p>
             <Link
               href={mega.footer.buttonHref}
-              className="inline-flex shrink-0 items-center justify-center rounded-md bg-[#000759] px-8 py-3 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-[#001a8f] dark:bg-[#c8d4ff] dark:text-[#000759] dark:hover:bg-white"
+              className="inline-flex shrink-0 items-center justify-center rounded-md bg-[#000759] px-8 py-3 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-[#001a8f]"
             >
               {mega.footer.buttonLabel}
             </Link>
@@ -779,7 +942,13 @@ function MegaMenuPanel({ mega, subReveal = true }: { mega: MegaMenu; subReveal?:
 }
 
 /** Re-runs sub-item transitions when `menuId` changes (each top-level nav hover). */
-function MegaMenuHoverAnimation({ menuId, mega }: { menuId: string; mega: MegaMenu }) {
+function MegaMenuHoverAnimation({
+  menuId,
+  mega,
+}: {
+  menuId: string;
+  mega: MegaMenu;
+}) {
   const [reveal, setReveal] = useState(true);
   const prevMenuIdRef = useRef<string | null>(null);
 
@@ -829,7 +998,10 @@ function DesktopHeaderSection({
   if (desktopSearchOpen) {
     return (
       <div className="hidden min-w-0 flex-1 items-center gap-6 lg:flex">
-        <Link href="/" className="shrink-0 text-lg font-semibold tracking-tight">
+        <Link
+          href="/"
+          className="shrink-0 text-lg font-semibold tracking-tight"
+        >
           <Image
             src="/REMAX Commercial Logo.png"
             alt="RE/MAX"
@@ -860,7 +1032,7 @@ function DesktopHeaderSection({
           <button
             type="submit"
             className="shrink-0 px-3 py-2 text-[#000759] transition hover:opacity-70 cursor-pointer"
-            aria-label="Submit search"
+            aria-label="Submit search≈"
           >
             <MobileSearchIcon className="h-5 w-5" />
           </button>
@@ -880,7 +1052,10 @@ function DesktopHeaderSection({
   return (
     <div className="flex min-w-0 flex-1 items-center gap-6 lg:gap-12">
       <div className="flex min-w-0 flex-1 items-center gap-6 lg:gap-12">
-        <Link href="/" className="shrink-0 text-lg font-semibold tracking-tight">
+        <Link
+          href="/"
+          className="shrink-0 text-lg font-semibold tracking-tight"
+        >
           <Image
             src="/REMAX Commercial Logo.png"
             alt="RE/MAX"
@@ -891,10 +1066,17 @@ function DesktopHeaderSection({
           />
         </Link>
 
-        <nav aria-label="Main navigation" className={`hidden min-w-0 lg:block ${desktopSearchOpen ? "lg:hidden" : ""}`}>
+        <nav
+          aria-label="Main navigation"
+          className={`hidden min-w-0 lg:block ${desktopSearchOpen ? "lg:hidden" : ""}`}
+        >
           <ul className="flex flex-wrap items-center gap-x-6 gap-y-2 text-base font-medium text-[#000759] xl:gap-x-10 xl:text-xl">
             {navConfig.map((item) => (
-              <li key={item.id} onMouseEnter={() => onOpenMega(item.id)} className="relative">
+              <li
+                key={item.id}
+                onMouseEnter={() => onOpenMega(item.id)}
+                className="relative"
+              >
                 <Link
                   href={item.href}
                   className={`decoration-2 transition-colors duration-300 ease-in-out ${openId === item.id ? "font-semibold text-[#000759] decoration-[#000759]" : "text-[#000759] no-underline hover:underline hover:decoration-[#000759]"} after:absolute after:left-0 after:-bottom-1
@@ -973,7 +1155,9 @@ function MobileHeaderSection({
           {...(mobileOpen ? { "aria-controls": "mobile-navigation" } : {})}
           onClick={toggleMobile}
         >
-          <span className="sr-only">{mobileOpen ? "Close menu" : "Open menu"}</span>
+          <span className="sr-only">
+            {mobileOpen ? "Close menu" : "Open menu"}
+          </span>
           <HamburgerIcon open={mobileOpen} />
         </button>
       </div>
@@ -996,7 +1180,13 @@ function MobileHeaderSection({
             <div className="mx-auto w-full shrink-0 px-6">
               <div className="mx-auto flex w-full items-center justify-between gap-4 px-7 py-3 sm:py-5">
                 <Link href="/" className="shrink-0" onClick={closeMobile}>
-                  <Image src="/REMAX Commcercial Logo.png" alt="RE/MAX" width={120} height={40} className="h-8 w-auto sm:h-9" />
+                  <Image
+                    src="/REMAX Commcercial Logo.png"
+                    alt="RE/MAX"
+                    width={120}
+                    height={40}
+                    className="h-8 w-auto sm:h-9"
+                  />
                 </Link>
                 <div className="flex shrink-0 items-center gap-3">
                   <Link
@@ -1013,8 +1203,18 @@ function MobileHeaderSection({
                     onClick={closeMobile}
                     aria-label="Close menu"
                   >
-                    <svg className="cursor-pointer h-6 w-6" viewBox="0 0 24 24" aria-hidden>
-                      <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    <svg
+                      className="cursor-pointer h-6 w-6"
+                      viewBox="0 0 24 24"
+                      aria-hidden
+                    >
+                      <path
+                        d="M6 6l12 12M18 6L6 18"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                      />
                     </svg>
                   </button>
                 </div>
@@ -1023,7 +1223,11 @@ function MobileHeaderSection({
 
             <div className="mx-auto w-full shrink-0 px-6 pb-2 pt-2">
               <div className="mx-auto w-full px-7">
-                <form role="search" className="pt-1" onSubmit={(e) => e.preventDefault()}>
+                <form
+                  role="search"
+                  className="pt-1"
+                  onSubmit={(e) => e.preventDefault()}
+                >
                   <div className="ml-auto flex h-11 w-full items-center overflow-hidden border-b border-[#000759] bg-white">
                     <label className="sr-only" htmlFor="header-search-mobile">
                       Search
@@ -1037,7 +1241,11 @@ function MobileHeaderSection({
                       placeholder="What are you looking for?"
                       className="min-w-0 flex-1 border-0 bg-transparent py-1 pr-2 text-base text-[#000759] placeholder:text-[#000759]/70 outline-none"
                     />
-                    <button type="submit" className="shrink-0 px-2 py-1 text-[#000759] transition hover:opacity-70" aria-label="Submit search">
+                    <button
+                      type="submit"
+                      className="shrink-0 px-2 py-1 text-[#000759] transition hover:opacity-70"
+                      aria-label="Submit search"
+                    >
                       <MobileSearchIcon className="h-5 w-5" />
                     </button>
                   </div>
@@ -1045,15 +1253,22 @@ function MobileHeaderSection({
               </div>
             </div>
 
-            <nav className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain px-6 pb-10 pt-2" aria-label="Mobile navigation">
+            <nav
+              className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain px-6 pb-10 pt-2"
+              aria-label="Mobile navigation"
+            >
               <div className="mx-auto w-full px-7">
                 {navConfig.map((item) => (
-                  <MobileNavGroup key={item.id} item={item} onNavigate={closeMobile} />
+                  <MobileNavGroup
+                    key={item.id}
+                    item={item}
+                    onNavigate={closeMobile}
+                  />
                 ))}
               </div>
             </nav>
           </div>,
-          document.body
+          document.body,
         )}
     </>
   );
@@ -1067,7 +1282,9 @@ export default function Header() {
   const [desktopSearchOpen, setDesktopSearchOpen] = useState(false);
   const [megaPanelMega, setMegaPanelMega] = useState<MegaMenu | null>(null);
   const [megaPanelOpen, setMegaPanelOpen] = useState(false);
-  const [lastHoveredMenuId, setLastHoveredMenuId] = useState<string | null>(null);
+  const [lastHoveredMenuId, setLastHoveredMenuId] = useState<string | null>(
+    null,
+  );
   const desktopSearchInputRef = useRef<HTMLInputElement>(null);
   const mobileSearchInputRef = useRef<HTMLInputElement>(null);
 
@@ -1121,10 +1338,11 @@ export default function Header() {
   const onDesktopMegaShellTransitionEnd = useCallback(
     (e: TransitionEvent<HTMLDivElement>) => {
       if (e.target !== e.currentTarget) return;
-      if (e.propertyName !== "opacity" && e.propertyName !== "transform") return;
+      if (e.propertyName !== "opacity" && e.propertyName !== "transform")
+        return;
       if (!openId) setMegaPanelMega(null);
     },
-    [openId]
+    [openId],
   );
 
   const closeMobile = useCallback(() => setMobileOpen(false), []);
@@ -1192,7 +1410,10 @@ export default function Header() {
             aria-label="Submenu"
             onTransitionEnd={onDesktopMegaShellTransitionEnd}
           >
-            <MegaMenuHoverAnimation menuId={megaMenuAnimId} mega={megaPanelMega} />
+            <MegaMenuHoverAnimation
+              menuId={megaMenuAnimId}
+              mega={megaPanelMega}
+            />
           </div>
         )}
       </div>

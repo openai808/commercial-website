@@ -158,37 +158,37 @@ export default function HomeContact() {
 
   return (
     <>
-      <section className="relative isolate min-h-[min(100vh,450px)] w-full">
+      <section className="relative isolate flex min-h-[min(100dvh,450px)] md:min-h-[min(100dvh,640px)] w-full items-center md:block md:min-h-[min(100vh,450px)]">
         {/* overflow-hidden only on the media stack so a `fixed` FAB is not clipped by this section */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
           <img
             src={CONTACT_BG}
             alt=""
-            className="absolute inset-0 h-full w-full object-cover object-center"
+            className="absolute inset-0 h-full w-full scale-105 object-cover object-center blur-md md:scale-100 md:blur-none"
           />
           <div className="absolute inset-0 bg-slate-950/45" />
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/50 via-transparent to-slate-950/30" />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/50 via-transparent to-slate-950/30 max-md:from-slate-950/55 max-md:via-slate-950/40 max-md:to-slate-950/45" />
         </div>
 
-        <div className="relative z-10 ml-10 flex w-full max-w-3xl flex-col justify-center px-6 pb-24 pt-16 md:ml-24 md:px-10 md:pb-28 md:pt-20 lg:ml-28 lg:px-14">
-          <div className="border border-white/25 bg-white/10 px-8 py-9 text-white shadow-2xl backdrop-blur-xl supports-[backdrop-filter]:bg-white/[0.08] md:px-10 md:py-11">
-            <p className="mb-3 text-[clamp(0.65rem,0.55vw,0.75rem)] font-sans uppercase tracking-[0.22em] text-white/85">
+        <div className="relative z-10 mx-auto w-[90%] max-w-3xl px-0 md:ml-24 md:mr-auto md:w-full md:max-w-3xl md:px-10 md:pb-28 md:pt-20 lg:ml-28 lg:px-14">
+          <div className="border border-white/30 bg-white/[0.18] px-7 py-10 text-left text-white shadow-2xl backdrop-blur-2xl supports-[backdrop-filter]:bg-white/[0.12] md:border-white/25 md:bg-white/10 md:px-10 md:py-11 supports-[backdrop-filter]:md:bg-white/[0.08]">
+            <p className="mb-4 text-[0.6875rem] font-sans uppercase leading-snug tracking-[0.22em] text-white/90 md:mb-3 md:text-[clamp(0.65rem,0.55vw,0.75rem)] md:text-white/85">
               Navigate Philippines real estate
             </p>
-            <h2 className="mb-4 font-serif text-[clamp(1.65rem,3.2vw,2.65rem)] font-light leading-[1.15] tracking-tight">
+            <h2 className="mb-6 font-serif text-[clamp(1.5rem,5.5vw,2.65rem)] font-light leading-[1.12] tracking-tight md:mb-4 md:text-[clamp(1.65rem,3.2vw,2.65rem)] md:leading-[1.15]">
               End-to-end property solutions delivered by market-leading experts
             </h2>
-            <p className="mb-8 max-w-xl font-sans text-sm leading-relaxed text-white/80 md:text-base">
+            <p className="mb-8 hidden max-w-xl font-sans text-sm leading-relaxed text-white/80 md:block md:text-base">
               Tell us about your goals—leasing, investment, or advisory—and we will connect you with the right
               specialists.
             </p>
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="inline-flex cursor-pointer items-center gap-3 border-0 bg-transparent font-sans text-[clamp(0.95rem,1.4vw,1.15rem)] font-semibold text-white transition hover:opacity-85"
+              className="flex w-full cursor-pointer items-center gap-4 border-0 bg-transparent text-left font-sans text-[clamp(0.95rem,3.8vw,1.15rem)] font-semibold text-white transition hover:opacity-85 md:inline-flex md:w-auto md:gap-3 md:text-[clamp(0.95rem,1.4vw,1.15rem)]"
             >
-              Find an expert
-              <span aria-hidden className="h-px w-10 bg-current" />
+              <span className="shrink-0">Find an expert</span>
+              <span aria-hidden className="h-px min-w-[2.5rem] flex-1 bg-white md:w-10 md:flex-none" />
             </button>
           </div>
         </div>
@@ -253,7 +253,7 @@ export default function HomeContact() {
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
-            className={`relative max-h-[min(92dvh,880px)] w-full max-w-lg overflow-y-auto rounded-sm bg-white shadow-2xl transition-[opacity,transform] duration-300 motion-reduce:transition-none ${
+            className={`relative w-full max-w-3xl overflow-y-auto rounded-sm bg-white shadow-2xl transition-[opacity,transform] duration-300 motion-reduce:transition-none ${
               modalEntered
                 ? "ease-out translate-y-0 opacity-100"
                 : "ease-in -translate-y-[min(28dvh,9rem)] opacity-0"
