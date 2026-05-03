@@ -3,7 +3,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type RefObject,
+  type TransitionEvent,
+} from "react";
 import { createPortal } from "react-dom";
 
 type AccordionItem = {
@@ -401,7 +408,7 @@ function Chevron({ open }: { open: boolean }) {
       height="12"
       viewBox="0 0 12 12"
       aria-hidden
-      className={`shrink-0 text-[#000759] transition-transform ${open ? "rotate-180" : ""}`}
+      className={`shrink-0 text-[#000759] transition-transform duration-200 ease-in-out ${open ? "rotate-180" : ""}`}
     >
       <path d="M2 4.5L6 8.5L10 4.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
     </svg>
@@ -430,7 +437,7 @@ function AccordionColumn({
             <li key={item.title} className="border-b border-zinc-200 first:border-t">
               <button
                 type="button"
-                className="flex w-full items-center justify-between gap-3 py-4 text-left text-base font-medium text-[#000759] transition hover:text-[#001a8f] dark:text-zinc-100 dark:hover:text-white"
+                className="flex w-full items-center justify-between gap-3 py-4 text-left text-base font-medium text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f] dark:text-zinc-100 dark:hover:text-white"
                 onClick={() => setOpenIndex(isExpanded ? -1 : i)}
                 aria-expanded={isExpanded}
                 {...(item.links?.length ? { "aria-controls": sublistId } : {})}
@@ -439,15 +446,26 @@ function AccordionColumn({
                 <Chevron open={isExpanded} />
               </button>
               {item.links && item.links.length > 0 && (
-                <ul id={sublistId} hidden={!isExpanded} className="space-y-2 pb-4 pl-0">
-                  {item.links.map((l) => (
-                    <li key={l.href}>
-                      <Link href={l.href} className="text-sm font-medium text-[#2563eb] hover:underline dark:text-[#7ab3ff]">
-                        {l.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+                <div
+                  className={`grid transition-[grid-template-rows] duration-300 ease-in-out motion-reduce:transition-none ${
+                    isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                  }`}
+                >
+                  <div className="min-h-0 overflow-hidden">
+                    <ul id={sublistId} aria-hidden={!isExpanded} className="space-y-2 pb-4 pl-0">
+                      {item.links.map((l) => (
+                        <li key={l.href}>
+                          <Link
+                            href={l.href}
+                            className="text-sm font-medium text-[#2563eb] transition-colors duration-200 ease-in-out hover:underline dark:text-[#7ab3ff]"
+                          >
+                            {l.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
               )}
             </li>
           );
@@ -456,7 +474,7 @@ function AccordionColumn({
       {viewAll && (
         <Link
           href={viewAll.href}
-          className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#000759] after:block after:h-px after:w-8 after:bg-[#000759] hover:opacity-80 dark:text-[#c8d4ff] dark:after:bg-[#c8d4ff]"
+          className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#000759] transition-opacity duration-200 ease-in-out after:block after:h-px after:w-8 after:bg-[#000759] hover:opacity-80 dark:text-[#c8d4ff] dark:after:bg-[#c8d4ff]"
         >
           {viewAll.label}
         </Link>
@@ -474,7 +492,7 @@ function LinksColumn({ heading, items }: { heading: string; items: { label: stri
           <li key={item.href} className="border-b border-zinc-200 first:border-t">
             <Link
               href={item.href}
-              className="block py-4 text-base font-medium text-[#000759] transition hover:text-[#001a8f] dark:text-zinc-100 dark:hover:text-white"
+              className="block py-4 text-base font-medium text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f] dark:text-zinc-100 dark:hover:text-white"
             >
               {item.label}
             </Link>
@@ -555,7 +573,7 @@ function MobileMenuRowArrow({ expanded }: { expanded: boolean }) {
       height="22"
       viewBox="0 0 24 24"
       aria-hidden
-      className={`cursor-pointer shrink-0 text-[#000759] transition-transform duration-200 ${expanded ? "rotate-90" : ""}`}
+      className={`cursor-pointer shrink-0 text-[#000759] transition-transform duration-200 ease-in-out ${expanded ? "rotate-90" : ""}`}
     >
       <path
         d="M5 12h14M13 6l6 6-6 6"
@@ -607,7 +625,7 @@ function MobileNavGroup({
     <div className="border-b border-[#000759]/25">
       <button
         type="button"
-        className="flex w-full items-center justify-between gap-4 py-5 text-left text-xl font-normal tracking-tight text-[#000759] sm:py-6 sm:text-2xl"
+        className="flex w-full items-center justify-between gap-4 py-5 text-left text-xl font-normal tracking-tight text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f] sm:py-6 sm:text-2xl"
         onClick={() => setExpanded((v) => !v)}
         aria-expanded={expanded}
         {...(expanded ? { "aria-controls": `mobile-nav-section-${item.id}` } : {})}
@@ -615,8 +633,11 @@ function MobileNavGroup({
         <span>{item.label}</span>
         <MobileMenuRowArrow expanded={expanded} />
       </button>
-      {expanded && (
-        <div id={`mobile-nav-section-${item.id}`} className="space-y-6 pb-4 pl-1">
+      <div
+        className={`grid transition-[grid-template-rows] duration-300 ease-in-out motion-reduce:transition-none ${expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+      >
+        <div id={`mobile-nav-section-${item.id}`} className="min-h-0 overflow-hidden">
+          <div className="space-y-6 pb-4 pl-1">
           {c1.kind === "accordion" && (
             <div>
               <p className="text-xs font-bold uppercase tracking-wide text-zinc-500">{c1.heading}</p>
@@ -630,7 +651,7 @@ function MobileNavGroup({
                           <li key={l.href}>
                             <Link
                               href={l.href}
-                              className="block py-1.5 text-sm text-[#2563eb] hover:underline"
+                              className="block py-1.5 text-sm text-[#2563eb] transition-colors duration-200 ease-in-out hover:underline"
                               onClick={onNavigate}
                             >
                               {l.label}
@@ -645,7 +666,7 @@ function MobileNavGroup({
               {c1.viewAll && (
                 <Link
                   href={c1.viewAll.href}
-                  className="mt-3 inline-block text-sm font-semibold text-[#000759] underline"
+                  className="mt-3 inline-block text-sm font-semibold text-[#000759] underline transition-opacity duration-200 ease-in-out hover:opacity-80"
                   onClick={onNavigate}
                 >
                   {c1.viewAll.label}
@@ -661,7 +682,7 @@ function MobileNavGroup({
                   <li key={l.href} className="border-b border-zinc-100 last:border-0">
                     <Link
                       href={l.href}
-                      className="block py-2.5 text-sm font-medium text-[#000759]"
+                      className="block py-2.5 text-sm font-medium text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f]"
                       onClick={onNavigate}
                     >
                       {l.label}
@@ -672,7 +693,11 @@ function MobileNavGroup({
             </div>
           )}
           {c3.kind === "featured" && (
-            <Link href={c3.href} className="block rounded-lg border border-zinc-200 p-3" onClick={onNavigate}>
+            <Link
+              href={c3.href}
+              className="block rounded-lg border border-zinc-200 p-3 transition-colors duration-200 ease-in-out hover:border-[#000759]/30 hover:bg-zinc-50"
+              onClick={onNavigate}
+            >
               <p className="text-xs font-bold uppercase tracking-wide text-[#2563eb]">{c3.tag}</p>
               <p className="mt-1 text-sm font-bold text-[#000759]">{c3.title}</p>
               <span className="mt-2 inline-block text-xs font-semibold text-[#000759] underline">{c3.readMore ?? "Read more"}</span>
@@ -685,53 +710,105 @@ function MobileNavGroup({
           >
             {mega.footer.buttonLabel}
           </Link>
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
 
-function MegaMenuPanel({ mega }: { mega: MegaMenu }) {
+function MegaMenuPanel({ mega, subReveal = true }: { mega: MegaMenu; subReveal?: boolean }) {
   const [c1, c2, c3] = mega.columns;
   if (!c1 || !c2 || !c3) return null;
+
+  const colMotion =
+    "transition-[opacity,transform] duration-200 ease-in-out motion-reduce:transition-none motion-reduce:translate-y-0 motion-reduce:opacity-100";
+
+  const colClass = (delayClass: string) =>
+    `${colMotion} ${subReveal ? `translate-y-0 opacity-100 ${delayClass}` : "translate-y-2 opacity-0 delay-0 lg:[transition-delay:0ms]"}`;
 
   return (
     <div className="border-t border-zinc-200 bg-white shadow-[0_24px_48px_-12px_rgba(0,0,0,0.12)] dark:border-white/10 dark:bg-zinc-950 dark:shadow-black/40">
       <div className="mx-auto w-full px-6">
         <div className="mx-auto w-full px-7 py-10 lg:py-12">
-        <div className="grid gap-10 lg:grid-cols-[1.15fr_1fr_1fr] lg:gap-0">
-          {c1.kind === "accordion" && <AccordionColumn heading={c1.heading} items={c1.items} viewAll={c1.viewAll} />}
-          {c2.kind === "links" && <LinksColumn heading={c2.heading} items={c2.items} />}
-          {c3.kind === "featured" && (
-            <FeaturedColumn
-              heading={c3.heading}
-              imageSrc={c3.imageSrc}
-              imageAlt={c3.imageAlt}
-              tag={c3.tag}
-              title={c3.title}
-              excerpt={c3.excerpt}
-              href={c3.href}
-              readMore={c3.readMore}
-            />
-          )}
-        </div>
+          <div className="grid gap-10 lg:grid-cols-[1.15fr_1fr_1fr] lg:gap-0">
+            {c1.kind === "accordion" && (
+              <div className={colClass("delay-0 lg:[transition-delay:0ms]")}>
+                <AccordionColumn heading={c1.heading} items={c1.items} viewAll={c1.viewAll} />
+              </div>
+            )}
+            {c2.kind === "links" && (
+              <div className={colClass("delay-75 lg:[transition-delay:75ms]")}>
+                <LinksColumn heading={c2.heading} items={c2.items} />
+              </div>
+            )}
+            {c3.kind === "featured" && (
+              <div className={colClass("delay-150 lg:[transition-delay:150ms]")}>
+                <FeaturedColumn
+                  heading={c3.heading}
+                  imageSrc={c3.imageSrc}
+                  imageAlt={c3.imageAlt}
+                  tag={c3.tag}
+                  title={c3.title}
+                  excerpt={c3.excerpt}
+                  href={c3.href}
+                  readMore={c3.readMore}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
-      <div className="border-t border-zinc-200 bg-zinc-50/80 dark:border-white/10 dark:bg-zinc-900/50">
+      <div
+        className={`border-t border-zinc-200 bg-zinc-50/80 transition-[opacity,transform] duration-200 ease-in-out motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:transition-none dark:border-white/10 dark:bg-zinc-900/50 ${subReveal ? "translate-y-0 opacity-100 delay-200 lg:[transition-delay:200ms]" : "translate-y-2 opacity-0 delay-0 lg:[transition-delay:0ms]"}`}
+      >
         <div className="mx-auto w-full px-6 py-6">
-        <div className="mx-auto flex w-full flex-col items-start justify-between gap-6 px-7 sm:flex-row sm:items-center">
-          <p className="max-w-xl font-serif text-lg text-[#000759] dark:text-[#c8d4ff]">{mega.footer.text}</p>
-          <Link
-            href={mega.footer.buttonHref}
-            className="inline-flex shrink-0 items-center justify-center rounded-md bg-[#000759] px-8 py-3 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-[#001a8f] dark:bg-[#c8d4ff] dark:text-[#000759] dark:hover:bg-white"
-          >
-            {mega.footer.buttonLabel}
-          </Link>
-        </div>
+          <div className="mx-auto flex w-full flex-col items-start justify-between gap-6 px-7 sm:flex-row sm:items-center">
+            <p className="max-w-xl font-serif text-lg text-[#000759] dark:text-[#c8d4ff]">{mega.footer.text}</p>
+            <Link
+              href={mega.footer.buttonHref}
+              className="inline-flex shrink-0 items-center justify-center rounded-md bg-[#000759] px-8 py-3 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-[#001a8f] dark:bg-[#c8d4ff] dark:text-[#000759] dark:hover:bg-white"
+            >
+              {mega.footer.buttonLabel}
+            </Link>
+          </div>
         </div>
       </div>
     </div>
   );
+}
+
+/** Re-runs sub-item transitions when `menuId` changes (each top-level nav hover). */
+function MegaMenuHoverAnimation({ menuId, mega }: { menuId: string; mega: MegaMenu }) {
+  const [reveal, setReveal] = useState(true);
+  const prevMenuIdRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (prevMenuIdRef.current === null) {
+      prevMenuIdRef.current = menuId;
+      setReveal(true);
+      return;
+    }
+    if (prevMenuIdRef.current === menuId) return;
+    prevMenuIdRef.current = menuId;
+
+    let raf1 = 0;
+    let raf2 = 0;
+    let raf3 = 0;
+    raf1 = requestAnimationFrame(() => {
+      setReveal(false);
+      raf2 = requestAnimationFrame(() => {
+        raf3 = requestAnimationFrame(() => setReveal(true));
+      });
+    });
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+      cancelAnimationFrame(raf3);
+    };
+  }, [menuId]);
+
+  return <MegaMenuPanel mega={mega} subReveal={reveal} />;
 }
 
 function DesktopHeaderSection({
@@ -820,10 +897,10 @@ function DesktopHeaderSection({
               <li key={item.id} onMouseEnter={() => onOpenMega(item.id)} className="relative">
                 <Link
                   href={item.href}
-                  className={`decoration-2 transition-colors ${openId === item.id ? "font-semibold text-[#000759] decoration-[#000759]" : "text-[#000759] no-underline hover:underline hover:decoration-[#000759]"} after:absolute after:left-0 after:-bottom-1
+                  className={`decoration-2 transition-colors duration-300 ease-in-out ${openId === item.id ? "font-semibold text-[#000759] decoration-[#000759]" : "text-[#000759] no-underline hover:underline hover:decoration-[#000759]"} after:absolute after:left-0 after:-bottom-1
                   after:h-[2px] after:w-0 after:bg-[#000759]
-                  after:transition-all after:duration-300
-                  hover:after:w-full hover:font-bold"`}
+                  after:transition-all after:duration-300 after:ease-in-out
+                  hover:after:w-full hover:font-bold`}
                 >
                   {item.label}
                 </Link>
@@ -860,6 +937,32 @@ function MobileHeaderSection({
   closeMobile: () => void;
   toggleMobile: () => void;
 }) {
+  const [portalMounted, setPortalMounted] = useState(false);
+  const [panelVisible, setPanelVisible] = useState(false);
+
+  useEffect(() => {
+    let raf1 = 0;
+    let raf2 = 0;
+    if (mobileOpen) {
+      raf1 = requestAnimationFrame(() => {
+        setPortalMounted(true);
+        raf2 = requestAnimationFrame(() => setPanelVisible(true));
+      });
+    } else {
+      raf1 = requestAnimationFrame(() => setPanelVisible(false));
+    }
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+    };
+  }, [mobileOpen]);
+
+  const onMobilePanelTransitionEnd = (e: TransitionEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) return;
+    if (e.propertyName !== "opacity") return;
+    if (!mobileOpen) setPortalMounted(false);
+  };
+
   return (
     <>
       <div className="flex items-center gap-3 lg:hidden">
@@ -876,14 +979,19 @@ function MobileHeaderSection({
       </div>
 
       {mounted &&
-        mobileOpen &&
+        portalMounted &&
         createPortal(
           <div
             id="mobile-navigation"
-            className="fixed inset-0 z-[200] flex max-h-[100dvh] flex-col bg-white text-[#000759] lg:hidden"
+            className={`fixed inset-0 z-[200] flex max-h-[100dvh] flex-col bg-white text-[#000759] transition-[opacity,transform] duration-300 ease-in-out motion-reduce:transition-none lg:hidden ${
+              panelVisible
+                ? "translate-y-0 opacity-100 motion-reduce:translate-y-0"
+                : "pointer-events-none translate-y-2 opacity-0 motion-reduce:translate-y-0"
+            }`}
             role="dialog"
             aria-modal="true"
             aria-label="Menu"
+            onTransitionEnd={onMobilePanelTransitionEnd}
           >
             <div className="mx-auto w-full shrink-0 px-6">
               <div className="mx-auto flex w-full items-center justify-between gap-4 px-7 py-3 sm:py-5">
@@ -957,6 +1065,9 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [desktopSearchOpen, setDesktopSearchOpen] = useState(false);
+  const [megaPanelMega, setMegaPanelMega] = useState<MegaMenu | null>(null);
+  const [megaPanelOpen, setMegaPanelOpen] = useState(false);
+  const [lastHoveredMenuId, setLastHoveredMenuId] = useState<string | null>(null);
   const desktopSearchInputRef = useRef<HTMLInputElement>(null);
   const mobileSearchInputRef = useRef<HTMLInputElement>(null);
 
@@ -980,12 +1091,41 @@ export default function Header() {
   }, [desktopSearchOpen]);
 
   const handleEnter = useCallback((id: string) => {
+    setLastHoveredMenuId(id);
     setOpenId(id);
   }, []);
 
   const handleLeave = useCallback(() => {
     setOpenId(null);
   }, []);
+
+  useEffect(() => {
+    let raf1 = 0;
+    let raf2 = 0;
+    if (openId) {
+      const mega = navConfig.find((n) => n.id === openId)?.mega ?? null;
+      if (!mega) return;
+      raf1 = requestAnimationFrame(() => {
+        setMegaPanelMega(mega);
+        raf2 = requestAnimationFrame(() => setMegaPanelOpen(true));
+      });
+    } else {
+      raf1 = requestAnimationFrame(() => setMegaPanelOpen(false));
+    }
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+    };
+  }, [openId]);
+
+  const onDesktopMegaShellTransitionEnd = useCallback(
+    (e: TransitionEvent<HTMLDivElement>) => {
+      if (e.target !== e.currentTarget) return;
+      if (e.propertyName !== "opacity" && e.propertyName !== "transform") return;
+      if (!openId) setMegaPanelMega(null);
+    },
+    [openId]
+  );
 
   const closeMobile = useCallback(() => setMobileOpen(false), []);
 
@@ -1007,7 +1147,7 @@ export default function Header() {
     };
   }, [mobileOpen, closeMobile]);
 
-  const openMega = openId ? navConfig.find((n) => n.id === openId)?.mega : null;
+  const megaMenuAnimId = openId ?? lastHoveredMenuId ?? "";
 
   return (
     <header className="sticky top-0 z-50 border-b border-black/10 bg-white dark:border-white/15 dark:bg-white">
@@ -1041,9 +1181,18 @@ export default function Header() {
           </div>
         </div>
 
-        {openMega && (
-          <div className="absolute left-0 right-0 top-full hidden lg:block" role="region" aria-label="Submenu">
-            <MegaMenuPanel mega={openMega} />
+        {megaPanelMega && (
+          <div
+            className={`absolute left-0 right-0 top-full hidden origin-top transition-[opacity,transform] duration-200 ease-in-out motion-reduce:transition-none lg:block ${
+              megaPanelOpen
+                ? "pointer-events-auto translate-y-0 opacity-100 motion-reduce:translate-y-0"
+                : "pointer-events-none -translate-y-2 opacity-0 motion-reduce:translate-y-0"
+            }`}
+            role="region"
+            aria-label="Submenu"
+            onTransitionEnd={onDesktopMegaShellTransitionEnd}
+          >
+            <MegaMenuHoverAnimation menuId={megaMenuAnimId} mega={megaPanelMega} />
           </div>
         )}
       </div>
