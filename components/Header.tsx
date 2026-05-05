@@ -634,17 +634,6 @@ function FeaturedColumn({
   );
 }
 
-function PhilippinesFlagIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 900 600" className={className} aria-hidden>
-      <rect fill="#0038a8" width="900" height="300" />
-      <rect fill="#ce1126" y="300" width="900" height="300" />
-      <path fill="#fff" d="M0 0 L450 300 L0 600Z" />
-      <circle fill="#fcd116" cx="180" cy="300" r="65" />
-    </svg>
-  );
-}
-
 function HamburgerIcon({ open }: { open: boolean }) {
   if (open) {
     return (
@@ -1181,7 +1170,7 @@ function MobileHeaderSection({
               <div className="mx-auto flex w-full items-center justify-between gap-4 px-7 py-3 sm:py-5">
                 <Link href="/" className="shrink-0" onClick={closeMobile}>
                   <Image
-                    src="/REMAX Commcercial Logo.png"
+                    src="/REMAX Commercial Logo.png"
                     alt="RE/MAX"
                     width={120}
                     height={40}
@@ -1189,14 +1178,6 @@ function MobileHeaderSection({
                   />
                 </Link>
                 <div className="flex shrink-0 items-center gap-3">
-                  <Link
-                    href="/office-locations"
-                    className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-zinc-200 bg-white shadow-sm ring-1 ring-black/5"
-                    aria-label="Philippines — office locations"
-                    onClick={closeMobile}
-                  >
-                    <PhilippinesFlagIcon className="h-full min-h-[2.5rem] w-[140%] max-w-none -translate-x-[12%]" />
-                  </Link>
                   <button
                     type="button"
                     className="cursor-pointer flex h-10 w-10 items-center justify-center rounded-md text-[#000759] transition hover:bg-zinc-100"
@@ -1279,6 +1260,7 @@ export default function Header() {
   const [openId, setOpenId] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [desktopSearchOpen, setDesktopSearchOpen] = useState(false);
   const [megaPanelMega, setMegaPanelMega] = useState<MegaMenu | null>(null);
   const [megaPanelOpen, setMegaPanelOpen] = useState(false);
@@ -1290,6 +1272,16 @@ export default function Header() {
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 0);
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
@@ -1368,7 +1360,11 @@ export default function Header() {
   const megaMenuAnimId = openId ?? lastHoveredMenuId ?? "";
 
   return (
-    <header className="sticky top-0 z-50 border-b border-black/10 bg-white dark:border-white/15 dark:bg-white">
+    <header
+      className={`sticky top-0 z-50 border-b border-black/10 bg-white transition-[box-shadow] duration-200 dark:border-white/15 dark:bg-white ${
+        scrolled ? "shadow-sm" : ""
+      }`}
+    >
       <div className="relative" onMouseLeave={handleLeave}>
         <div className="mx-auto w-full px-6">
           <div

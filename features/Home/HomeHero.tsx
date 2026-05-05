@@ -56,7 +56,7 @@ export default function HomeHero() {
   }, [activeIndex]);
 
   return (
-    <section className="relative h-[35vh] md:h-[65vh] w-full overflow-hidden">
+    <section className="relative h-[55vh] sm:h-[35vh] md:h-[65vh] w-full overflow-hidden">
       {HERO_SLIDES.map((slide, index) => {
         const isActive = index === activeIndex;
 
@@ -148,10 +148,14 @@ export default function HomeHero() {
         </h1>
         <button
           type="button"
-          className="inline-flex items-center gap-3 text-[clamp(0.95rem,1.5vw,1.5rem)] font-semibold hover:opacity-80"
+          className="group inline-flex items-center gap-4 text-[clamp(0.95rem,1.5vw,1.5rem)] font-semibold text-white transition-colors duration-300 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
         >
+          <span
+            aria-hidden="true"
+            className="h-px w-0 shrink-0 bg-current transition-[width] duration-300 ease-out group-hover:w-10 group-focus-visible:w-10"
+          />
           {activeSlide.cta}
-          <span aria-hidden="true" className="h-px w-9 bg-current" />
+          <span aria-hidden="true" className="h-px w-10 shrink-0 bg-current" />
         </button>
       </div>
     </section>

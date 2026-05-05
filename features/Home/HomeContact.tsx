@@ -170,7 +170,7 @@ export default function HomeContact() {
           <div className="absolute inset-0 bg-gradient-to-r from-slate-950/50 via-transparent to-slate-950/30 max-md:from-slate-950/55 max-md:via-slate-950/40 max-md:to-slate-950/45" />
         </div>
 
-        <div className="relative z-10 mx-auto w-[90%] max-w-3xl px-0 md:ml-24 md:mr-auto md:w-full md:max-w-3xl md:px-10 md:pb-28 md:pt-20 lg:ml-28 lg:px-14">
+        <div className="relative z-10 mx-auto w-[90%] max-w-3xl px-0 md:mr-auto md:w-full md:max-w-3xl md:px-10 md:pb-28 md:pt-20 lg:ml-28 lg:px-14">
           <div className="border border-white/30 bg-white/[0.18] px-7 py-10 text-left text-white shadow-2xl backdrop-blur-2xl supports-[backdrop-filter]:bg-white/[0.12] md:border-white/25 md:bg-white/10 md:px-10 md:py-11 supports-[backdrop-filter]:md:bg-white/[0.08]">
             <p className="mb-4 text-[0.6875rem] font-sans uppercase leading-snug tracking-[0.22em] text-white/90 md:mb-3 md:text-[clamp(0.65rem,0.55vw,0.75rem)] md:text-white/85">
               Navigate Philippines real estate
@@ -239,7 +239,7 @@ export default function HomeContact() {
 
       {modalMounted ? (
         <div
-          className={`fixed inset-0 z-[250] flex items-center justify-center bg-black/45 p-4 sm:p-6 transition-opacity duration-300 motion-reduce:transition-none ${
+          className={`fixed inset-0 z-[250] flex items-start justify-center overflow-y-auto bg-black/45 px-3 py-3 sm:items-center sm:p-6 transition-opacity duration-300 motion-reduce:transition-none ${
             modalEntered ? "ease-out opacity-100" : "ease-in opacity-0"
           } ${modalEntered ? "pointer-events-auto" : "pointer-events-none"}`}
           role="presentation"
@@ -253,7 +253,7 @@ export default function HomeContact() {
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
-            className={`relative w-full max-w-3xl overflow-y-auto rounded-sm bg-white shadow-2xl transition-[opacity,transform] duration-300 motion-reduce:transition-none ${
+            className={`relative w-full max-w-3xl overflow-y-auto rounded-sm bg-white shadow-2xl max-h-[calc(100dvh-1.5rem)] sm:max-h-[calc(100dvh-3rem)] transition-[opacity,transform] duration-300 motion-reduce:transition-none ${
               modalEntered
                 ? "ease-out translate-y-0 opacity-100"
                 : "ease-in -translate-y-[min(28dvh,9rem)] opacity-0"

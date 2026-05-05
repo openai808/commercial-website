@@ -41,6 +41,11 @@ function wheelDeltaPixels(e: WheelEvent): number {
 export default function HomeNewsInsights() {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const dragStateRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startScrollLeft: number;
+  } | null>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [centeredIndex, setCenteredIndex] = useState(0);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -160,6 +165,39 @@ export default function HomeNewsInsights() {
     }
   };
 
+  const onScrollerPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse") return;
+    const scroller = scrollerRef.current;
+    if (!scroller || scroller.scrollWidth <= scroller.clientWidth) return;
+    e.preventDefault();
+    dragStateRef.current = {
+      pointerId: e.pointerId,
+      startX: e.clientX,
+      startScrollLeft: scroller.scrollLeft,
+    };
+    scroller.setPointerCapture(e.pointerId);
+  };
+
+  const onScrollerPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const drag = dragStateRef.current;
+    const scroller = scrollerRef.current;
+    if (!drag || !scroller || drag.pointerId !== e.pointerId) return;
+    const deltaX = e.clientX - drag.startX;
+    scroller.scrollLeft = drag.startScrollLeft - deltaX;
+  };
+
+  const endScrollerDrag = (e: React.PointerEvent<HTMLDivElement>) => {
+    const scroller = scrollerRef.current;
+    const drag = dragStateRef.current;
+    if (!scroller || !drag || drag.pointerId !== e.pointerId) return;
+    try {
+      scroller.releasePointerCapture(e.pointerId);
+    } catch {
+      /* capture already released */
+    }
+    dragStateRef.current = null;
+  };
+
   return (
     <section className="min-w-0 bg-white py-16 md:py-24">
       <div className="mx-auto w-full max-w-full px-6 sm:px-8 lg:px-12">
@@ -174,10 +212,14 @@ export default function HomeNewsInsights() {
       <div
         ref={scrollerRef}
         id="home-news-insights-scroller"
-        className="mt-10 flex w-full min-w-0 snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden scroll-smooth px-6 pb-10 [-webkit-overflow-scrolling:touch] sm:px-8 sm:pb-12 lg:px-12 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+        className="mt-10 flex w-full min-w-0 snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden scroll-smooth px-6 pb-10 [-webkit-overflow-scrolling:touch] sm:px-8 sm:pb-12 lg:px-12 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] md:cursor-grab md:select-none active:md:cursor-grabbing"
         role="region"
         aria-label="News and insights articles"
         onMouseLeave={() => setHoveredIndex(null)}
+        onPointerDown={onScrollerPointerDown}
+        onPointerMove={onScrollerPointerMove}
+        onPointerUp={endScrollerDrag}
+        onPointerCancel={endScrollerDrag}
       >
         {NEWS_ITEMS.map((item, index) => {
           const isHighlighted = index === highlightedIndex;

@@ -94,10 +94,17 @@ function CtaLink({ href, children }: { href: string; children: ReactNode }) {
   return (
     <Link
       href={href}
-      className="group inline-flex items-center gap-3 text-sm font-semibold text-[#233d83] underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#233d83]"
+      className="group inline-flex items-center gap-4 text-sm font-semibold text-[#233d83] transition-colors duration-300 ease-out hover:text-[#2f5fe3] focus-visible:text-[#2f5fe3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#233d83]"
     >
+      <span
+        className="h-px w-0 shrink-0 bg-current transition-[width] duration-300 ease-out group-hover:w-10 group-focus-visible:w-10"
+        aria-hidden
+      />
       <span>{children}</span>
-      <span className="h-px w-10 shrink-0 bg-[#233d83] transition-[width] group-hover:w-14" aria-hidden />
+      <span
+        className="h-px w-10 shrink-0 bg-current"
+        aria-hidden
+      />
     </Link>
   );
 }
