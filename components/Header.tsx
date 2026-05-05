@@ -45,6 +45,19 @@ type MegaMenu = {
 
 type NavItem = { id: string; href: string; label: string; mega: MegaMenu };
 
+/** Edge Tools ARIA rule expects concrete "true" | "false" tokens, not boolean JSX props. */
+function ariaExpandedProps(expanded: boolean) {
+  return expanded
+    ? { "aria-expanded": "true" as const }
+    : { "aria-expanded": "false" as const };
+}
+
+function ariaHiddenProps(hidden: boolean) {
+  return hidden
+    ? { "aria-hidden": "true" as const }
+    : { "aria-hidden": "false" as const };
+}
+
 const navConfig: NavItem[] = [
   {
     id: "services",
@@ -504,7 +517,7 @@ function AccordionColumn({
                 type="button"
                 className="flex w-full items-center justify-between gap-3 py-4 text-left text-base font-medium text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f]"
                 onClick={() => setOpenIndex(isExpanded ? -1 : i)}
-                aria-expanded={isExpanded}
+                {...ariaExpandedProps(isExpanded)}
                 {...(item.links?.length ? { "aria-controls": sublistId } : {})}
               >
                 <span>{item.title}</span>
@@ -519,7 +532,7 @@ function AccordionColumn({
                   <div className="min-h-0 overflow-hidden">
                     <ul
                       id={sublistId}
-                      aria-hidden={!isExpanded}
+                      {...ariaHiddenProps(!isExpanded)}
                       className="space-y-2 pb-4 pl-0"
                     >
                       {item.links.map((l) => (
@@ -745,7 +758,7 @@ function MobileNavGroup({
         type="button"
         className="flex w-full items-center justify-between gap-4 py-5 text-left text-xl font-normal tracking-tight text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f] sm:py-6 sm:text-2xl"
         onClick={() => setExpanded((v) => !v)}
-        aria-expanded={expanded}
+        {...ariaExpandedProps(expanded)}
         {...(expanded
           ? { "aria-controls": `mobile-nav-section-${item.id}` }
           : {})}
@@ -974,6 +987,7 @@ function DesktopHeaderSection({
   desktopSearchOpen,
   desktopSearchInputRef,
   onOpenMega,
+  onCloseMega,
   onOpenSearch,
   onCloseSearch,
 }: {
@@ -981,6 +995,7 @@ function DesktopHeaderSection({
   desktopSearchOpen: boolean;
   desktopSearchInputRef: RefObject<HTMLInputElement | null>;
   onOpenMega: (id: string) => void;
+  onCloseMega: () => void;
   onOpenSearch: () => void;
   onCloseSearch: () => void;
 }) {
@@ -990,6 +1005,7 @@ function DesktopHeaderSection({
         <Link
           href="/"
           className="shrink-0 text-lg font-semibold tracking-tight"
+          onClick={onCloseMega}
         >
           <Image
             src="/REMAX Commercial Logo.png"
@@ -1044,6 +1060,7 @@ function DesktopHeaderSection({
         <Link
           href="/"
           className="shrink-0 text-lg font-semibold tracking-tight"
+          onClick={onCloseMega}
         >
           <Image
             src="/REMAX Commercial Logo.png"
@@ -1068,6 +1085,7 @@ function DesktopHeaderSection({
               >
                 <Link
                   href={item.href}
+                  onClick={onCloseMega}
                   className={`decoration-2 transition-colors duration-300 ease-in-out ${openId === item.id ? "font-semibold text-[#000759] decoration-[#000759]" : "text-[#000759] no-underline hover:underline hover:decoration-[#000759]"} after:absolute after:left-0 after:-bottom-1
                   after:h-[2px] after:w-0 after:bg-[#000759]
                   after:transition-all after:duration-300 after:ease-in-out
@@ -1099,12 +1117,14 @@ function MobileHeaderSection({
   mounted,
   mobileOpen,
   mobileSearchInputRef,
+  pathname,
   closeMobile,
   toggleMobile,
 }: {
   mounted: boolean;
   mobileOpen: boolean;
   mobileSearchInputRef: RefObject<HTMLInputElement | null>;
+  pathname: string;
   closeMobile: () => void;
   toggleMobile: () => void;
 }) {
@@ -1140,7 +1160,7 @@ function MobileHeaderSection({
         <button
           type="button"
           className="flex h-10 w-10 items-center justify-center rounded-md text-[#000759] transition hover:bg-zinc-100"
-          aria-expanded={mobileOpen}
+          {...ariaExpandedProps(mobileOpen)}
           {...(mobileOpen ? { "aria-controls": "mobile-navigation" } : {})}
           onClick={toggleMobile}
         >
@@ -1238,7 +1258,7 @@ function MobileHeaderSection({
               className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain px-6 pb-10 pt-2"
               aria-label="Mobile navigation"
             >
-              <div className="mx-auto w-full px-7">
+              <div className="mx-auto w-full px-7" key={pathname}>
                 {navConfig.map((item) => (
                   <MobileNavGroup
                     key={item.id}
@@ -1339,8 +1359,11 @@ export default function Header() {
 
   const closeMobile = useCallback(() => setMobileOpen(false), []);
 
+  const closeDesktopMega = useCallback(() => setOpenId(null), []);
+
   useEffect(() => {
     closeMobile();
+    setOpenId(null);
   }, [pathname, closeMobile]);
 
   useEffect(() => {
@@ -1376,6 +1399,7 @@ export default function Header() {
               desktopSearchOpen={desktopSearchOpen}
               desktopSearchInputRef={desktopSearchInputRef}
               onOpenMega={handleEnter}
+              onCloseMega={closeDesktopMega}
               onOpenSearch={() => {
                 setOpenId(null);
                 setDesktopSearchOpen(true);
@@ -1388,6 +1412,7 @@ export default function Header() {
                 mounted={mounted}
                 mobileOpen={mobileOpen}
                 mobileSearchInputRef={mobileSearchInputRef}
+                pathname={pathname}
                 closeMobile={closeMobile}
                 toggleMobile={() => setMobileOpen((o) => !o)}
               />

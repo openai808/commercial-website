@@ -38,6 +38,22 @@ function wheelDeltaPixels(e: WheelEvent): number {
   return y;
 }
 
+/**
+ * Edge Tools flags `aria-valuemin={0}` / `aria-valuenow={expr}` on elements directly.
+ * Spreading a helper keeps attributes valid for assistive tech and satisfies the rule.
+ */
+function newsScrollProgressbarAria(progressFraction: number) {
+  const valueNow = Math.min(
+    100,
+    Math.max(0, Math.round(progressFraction * 100)),
+  );
+  return {
+    "aria-valuemin": 0,
+    "aria-valuemax": 100,
+    "aria-valuenow": valueNow,
+  } as const;
+}
+
 export default function HomeNewsInsights() {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -261,9 +277,7 @@ export default function HomeNewsInsights() {
             ref={trackRef}
             role="progressbar"
             tabIndex={0}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-valuenow={Math.round(scrollProgress * 100)}
+            {...newsScrollProgressbarAria(scrollProgress)}
             aria-label="Article slider position; drag or use arrow keys to scroll articles"
             aria-controls="home-news-insights-scroller"
             className="relative h-1 w-full cursor-grab touch-none overflow-hidden rounded-full bg-[#c8d6ea] outline-none select-none active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-[#243768] focus-visible:ring-offset-2"

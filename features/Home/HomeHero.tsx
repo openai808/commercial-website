@@ -148,7 +148,7 @@ export default function HomeHero() {
         </h1>
         <button
           type="button"
-          className="group inline-flex items-center gap-4 text-[clamp(0.95rem,1.5vw,1.5rem)] font-semibold text-white transition-colors duration-300 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          className="cursor-pointer group inline-flex items-center gap-4 text-[clamp(0.95rem,1.5vw,1.5rem)] font-semibold text-white transition-colors duration-300 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
         >
           <span
             aria-hidden="true"
