@@ -185,10 +185,14 @@ export default function HomeContact() {
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="flex w-full cursor-pointer items-center gap-4 border-0 bg-transparent text-left font-sans text-[clamp(0.95rem,3.8vw,1.15rem)] font-semibold text-white transition hover:opacity-85 md:inline-flex md:w-auto md:gap-3 md:text-[clamp(0.95rem,1.4vw,1.15rem)]"
+              className="group inline-flex w-full cursor-pointer items-center gap-4 border-0 bg-transparent text-left font-sans text-[clamp(0.95rem,3.8vw,1.15rem)] font-semibold text-white transition-colors duration-300 ease-out hover:text-[#dbe6ff] focus-visible:text-[#dbe6ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:w-auto md:gap-3 md:text-[clamp(0.95rem,1.4vw,1.15rem)]"
             >
+              <span
+                aria-hidden
+                className="h-px w-0 shrink-0 bg-current transition-[width] duration-300 ease-out group-hover:w-10 group-focus-visible:w-10"
+              />
               <span className="shrink-0">Find an expert</span>
-              <span aria-hidden className="h-px min-w-[2.5rem] flex-1 bg-white md:w-10 md:flex-none" />
+              <span aria-hidden className="h-px w-10 shrink-0 bg-current" />
             </button>
           </div>
         </div>

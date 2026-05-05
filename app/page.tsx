@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import HomeContact from "@/features/Home/HomeContact";
-import HomeBlogSlider from "@/features/Home/HomeBlogSlider";
-import HomeHero from "@/features/Home/HomeHero";
-import HomeNewsInsights from "@/features/Home/HomeNewsInsights";
-import HomePillars from "@/features/Home/HomePillars";
-import HomeServices from "@/features/Home/HomeServices";
-import HomeTicker from "@/features/Home/HomeTicker";
+import HomeContact from "@/features/home/HomeContact";
+import HomeBlogSlider from "@/features/home/HomeBlogSlider";
+import HomeHero from "@/features/home/HomeHero";
+import HomeNewsInsights from "@/features/home/HomeNewsInsights";
+import HomePillars from "@/features/home/HomePillars";
+import HomeServices from "@/features/home/HomeServices";
+import HomeTicker from "@/features/home/HomeTicker";
 
 export const metadata: Metadata = {
   title: {
