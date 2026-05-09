@@ -21,7 +21,7 @@ function HomeBelowHeroFallback() {
 }
 
 const HomeBelowHero = dynamic(
-  () => import("@/features/home/HomeBelowHero"),
+  () => import("../features/home/HomeBelowHero"),
   {
     loading: () => <HomeBelowHeroFallback />,
   },
