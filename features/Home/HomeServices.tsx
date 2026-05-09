@@ -23,6 +23,30 @@ function IconCapitalMarkets() {
   );
 }
 
+function IconOccupier() {
+  return (
+    <svg viewBox="0 0 48 48" className="h-10 w-10 shrink-0" aria-hidden>
+      <rect
+        x="17"
+        y="8"
+        width="14"
+        height="22"
+        rx="1.5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+      <path
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        d="M13 26h4M31 26h4M10 38c8 5 20 5 28 0M24 30v8M18 42l6-3 6 3"
+      />
+    </svg>
+  );
+}
+
 function IconLandlord() {
   return (
     <svg viewBox="0 0 48 48" className="h-10 w-10 shrink-0" aria-hidden>
@@ -135,8 +159,14 @@ const SERVICES: ServiceItem[] = [
   {
     id: "capital-markets",
     label: "Capital Markets & Investment Services",
-    href: "/services/capital-markets",
+    href: "/services/capital-markets-and-investment-services",
     icon: <IconCapitalMarkets />,
+  },
+  {
+    id: "occupier",
+    label: "Occupier Services",
+    href: "/services/occupier-services",
+    icon: <IconOccupier />,
   },
   {
     id: "landlord",

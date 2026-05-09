@@ -8,39 +8,37 @@ import {
   useEffect,
   useRef,
   useState,
+  type ReactNode,
   type RefObject,
   type TransitionEvent,
 } from "react";
 import { createPortal } from "react-dom";
 
-type AccordionItem = {
+type MegaIntroColumn = {
+  kind: "intro";
   title: string;
-  links?: { label: string; href: string }[];
+  description: string;
+  overviewLabel: string;
+  overviewHref: string;
+  featured?: {
+    imageSrc: string;
+    imageAlt: string;
+    title: string;
+    href: string;
+    linkLabel?: string;
+  };
 };
 
-type MegaColumn =
-  | {
-      kind: "accordion";
-      heading: string;
-      items: AccordionItem[];
-      viewAll?: { label: string; href: string };
-    }
-  | { kind: "links"; heading: string; items: { label: string; href: string }[] }
-  | {
-      kind: "featured";
-      heading: string;
-      imageSrc: string;
-      imageAlt: string;
-      tag: string;
-      title: string;
-      excerpt: string;
-      href: string;
-      readMore?: string;
-    };
+type MegaLinkStackColumn = {
+  kind: "linkStack";
+  heading: string;
+  items: { label: string; href: string; external?: boolean }[];
+  viewAll?: { label: string; href: string };
+};
 
 type MegaMenu = {
-  columns: MegaColumn[];
-  footer: { text: string; buttonLabel: string; buttonHref: string };
+  /** Intro column plus two or more link stacks (desktop mega-menu layout). */
+  columns: [MegaIntroColumn, MegaLinkStackColumn, MegaLinkStackColumn, ...MegaLinkStackColumn[]];
 };
 
 type NavItem = { id: string; href: string; label: string; mega: MegaMenu };
@@ -52,96 +50,7 @@ function ariaExpandedProps(expanded: boolean) {
     : { "aria-expanded": "false" as const };
 }
 
-function ariaHiddenProps(hidden: boolean) {
-  return hidden
-    ? { "aria-hidden": "true" as const }
-    : { "aria-hidden": "false" as const };
-}
-
 const navConfig: NavItem[] = [
-  {
-    id: "services",
-    href: "/services",
-    label: "Services",
-    mega: {
-      columns: [
-        {
-          kind: "accordion",
-          heading: "How we can help",
-          viewAll: { label: "View all services", href: "/services" },
-          items: [
-            {
-              title: "Value and invest in real estate",
-              links: [
-                {
-                  label: "Capital Markets and Investment Services",
-                  href: "/services/capital-markets",
-                },
-                { label: "Valuation Services", href: "/services/valuation" },
-              ],
-            },
-            {
-              title: "Lease, occupy, and optimise space",
-              links: [
-                { label: "Tenant representation", href: "/services/tenant" },
-                { label: "Occupier solutions", href: "/services/occupier" },
-              ],
-            },
-            {
-              title: "Manage your property",
-              links: [
-                { label: "Property management", href: "/services/management" },
-                { label: "Facilities services", href: "/services/facilities" },
-              ],
-            },
-            {
-              title: "Engineer and manage your project",
-              links: [
-                { label: "Project management", href: "/services/projects" },
-                {
-                  label: "Development advisory",
-                  href: "/services/development",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          kind: "links",
-          heading: "Property types",
-          items: [
-            { label: "Office", href: "/properties/office" },
-            {
-              label: "Industrial and Logistics",
-              href: "/properties/industrial",
-            },
-            {
-              label: "Hotels and Hospitality",
-              href: "/properties/hospitality",
-            },
-            { label: "Retail", href: "/properties/retail" },
-            { label: "Residential", href: "/properties/residential" },
-          ],
-        },
-        {
-          kind: "featured",
-          heading: "Featured article",
-          imageSrc: "/REMAX Commercial Logo.png",
-          imageAlt: "RE/MAX Philippines",
-          tag: "Research & Insights",
-          title: "2026 Asia Pacific Workplace Insights",
-          excerpt: "Perspectives from Office Occupier Survey",
-          href: "/insights/workplace-2026",
-          readMore: "Read more",
-        },
-      ],
-      footer: {
-        text: "Find out how we can help you achieve more",
-        buttonLabel: "VIEW ALL SERVICES",
-        buttonHref: "/services",
-      },
-    },
-  },
   {
     id: "properties",
     href: "/properties",
@@ -149,64 +58,131 @@ const navConfig: NavItem[] = [
     mega: {
       columns: [
         {
-          kind: "accordion",
-          heading: "Find a property",
-          viewAll: { label: "View all listings", href: "/properties" },
-          items: [
-            {
-              title: "Buy",
-              links: [
-                {
-                  label: "Residential for sale",
-                  href: "/properties/buy/residential",
-                },
-                {
-                  label: "Commercial for sale",
-                  href: "/properties/buy/commercial",
-                },
-              ],
-            },
-            {
-              title: "Rent",
-              links: [
-                { label: "Long-term rentals", href: "/properties/rent" },
-                { label: "Short-stay", href: "/properties/short-stay" },
-              ],
-            },
-            {
-              title: "New developments",
-              links: [{ label: "Pre-selling", href: "/properties/new" }],
-            },
-          ],
+          kind: "intro",
+          title: "Properties",
+          description:
+            "Find the ideal office, industrial or retail property for your team or source specialized spaces for multifamily, healthcare, technology and more. Let us guide you to your next investment or leasing opportunity.",
+          overviewLabel: "See Overview",
+          overviewHref: "/properties",
         },
         {
-          kind: "links",
-          heading: "Popular searches",
+          kind: "linkStack",
+          heading: "For Lease",
           items: [
-            { label: "Metro Manila", href: "/properties?area=ncr" },
-            { label: "Cebu", href: "/properties?area=cebu" },
-            { label: "Davao", href: "/properties?area=davao" },
-            { label: "Clark / Pampanga", href: "/properties?area=clark" },
-            { label: "Beach & leisure", href: "/properties?type=leisure" },
+            {
+              label: "Properties for Lease",
+              href: "/properties/for-lease",
+            },
           ],
+          viewAll: { label: "View all leases", href: "/properties/for-lease" },
         },
         {
-          kind: "featured",
-          heading: "Featured article",
-          imageSrc: "/REMAX Commercial Logo.png",
-          imageAlt: "RE/MAX",
-          tag: "Market spotlight",
-          title: "Q1 2026 Metro Manila residential outlook",
-          excerpt: "Pricing, inventory, and buyer demand at a glance",
-          href: "/insights/metro-manila-q1-2026",
-          readMore: "Read more",
+          kind: "linkStack",
+          heading: "For Sale",
+          items: [
+            { label: "Properties for Sale", href: "/properties/for-sale" },
+            {
+              label: "Investment Properties for Sale",
+              href: "/properties/investment",
+            },
+          ],
+          viewAll: { label: "View all sales", href: "/properties/for-sale" },
         },
       ],
-      footer: {
-        text: "Browse curated listings and connect with an agent",
-        buttonLabel: "VIEW ALL PROPERTIES",
-        buttonHref: "/properties",
-      },
+    },
+  },
+  {
+    id: "services",
+    href: "/services",
+    label: "Services",
+    mega: {
+      columns: [
+        {
+          kind: "intro",
+          title: "Services",
+          description:
+            "Unlock the value in every dimension of your real estate with integrated, data-led services that support your overall business strategy.",
+          overviewLabel: "See Overview",
+          overviewHref: "/services",
+          featured: {
+            imageSrc:
+              "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=320&q=80",
+            imageAlt: "Solar panels and sustainable energy",
+            title: "Energy & Sustainability",
+            href: "/services/sustainability",
+            linkLabel: "Learn more",
+          },
+        },
+        {
+          kind: "linkStack",
+          heading: "Needs",
+          items: [
+            { label: "Capital Markets & Investment Services", href: "/services/capital-markets-and-investment-services" },
+            {
+              label: "Occupier Services",
+              href: "/services/occupier-services",
+            },
+            {
+              label: "Landlord Representation",
+              href: "/services/plan-lease-occupy",
+            },
+            { label: "Project Management", href: "/services/design-build" },
+            {
+              label: "Residential",
+              href: "/services/manage-portfolios",
+            },
+            {
+              label: "Tenant Representation",
+              href: "/services/transform-outcomes",
+            },
+            {
+              label: "Real Estate Management Services",
+              href: "/services/transform-outcomes1",
+            }, {
+              label: "Valuation and Advisory Services",
+              href: "/services/transform-outcomes2",
+            },
+            {
+              label: "Research Services",
+              href: "/services/transform-outcomes3",
+            },
+          ],
+          viewAll: { label: "View all services", href: "/services" },
+        },
+        {
+          kind: "linkStack",
+          heading: "Property types",
+          items: [
+            { label: "Office", href: "/properties/office" },
+            { label: "Retail", href: "/properties/retail" },
+            { label: "Industrial", href: "/properties/industrial" },
+            { label: "Multifamily", href: "/properties/multifamily" },
+            { label: "Hotels", href: "/properties/hospitality" },
+          ],
+          viewAll: { label: "See all property types", href: "/properties" },
+        },
+        {
+          kind: "linkStack",
+          heading: "Industries",
+          items: [
+            { label: "Data Center", href: "/services/industries/data-center" },
+            {
+              label: "Life Sciences",
+              href: "/services/industries/life-sciences",
+            },
+            {
+              label: "Banking & Financial Services",
+              href: "/services/industries/banking",
+            },
+            {
+              label: "Tech, Media & Telecommunications",
+              href: "/services/industries/tmt",
+            },
+            { label: "Healthcare", href: "/services/industries/healthcare" },
+          ],
+          viewAll: { label: "See all industries", href: "/services" },
+        },
+      ],
     },
   },
   {
@@ -216,433 +192,351 @@ const navConfig: NavItem[] = [
     mega: {
       columns: [
         {
-          kind: "accordion",
-          heading: "Explore insights",
-          viewAll: { label: "View all insights", href: "/insights" },
-          items: [
-            {
-              title: "Research & reports",
-              links: [
-                { label: "Market reports", href: "/insights/reports" },
-                { label: "Sector briefings", href: "/insights/sectors" },
-              ],
-            },
-            {
-              title: "News & commentary",
-              links: [
-                { label: "Company news", href: "/insights/news" },
-                { label: "Expert opinion", href: "/insights/commentary" },
-              ],
-            },
-            {
-              title: "Events & webinars",
-              links: [{ label: "Upcoming sessions", href: "/insights/events" }],
-            },
-          ],
-        },
-        {
-          kind: "links",
-          heading: "Topics",
-          items: [
-            { label: "Workplace", href: "/insights/workplace" },
-            { label: "Capital markets", href: "/insights/capital-markets" },
-            { label: "Sustainability", href: "/insights/sustainability" },
-            { label: "Technology", href: "/insights/technology" },
-            { label: "Economy", href: "/insights/economy" },
-          ],
-        },
-        {
-          kind: "featured",
-          heading: "Featured article",
-          imageSrc: "/REMAX Commercial Logo.png",
-          imageAlt: "Insights",
-          tag: "Research & Insights",
-          title: "2026 Asia Pacific Workplace Insights",
-          excerpt: "Perspectives from Office Occupier Survey",
-          href: "/insights/workplace-2026",
-          readMore: "Read more",
-        },
-      ],
-      footer: {
-        text: "Stay ahead with data-driven perspectives",
-        buttonLabel: "VIEW ALL INSIGHTS",
-        buttonHref: "/insights",
-      },
-    },
-  },
-  {
-    id: "experts",
-    href: "/experts",
-    label: "Experts",
-    mega: {
-      columns: [
-        {
-          kind: "accordion",
-          heading: "Meet our people",
-          viewAll: { label: "View directory", href: "/experts" },
-          items: [
-            {
-              title: "Leadership",
-              links: [
-                { label: "Executive team", href: "/experts/leadership" },
-                { label: "Regional heads", href: "/experts/regional" },
-              ],
-            },
-            {
-              title: "Advisory",
-              links: [
-                { label: "Capital markets", href: "/experts/capital-markets" },
-                { label: "Valuation", href: "/experts/valuation" },
-              ],
-            },
-            {
-              title: "Client services",
-              links: [{ label: "Account teams", href: "/experts/accounts" }],
-            },
-          ],
-        },
-        {
-          kind: "links",
-          heading: "Office expertise",
-          items: [
-            { label: "Brokerage", href: "/experts/brokerage" },
-            { label: "Property management", href: "/experts/management" },
-            { label: "Project services", href: "/experts/projects" },
-            { label: "Research", href: "/experts/research" },
-          ],
-        },
-        {
-          kind: "featured",
-          heading: "Featured article",
-          imageSrc: "/REMAX Commercial Logo.png",
-          imageAlt: "Experts",
-          tag: "People",
-          title: "How our specialists partner with occupiers",
-          excerpt: "A closer look at integrated client teams",
-          href: "/insights/expert-teams",
-          readMore: "Read more",
-        },
-      ],
-      footer: {
-        text: "Connect with the right specialist for your goals",
-        buttonLabel: "VIEW ALL EXPERTS",
-        buttonHref: "/experts",
-      },
-    },
-  },
-  {
-    id: "office-locations",
-    href: "/office-locations",
-    label: "Office locations",
-    mega: {
-      columns: [
-        {
-          kind: "accordion",
-          heading: "Regions",
-          viewAll: {
-            label: "View global footprint",
-            href: "/office-locations",
+          kind: "intro",
+          title: "Insights & Research",
+          description:
+            "Our unmatched research and thought leadership platform delivers actionable insights to help our clients make informed business decisions.",
+          overviewLabel: "Explore Insights & Research",
+          overviewHref: "/insights",
+          featured: {
+            imageSrc:
+              "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=320&q=80",
+            imageAlt: "Newsletter and notebook on a desk",
+            title: "Our Take Newsletter",
+            href: "/insights/our-take-newsletter",
+            linkLabel: "Learn More",
           },
+        },
+        {
+          kind: "linkStack",
+          heading: "Latest Research",
           items: [
-            {
-              title: "Philippines",
-              links: [
-                {
-                  label: "Metro Manila",
-                  href: "/office-locations/metro-manila",
-                },
-                {
-                  label: "Visayas & Mindanao",
-                  href: "/office-locations/vismin",
-                },
-              ],
-            },
-            {
-              title: "Asia Pacific",
-              links: [
-                { label: "Singapore", href: "/office-locations/singapore" },
-                { label: "Hong Kong", href: "/office-locations/hong-kong" },
-              ],
-            },
-            {
-              title: "Americas & EMEA",
-              links: [
-                {
-                  label: "International offices",
-                  href: "/office-locations/global",
-                },
-              ],
-            },
+            { label: "Market Reports", href: "/insights/reports" },
           ],
         },
         {
-          kind: "links",
-          heading: "Visit us",
+          kind: "linkStack",
+          heading: "Trending Topics",
           items: [
-            { label: "Book a meeting", href: "/contact" },
-            { label: "New business enquiries", href: "/contact/business" },
-            { label: "Media enquiries", href: "/contact/media" },
-            { label: "Careers", href: "/careers" },
+            {
+              label: "The Weekly Take Podcast",
+              href: "/insights/weekly-take-podcast",
+            },
+            {
+              label: "Our Take Newsletter",
+              href: "/insights/our-take-newsletter",
+            },
+            { label: "Sustainability", href: "/insights/sustainability" },
+            {
+              label: "Total Cost of Occupancy",
+              href: "/insights/total-cost-of-occupancy",
+            },
+            { label: "Data Center", href: "/insights/data-center" },
           ],
         },
         {
-          kind: "featured",
-          heading: "Featured article",
-          imageSrc: "/REMAX Commercial Logo.png",
-          imageAlt: "Offices",
-          tag: "Locations",
-          title: "Opening our newest flagship workspace",
-          excerpt: "Designed for collaboration and client experience",
-          href: "/insights/new-office",
-          readMore: "Read more",
+          kind: "linkStack",
+          heading: "Featured Insights",
+          items: [
+            {
+              label: "Intelligent Investment",
+              href: "/insights/intelligent-investment",
+            },
+            { label: "Future Cities", href: "/insights/future-cities" },
+            { label: "Adaptive Spaces", href: "/insights/adaptive-spaces" },
+            {
+              label: "Evolving Workforces",
+              href: "/insights/evolving-workforces",
+            },
+            {
+              label: "Creating Resilience",
+              href: "/insights/creating-resilience",
+            },
+          ],
         },
       ],
-      footer: {
-        text: "Find an office near you",
-        buttonLabel: "VIEW ALL OFFICES",
-        buttonHref: "/office-locations",
-      },
+    },
+  },
+  {
+    id: "careers",
+    href: "/careers",
+    label: "Careers",
+    mega: {
+      columns: [
+        {
+          kind: "intro",
+          title: "Careers",
+          description:
+            "Find your next opportunity on the world's leading commercial real estate services and investment team.",
+          overviewLabel: "Explore Careers",
+          overviewHref: "/careers",
+          featured: {
+            imageSrc:
+              "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=320&q=80",
+            imageAlt: "Professional portrait for careers blog",
+            title: "Explore how we help businesses and people thrive",
+            href: "/careers/blog",
+            linkLabel: "Learn More",
+          },
+        },
+        {
+          kind: "linkStack",
+          heading: "Working at REMAX/8",
+          items: [
+            {
+              label: "Interview Accomodations",
+              href: "/careers/interview-accommodations",
+            },
+            { label: "FAQs", href: "/careers/faqs" },
+            { label: "Our Benefits", href: "/careers/benefits" },
+            { label: "Our Values-Driven Culture", href: "/careers/culture" },
+            { label: "Military", href: "/careers/military" },
+            { label: "Search Jobs", href: "/careers/jobs" },
+          ],
+        },
+        {
+          kind: "linkStack",
+          heading: "Our Career Opportunities",
+          items: [
+            { label: "Sales & Consulting", href: "/careers/sales-consulting" },
+            {
+              label: "Digital & Technology",
+              href: "/careers/digital-technology",
+            },
+            {
+              label: "Building Operations & Management",
+              href: "/careers/building-operations-management",
+            },
+            { label: "Project Management", href: "/careers/project-management" },
+            { label: "Corporate", href: "/careers/corporate" },
+            {
+              label: "Investment Management",
+              href: "/careers/investment-management",
+            },
+            { label: "Students & Grads", href: "/careers/students-grads" },
+          ],
+        },
+        {
+          kind: "linkStack",
+          heading: "Learn More",
+          items: [
+            {
+              label: "Thrive at CBRE Careers Blog",
+              href: "/careers/blog",
+            },
+            {
+              label: "Join our Talent Community",
+              href: "/careers/talent-community",
+            },
+            { label: "Meet Our Leaders", href: "/careers/leaders" },
+            { label: "Our Culture", href: "/careers/culture" },
+            { label: "What We Do", href: "/careers/what-we-do" },
+          ],
+        },
+      ],
     },
   },
   {
     id: "about-us",
     href: "/about-us",
-    label: "About us",
+    label: "About Us",
     mega: {
       columns: [
         {
-          kind: "accordion",
-          heading: "Who we are",
-          viewAll: { label: "About RE/MAX", href: "/about-us" },
-          items: [
-            {
-              title: "Our company",
-              links: [
-                { label: "Purpose & values", href: "/about-us/values" },
-                { label: "History", href: "/about-us/history" },
-              ],
-            },
-            {
-              title: "Responsibility",
-              links: [
-                { label: "ESG & sustainability", href: "/about-us/esg" },
-                { label: "Community", href: "/about-us/community" },
-              ],
-            },
-            {
-              title: "Investors",
-              links: [
-                { label: "Reports & governance", href: "/about-us/investors" },
-              ],
-            },
-          ],
+          kind: "intro",
+          title: "About Us",
+          description:
+            "With more than 155,000 professionals in over 100 countries, REMAX/8 is the global leader in commercial real estate services and investment and a premier provider of critical infrastructure services.",
+          overviewLabel: "Explore",
+          overviewHref: "/about-us",
         },
         {
-          kind: "links",
-          heading: "Quick links",
+          kind: "linkStack",
+          heading: "",
           items: [
+            {
+              label: "Global Executive Leadership",
+              href: "/about-us/global-executive-leadership",
+            },
+            {
+              label: "Board of Directors",
+              href: "/about-us/board-of-directors",
+              external: true,
+            },
             { label: "Newsroom", href: "/news" },
-            { label: "Careers", href: "/careers" },
-            { label: "Contact", href: "/contact" },
-            { label: "Brand centre", href: "/about-us/brand" },
           ],
         },
         {
-          kind: "featured",
-          heading: "Featured article",
-          imageSrc: "/REMAX Commercial Logo.png",
-          imageAlt: "About",
-          tag: "Company",
-          title: "Building trust in every transaction",
-          excerpt: "How we support clients across the property lifecycle",
-          href: "/insights/trust",
-          readMore: "Read more",
+          kind: "linkStack",
+          heading: "",
+          items: [
+            {
+              label: "Corporate Responsibility",
+              href: "/about-us/corporate-responsibility",
+            },
+            {
+              label: "Investor Relations",
+              href: "/about-us/investor-relations",
+              external: true,
+            },
+            { label: "Data & Technology", href: "/about-us/data-technology" },
+          ],
+        },
+        {
+          kind: "linkStack",
+          heading: "",
+          items: [
+            { label: "Culture & History", href: "/about-us/culture-history" },
+            { label: "Supply Chain", href: "/about-us/supply-chain" },
+          ],
         },
       ],
-      footer: {
-        text: "Learn more about our network and culture",
-        buttonLabel: "VIEW ABOUT US",
-        buttonHref: "/about-us",
-      },
     },
   },
 ];
 
-function Chevron({ open }: { open: boolean }) {
+function LinkStackRowChevron() {
   return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 12 12"
-      aria-hidden
-      className={`shrink-0 text-[#000759] transition-transform duration-200 ease-in-out ${open ? "rotate-180" : ""}`}
-    >
-      <path
-        d="M2 4.5L6 8.5L10 4.5"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-    </svg>
+    <span className="shrink-0 text-sm font-light text-zinc-300" aria-hidden>
+      ›
+    </span>
   );
 }
 
-function AccordionColumn({
-  heading,
-  items,
-  viewAll,
-}: {
-  heading: string;
-  items: AccordionItem[];
-  viewAll?: { label: string; href: string };
-}) {
-  const [openIndex, setOpenIndex] = useState(0);
-
+function ExternalLinkMark() {
   return (
-    <div className="min-w-0 border-r border-zinc-200 pr-8 lg:pr-12">
-      <h3 className="font-serif text-xl font-normal tracking-tight text-[#000759]">
-        {heading}
-      </h3>
-      <ul className="mt-6 space-y-0">
-        {items.map((item, i) => {
-          const isExpanded = openIndex === i;
-          const sublistId = `mega-accordion-panel-${heading.replace(/\s+/g, "-").toLowerCase()}-${i}`;
-          return (
-            <li
-              key={item.title}
-              className="border-b border-zinc-200 first:border-t"
-            >
-              <button
-                type="button"
-                className="flex w-full items-center justify-between gap-3 py-4 text-left text-base font-medium text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f]"
-                onClick={() => setOpenIndex(isExpanded ? -1 : i)}
-                {...ariaExpandedProps(isExpanded)}
-                {...(item.links?.length ? { "aria-controls": sublistId } : {})}
-              >
-                <span>{item.title}</span>
-                <Chevron open={isExpanded} />
-              </button>
-              {item.links && item.links.length > 0 && (
-                <div
-                  className={`grid transition-[grid-template-rows] duration-300 ease-in-out motion-reduce:transition-none ${
-                    isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-                  }`}
-                >
-                  <div className="min-h-0 overflow-hidden">
-                    <ul
-                      id={sublistId}
-                      {...ariaHiddenProps(!isExpanded)}
-                      className="space-y-2 pb-4 pl-0"
-                    >
-                      {item.links.map((l) => (
-                        <li key={l.href}>
-                          <Link
-                            href={l.href}
-                            className="text-sm font-medium text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f] hover:underline"
-                          >
-                            {l.label}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              )}
-            </li>
-          );
-        })}
-      </ul>
-      {viewAll && (
-        <Link
-          href={viewAll.href}
-          className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#000759] transition-opacity duration-200 ease-in-out after:block after:h-px after:w-8 after:bg-[#000759] hover:opacity-80"
-        >
-          {viewAll.label}
-        </Link>
+    <span className="ml-1 text-[11px] text-zinc-400" aria-hidden>
+      ↗
+    </span>
+  );
+}
+
+function AccentRuleLink({
+  href,
+  children,
+  className = "",
+  onClick,
+}: {
+  href: string;
+  children: ReactNode;
+  className?: string;
+  onClick?: () => void;
+}) {
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className={`group/va inline-flex items-center gap-2 text-sm text-[#000759] transition-opacity duration-200 ease-in-out hover:opacity-80 ${className}`}
+    >
+      <span
+        className="h-px w-6 shrink-0 bg-emerald-400 transition-colors group-hover/va:bg-emerald-500"
+        aria-hidden
+      />
+      {children}
+    </Link>
+  );
+}
+
+function IntroMegaColumn({
+  column,
+  motionClass,
+}: {
+  column: MegaIntroColumn;
+  motionClass: string;
+}) {
+  return (
+    <div
+      className={`min-w-0 border-b border-zinc-200 pb-10 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-10 ${motionClass}`}
+    >
+      <h2 className="font-serif text-3xl font-normal tracking-tight text-[#000759] sm:text-4xl">
+        {column.title}
+      </h2>
+      <p className="mt-4 max-w-sm text-sm leading-relaxed text-zinc-600">
+        {column.description}
+      </p>
+      <Link
+        href={column.overviewHref}
+        className="mt-6 inline-flex items-center justify-center bg-[#000759] px-6 py-2.5 text-sm font-medium text-white transition hover:bg-[#001a8f]"
+      >
+        {column.overviewLabel}
+      </Link>
+      {column.featured && (
+        <div className="mt-10 border-t border-zinc-200 pt-8">
+          <Link
+            href={column.featured.href}
+            className="group/feat flex gap-4 transition-opacity hover:opacity-90"
+          >
+            <div className="relative h-[4.5rem] w-[5.5rem] shrink-0 overflow-hidden bg-zinc-100 sm:h-[5rem] sm:w-24">
+              <Image
+                src={column.featured.imageSrc}
+                alt={column.featured.imageAlt}
+                fill
+                className="object-cover transition duration-300 group-hover/feat:scale-[1.03]"
+                sizes="96px"
+              />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="font-serif text-base font-normal leading-snug text-[#000759] sm:text-lg">
+                {column.featured.title}
+              </p>
+              <span className="mt-3 inline-flex items-center gap-2 text-sm text-[#000759]">
+                <span
+                  className="h-px w-6 shrink-0 bg-emerald-400 transition-colors group-hover/feat:bg-emerald-500"
+                  aria-hidden
+                />
+                {column.featured.linkLabel ?? "Learn more"}
+              </span>
+            </div>
+          </Link>
+        </div>
       )}
     </div>
   );
 }
 
-function LinksColumn({
-  heading,
-  items,
+function LinkStackMegaColumn({
+  column,
+  isLast,
+  stackIndex,
+  motionClass,
 }: {
-  heading: string;
-  items: { label: string; href: string }[];
+  column: MegaLinkStackColumn;
+  isLast: boolean;
+  stackIndex: number;
+  motionClass: string;
 }) {
   return (
-    <div className="min-w-0 border-r border-zinc-200 px-8 lg:px-12">
-      <h3 className="font-serif text-xl font-normal tracking-tight text-[#000759]">
-        {heading}
-      </h3>
-      <ul className="mt-6">
-        {items.map((item) => (
-          <li
-            key={item.href}
-            className="border-b border-zinc-200 first:border-t"
-          >
+    <div
+      className={`min-w-0 ${stackIndex === 0 ? "pt-6 sm:pt-8" : "pt-8 sm:pt-10"} pb-8 sm:pb-10 lg:py-0 lg:pl-10 ${isLast ? "" : "border-b border-zinc-200 lg:border-b-0 lg:border-r"} ${motionClass}`}
+    >
+      {column.heading && (
+        <h3 className="font-serif text-sm font-normal tracking-wide text-zinc-500">
+          {column.heading}
+        </h3>
+      )}
+      <ul className={column.heading ? "mt-5" : "mt-0"}>
+        {column.items.map((item) => (
+          <li key={item.href} className="border-b border-zinc-200 first:border-t">
             <Link
               href={item.href}
-              className="block py-4 text-base font-medium text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f]"
+              className="flex items-center justify-between gap-3 py-3.5 text-sm font-semibold text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f]"
             >
-              {item.label}
+              <span className="min-w-0">
+                {item.label}
+                {item.external && <ExternalLinkMark />}
+              </span>
+              <LinkStackRowChevron />
             </Link>
           </li>
         ))}
       </ul>
-    </div>
-  );
-}
-
-function FeaturedColumn({
-  heading,
-  imageSrc,
-  imageAlt,
-  tag,
-  title,
-  excerpt,
-  href,
-  readMore = "Read more",
-}: {
-  heading: string;
-  imageSrc: string;
-  imageAlt: string;
-  tag: string;
-  title: string;
-  excerpt: string;
-  href: string;
-  readMore?: string;
-}) {
-  return (
-    <div className="min-w-0 pl-0 lg:pl-4">
-      <h3 className="font-serif text-xl font-normal tracking-tight text-[#000759]">
-        {heading}
-      </h3>
-      <Link href={href} className="mt-6 block group/card">
-        <div className="relative aspect-[16/10] w-full overflow-hidden bg-zinc-100">
-          <Image
-            src={imageSrc}
-            alt={imageAlt}
-            fill
-            className="object-cover transition duration-300 group-hover/card:scale-[1.02]"
-            sizes="(min-width: 1024px) 320px, 100vw"
-          />
+      {column.viewAll && (
+        <div className="mt-6">
+          <AccentRuleLink href={column.viewAll.href}>
+            {column.viewAll.label}
+          </AccentRuleLink>
         </div>
-        <p className="mt-4 text-xs font-bold uppercase tracking-wide text-[#000759]">
-          {tag}
-        </p>
-        <p className="mt-2 text-lg font-bold leading-snug text-[#000759]">
-          {title}
-        </p>
-        <p className="mt-1 text-sm text-[#000759]">
-          {excerpt}
-        </p>
-        <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#000759] after:block after:h-px after:w-8 after:bg-[#000759] group-hover/card:opacity-80">
-          {readMore}
-        </span>
-      </Link>
+      )}
     </div>
   );
 }
@@ -749,8 +643,14 @@ function MobileNavGroup({
 }) {
   const [expanded, setExpanded] = useState(false);
   const mega = item.mega;
-  const [c1, c2, c3] = mega.columns;
-  if (!c1 || !c2 || !c3) return null;
+  const [intro, ...stacks] = mega.columns;
+  if (
+    intro?.kind !== "intro" ||
+    stacks.length < 2 ||
+    !stacks.every((c) => c.kind === "linkStack")
+  ) {
+    return null;
+  }
 
   return (
     <div className="border-b border-[#000759]/25">
@@ -774,93 +674,82 @@ function MobileNavGroup({
           className="min-h-0 overflow-hidden"
         >
           <div className="space-y-6 pb-4 pl-1">
-            {c1.kind === "accordion" && (
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wide text-zinc-500">
-                  {c1.heading}
-                </p>
-                <ul className="mt-2 space-y-1">
-                  {c1.items.map((acc) => (
-                    <li key={acc.title}>
-                      <p className="py-2 text-sm font-semibold text-[#000759]">
-                        {acc.title}
-                      </p>
-                      {acc.links && (
-                        <ul className="space-y-1 border-l-2 border-zinc-200 pl-3">
-                          {acc.links.map((l) => (
-                            <li key={l.href}>
-                              <Link
-                                href={l.href}
-                                className="block py-1.5 text-sm text-[#2563eb] transition-colors duration-200 ease-in-out hover:underline"
-                                onClick={onNavigate}
-                              >
-                                {l.label}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-                {c1.viewAll && (
-                  <Link
-                    href={c1.viewAll.href}
-                    className="mt-3 inline-block text-sm font-semibold text-[#000759] underline transition-opacity duration-200 ease-in-out hover:opacity-80"
-                    onClick={onNavigate}
-                  >
-                    {c1.viewAll.label}
-                  </Link>
-                )}
-              </div>
-            )}
-            {c2.kind === "links" && (
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wide text-zinc-500">
-                  {c2.heading}
-                </p>
+            <div>
+              <p className="font-serif text-2xl text-[#000759]">
+                {intro.title}
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-zinc-600">
+                {intro.description}
+              </p>
+              <Link
+                href={intro.overviewHref}
+                className="mt-4 inline-flex w-full items-center justify-center bg-[#000759] px-4 py-3 text-sm font-medium text-white transition hover:bg-[#001a8f]"
+                onClick={onNavigate}
+              >
+                {intro.overviewLabel}
+              </Link>
+              {intro.featured && (
+                <Link
+                  href={intro.featured.href}
+                  className="mt-6 flex gap-3 border-t border-zinc-200 pt-6"
+                  onClick={onNavigate}
+                >
+                  <div className="relative h-16 w-20 shrink-0 overflow-hidden bg-zinc-100">
+                    <Image
+                      src={intro.featured.imageSrc}
+                      alt={intro.featured.imageAlt}
+                      fill
+                      className="object-cover"
+                      sizes="80px"
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-serif text-base text-[#000759]">
+                      {intro.featured.title}
+                    </p>
+                    <span className="mt-2 inline-flex items-center gap-2 text-sm text-[#000759]">
+                      <span
+                        className="h-px w-5 shrink-0 bg-emerald-400"
+                        aria-hidden
+                      />
+                      {intro.featured.linkLabel ?? "Learn more"}
+                    </span>
+                  </div>
+                </Link>
+              )}
+            </div>
+            {stacks.map((col) => (
+              <div key={col.heading}>
+                <p className="font-serif text-sm text-zinc-500">{col.heading}</p>
                 <ul className="mt-2">
-                  {c2.items.map((l) => (
+                  {col.items.map((l) => (
                     <li
                       key={l.href}
-                      className="border-b border-zinc-100 last:border-0"
+                      className="border-b border-zinc-200 first:border-t"
                     >
                       <Link
                         href={l.href}
-                        className="block py-2.5 text-sm font-medium text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f]"
+                        className="flex items-center justify-between gap-2 py-2.5 text-sm font-semibold text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f]"
                         onClick={onNavigate}
                       >
-                        {l.label}
+                        <span>
+                          {l.label}
+                          {l.external && <ExternalLinkMark />}
+                        </span>
+                        <LinkStackRowChevron />
                       </Link>
                     </li>
                   ))}
                 </ul>
+                {col.viewAll && (
+                  <div className="mt-3">
+                    <AccentRuleLink href={col.viewAll.href} onClick={onNavigate}>
+                      {col.viewAll.label}
+                    </AccentRuleLink>
+                  </div>
+                )}
               </div>
-            )}
-            {c3.kind === "featured" && (
-              <Link
-                href={c3.href}
-                className="block rounded-lg border border-zinc-200 p-3 transition-colors duration-200 ease-in-out hover:border-[#000759]/30 hover:bg-zinc-50"
-                onClick={onNavigate}
-              >
-                <p className="text-xs font-bold uppercase tracking-wide text-[#2563eb]">
-                  {c3.tag}
-                </p>
-                <p className="mt-1 text-sm font-bold text-[#000759]">
-                  {c3.title}
-                </p>
-                <span className="mt-2 inline-block text-xs font-semibold text-[#000759] underline">
-                  {c3.readMore ?? "Read more"}
-                </span>
-              </Link>
-            )}
-            <Link
-              href={mega.footer.buttonHref}
-              className="inline-flex w-full items-center justify-center rounded-md bg-[#000759] px-4 py-3 text-xs font-bold uppercase tracking-wider text-white"
-              onClick={onNavigate}
-            >
-              {mega.footer.buttonLabel}
-            </Link>
+            ))}
           </div>
         </div>
       </div>
@@ -875,8 +764,10 @@ function MegaMenuPanel({
   mega: MegaMenu;
   subReveal?: boolean;
 }) {
-  const [c1, c2, c3] = mega.columns;
-  if (!c1 || !c2 || !c3) return null;
+  const [intro, ...stacks] = mega.columns;
+  if (intro?.kind !== "intro" || stacks.length < 2) {
+    return null;
+  }
 
   const colMotion =
     "transition-[opacity,transform] duration-200 ease-in-out motion-reduce:transition-none motion-reduce:translate-y-0 motion-reduce:opacity-100";
@@ -888,54 +779,32 @@ function MegaMenuPanel({
     <div className="bg-white shadow-[0_24px_48px_-12px_rgba(0,0,0,0.12)]">
       <div className="mx-auto w-full px-6">
         <div className="mx-auto w-full px-7 py-10 lg:py-12">
-          <div className="grid gap-10 lg:grid-cols-[1.15fr_1fr_1fr] lg:gap-0">
-            {c1.kind === "accordion" && (
-              <div className={colClass("delay-0 lg:[transition-delay:0ms]")}>
-                <AccordionColumn
-                  heading={c1.heading}
-                  items={c1.items}
-                  viewAll={c1.viewAll}
-                />
-              </div>
-            )}
-            {c2.kind === "links" && (
-              <div className={colClass("delay-75 lg:[transition-delay:75ms]")}>
-                <LinksColumn heading={c2.heading} items={c2.items} />
-              </div>
-            )}
-            {c3.kind === "featured" && (
-              <div
-                className={colClass("delay-150 lg:[transition-delay:150ms]")}
-              >
-                <FeaturedColumn
-                  heading={c3.heading}
-                  imageSrc={c3.imageSrc}
-                  imageAlt={c3.imageAlt}
-                  tag={c3.tag}
-                  title={c3.title}
-                  excerpt={c3.excerpt}
-                  href={c3.href}
-                  readMore={c3.readMore}
-                />
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-      <div
-        className={`border-t border-zinc-200 transition-[opacity,transform] duration-200 ease-in-out motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:transition-none dark:border-white/10 ${subReveal ? "translate-y-0 opacity-100 delay-200 lg:[transition-delay:200ms]" : "translate-y-2 opacity-0 delay-0 lg:[transition-delay:0ms]"}`}
-      >
-        <div className="mx-auto w-full px-6 py-6">
-          <div className="mx-auto flex w-full flex-col items-start justify-between gap-6 px-7 sm:flex-row sm:items-center">
-            <p className="max-w-xl font-serif text-lg text-[#000759]">
-              {mega.footer.text}
-            </p>
-            <Link
-              href={mega.footer.buttonHref}
-              className="inline-flex shrink-0 items-center justify-center rounded-md bg-[#000759] px-8 py-3 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-[#001a8f]"
-            >
-              {mega.footer.buttonLabel}
-            </Link>
+          <div
+            className={`grid gap-0 ${
+              stacks.length === 2
+                ? "lg:grid-cols-[minmax(260px,1.1fr)_1fr_1fr]"
+                : "lg:grid-cols-[minmax(260px,1.1fr)_1fr_1fr_1fr]"
+            }`}
+          >
+            <IntroMegaColumn
+              column={intro}
+              motionClass={colClass("delay-0 lg:[transition-delay:0ms]")}
+            />
+            {stacks.map((stack, index) => (
+              <LinkStackMegaColumn
+                key={`${stack.heading}-${index}`}
+                column={stack}
+                stackIndex={index}
+                isLast={index === stacks.length - 1}
+                motionClass={colClass(
+                  index === 0
+                    ? "delay-75 lg:[transition-delay:75ms]"
+                    : index === 1
+                      ? "delay-150 lg:[transition-delay:150ms]"
+                      : "delay-200 lg:[transition-delay:200ms]",
+                )}
+              />
+            ))}
           </div>
         </div>
       </div>
@@ -1392,7 +1261,7 @@ export default function Header() {
         <div className="mx-auto w-full px-6">
           <div
             id="site-header-bar"
-            className="mx-auto flex w-full items-center justify-between gap-4 px-7 py-3 sm:py-5 lg:gap-8 lg:py-7"
+            className="mx-auto flex w-full items-center justify-between gap-4 py-3 sm:py-5 lg:gap-8"
           >
             <DesktopHeaderSection
               openId={openId}

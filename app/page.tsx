@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
-import HomeHero from "@/features/Home/HomeHero";
+import HomeHero from "@/features/home/HomeHero";
 
 function HomeBelowHeroFallback() {
   return (
@@ -20,7 +20,7 @@ function HomeBelowHeroFallback() {
   );
 }
 
-const HomeBelowHero = dynamic(() => import("@/features/Home/HomeBelowHero"), {
+const HomeBelowHero = dynamic(() => import("@/features/home/HomeBelowHero"), {
   loading: () => <HomeBelowHeroFallback />,
 });
 

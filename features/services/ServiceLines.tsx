@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 
 type ServiceIcon =
@@ -9,14 +10,26 @@ type ServiceIcon =
   | "industrial"
   | "sustainability";
 
-const serviceLines: { title: string; icon: ServiceIcon }[] = [
-  { title: "Capital Markets & Investment Services", icon: "capital" },
-  { title: "Occupier Services", icon: "occupier" },
-  { title: "Real Estate Management Services", icon: "management" },
-  { title: "Valuation and Advisory Services", icon: "valuation" },
-  { title: "Residential", icon: "residential" },
-  { title: "Industrial", icon: "industrial" },
-  { title: "Sustainability Services", icon: "sustainability" },
+const serviceLines: { title: string; icon: ServiceIcon; href: string }[] = [
+  {
+    title: "Capital Markets & Investment Services",
+    icon: "capital",
+    href: "/services/capital-markets-and-investment-services",
+  },
+  { title: "Occupier Services", icon: "occupier", href: "/services/occupier-services" },
+  {
+    title: "Real Estate Management Services",
+    icon: "management",
+    href: "/services/transform-outcomes1",
+  },
+  {
+    title: "Valuation and Advisory Services",
+    icon: "valuation",
+    href: "/services/transform-outcomes2",
+  },
+  { title: "Residential", icon: "residential", href: "/services/manage-portfolios" },
+  { title: "Industrial", icon: "industrial", href: "/properties/industrial" },
+  { title: "Sustainability Services", icon: "sustainability", href: "/services/sustainability" },
 ];
 
 function ServiceCardIcon({ icon }: { icon: ServiceIcon }) {
@@ -105,8 +118,9 @@ export default function ServiceLines() {
 
         <div className="mx-auto mt-10 grid max-w-4xl grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
           {serviceLines.map((service, index) => (
-            <article
+            <Link
               key={service.title}
+              href={service.href}
               className={`group flex min-h-36 cursor-pointer flex-col items-center justify-center gap-4 border border-[#dde2ed] bg-white px-5 py-6 text-center transition-all duration-200 hover:shadow-[0_10px_24px_rgba(35,61,131,0.16)] ${
                 index === serviceLines.length - 1
                   ? "sm:col-span-2 lg:col-span-1 lg:col-start-2"
@@ -117,7 +131,7 @@ export default function ServiceLines() {
               <h3 className="text-sm font-normal leading-snug text-[#2d3c70] transition-colors duration-200 group-hover:text-[#59a8ff] group-hover:underline md:text-base">
                 {service.title}
               </h3>
-            </article>
+            </Link>
           ))}
         </div>
       </div>
