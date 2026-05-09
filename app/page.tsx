@@ -20,9 +20,12 @@ function HomeBelowHeroFallback() {
   );
 }
 
-const HomeBelowHero = dynamic(() => import("@/features/home/HomeBelowHero"), {
-  loading: () => <HomeBelowHeroFallback />,
-});
+const HomeBelowHero = dynamic(
+  () => import("../features/home/HomeBelowHero"),
+  {
+    loading: () => <HomeBelowHeroFallback />,
+  },
+);
 
 export const metadata: Metadata = {
   title: {
