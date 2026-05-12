@@ -1,14 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
+import OccupierServicesSectionNav from "@/features/services/OccupierServicesSectionNav";
 
-const SECTION_LINKS = [
-  "Our Services",
-  "Tools & Tech",
-  "Insights",
-  "Mission",
-  "News",
-  "Leadership",
-  "Contact Us",
+const SECTION_LINKS: { label: string; href: string }[] = [
+  { label: "Our Services", href: "#our-services" },
+  { label: "Tools & Tech", href: "#tools-tech" },
+  { label: "Insights", href: "#insights" },
+  { label: "Mission", href: "#mission" },
+  { label: "News", href: "#news" },
+  { label: "Leadership", href: "#leadership" },
+  { label: "Contact Us", href: "#contact-us" },
 ];
 
 export default function OccupierServicesIntro() {
@@ -36,20 +37,10 @@ export default function OccupierServicesIntro() {
       </div>
 
       <div className="border-b border-[#d9dce5] bg-white">
-        <nav
-          aria-label="Occupier services sections"
+        <OccupierServicesSectionNav
+          items={SECTION_LINKS}
           className="mx-auto flex w-full max-w-5xl flex-wrap justify-center gap-2 px-6 py-4 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#1f2d57] md:gap-4"
-        >
-          {SECTION_LINKS.map((label) => (
-            <a
-              key={label}
-              href="#"
-              className="border-r border-[#c9ceda] px-2 last:border-r-0 hover:text-[#23408e]"
-            >
-              {label}
-            </a>
-          ))}
-        </nav>
+        />
       </div>
 
       <div className="mx-auto w-full max-w-5xl px-6 py-12 md:py-16">

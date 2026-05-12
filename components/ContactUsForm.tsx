@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 type ContactUsFormProps = {
   title?: string;
@@ -36,6 +36,31 @@ export default function ContactUsForm({
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [expandContactFab, setExpandContactFab] = useState(false);
+  const [dockContactFabInSection, setDockContactFabInSection] = useState(false);
+  const sectionBottomSentinelRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(hover: none)");
+    const sync = () => setExpandContactFab(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  useLayoutEffect(() => {
+    const el = sectionBottomSentinelRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        setDockContactFabInSection(entry.isIntersecting);
+      },
+      { root: null, threshold: 0, rootMargin: "0px" },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   const validate = (formValues: FormValues): FormErrors => {
     const nextErrors: FormErrors = {};
@@ -86,9 +111,17 @@ export default function ContactUsForm({
     "mt-1 text-right text-[11px] font-semibold uppercase tracking-[0.08em] text-[#d6697d]";
 
   return (
-    <section aria-labelledby="contact-us-title" className={`bg-[#e6ebf6] py-16 ${className}`}>
+    <section
+      id="contact-us"
+      aria-labelledby="contact-us-title"
+      className={`relative isolate scroll-mt-24 bg-[#e6ebf6] py-16 ${className}`}
+    >
       <div className="mx-auto w-full max-w-6xl px-6 text-[#1f2d57] md:px-10">
-        <h2 id="contact-us-title" className="mb-10 text-center text-4xl font-light">
+        <h2
+          ref={titleRef}
+          id="contact-us-title"
+          className="mb-10 text-center text-4xl font-light"
+        >
           {title}
         </h2>
 
@@ -265,6 +298,50 @@ export default function ContactUsForm({
           </div>
         </form>
       </div>
+
+      <div
+        ref={sectionBottomSentinelRef}
+        className="pointer-events-none absolute bottom-0 left-0 right-0 h-px"
+        aria-hidden
+      />
+
+      <button
+        type="button"
+        onClick={() => {
+          titleRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }}
+        className={`group bottom-6 right-6 inline-flex h-14 min-h-14 min-w-14 overflow-hidden rounded-full bg-[#000759] text-white shadow-lg ring-2 ring-white/20 transition-[max-width,box-shadow,padding,width] duration-300 ease-out hover:bg-[#000759]/92 hover:shadow-xl hover:ring-white/35 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white max-[480px]:bottom-4 max-[480px]:right-4 md:bottom-10 md:right-10 ${
+          dockContactFabInSection ? "absolute z-20" : "fixed z-40"
+        } ${
+          expandContactFab
+            ? "w-auto max-w-[min(18rem,calc(100vw-2rem))] pr-5"
+            : "w-14 max-w-14 pr-0 hover:w-auto hover:max-w-[min(18rem,calc(100vw-2rem))] hover:pr-5 focus-visible:w-auto focus-visible:max-w-[min(18rem,calc(100vw-2rem))] focus-visible:pr-5"
+        }`}
+        aria-label="Contact us — scroll to form"
+      >
+        <span
+          className="pointer-events-none absolute left-0 top-0 z-10 flex size-14 items-center justify-center"
+          aria-hidden
+        >
+          <img
+            src="/icon-phone-mail.svg"
+            alt=""
+            className="block size-8 object-contain"
+            width={32}
+            height={32}
+            decoding="async"
+          />
+        </span>
+        <span
+          className={`flex h-14 min-h-14 min-w-0 flex-1 items-center overflow-hidden whitespace-nowrap pl-14 pr-0.5 text-left text-xs font-bold uppercase tracking-[0.12em] transition-[opacity,transform] duration-300 ease-out ${
+            expandContactFab
+              ? "translate-x-0 opacity-100"
+              : "pointer-events-none translate-x-1 opacity-0 group-hover:pointer-events-auto group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:pointer-events-auto group-focus-visible:translate-x-0 group-focus-visible:opacity-100"
+          }`}
+        >
+          Contact us
+        </span>
+      </button>
     </section>
   );
 }

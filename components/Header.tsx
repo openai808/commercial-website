@@ -109,7 +109,7 @@ const navConfig: NavItem[] = [
               "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=320&q=80",
             imageAlt: "Solar panels and sustainable energy",
             title: "Energy & Sustainability",
-            href: "/services/sustainability",
+            href: "/services/sustainability-services",
             linkLabel: "Learn more",
           },
         },
@@ -129,7 +129,11 @@ const navConfig: NavItem[] = [
             { label: "Project Management", href: "/services/design-build" },
             {
               label: "Residential",
-              href: "/services/manage-portfolios",
+              href: "/services/residential-services",
+            },
+            {
+              label: "Industrial Services",
+              href: "/services/industrial",
             },
             {
               label: "Tenant Representation",
@@ -137,10 +141,10 @@ const navConfig: NavItem[] = [
             },
             {
               label: "Real Estate Management Services",
-              href: "/services/transform-outcomes1",
+              href: "/services/real-estate-management-services",
             }, {
               label: "Valuation and Advisory Services",
-              href: "/services/transform-outcomes2",
+              href: "/services/valuation-and-advisory-services",
             },
             {
               label: "Research Services",

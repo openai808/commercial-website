@@ -183,7 +183,7 @@ const SERVICES: ServiceItem[] = [
   {
     id: "residential",
     label: "Residential",
-    href: "/properties/residential",
+    href: "/services/residential-services",
     icon: <IconResidential />,
   },
   {
@@ -201,7 +201,7 @@ const SERVICES: ServiceItem[] = [
   {
     id: "valuation",
     label: "Valuation and Advisory Services",
-    href: "/services/valuation",
+    href: "/services/valuation-and-advisory-services",
     icon: <IconValuation />,
   },
   {

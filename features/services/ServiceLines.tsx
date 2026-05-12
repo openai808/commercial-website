@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-type ServiceIcon =
+export type ServiceIcon =
   | "capital"
   | "occupier"
   | "management"
@@ -20,19 +20,19 @@ const serviceLines: { title: string; icon: ServiceIcon; href: string }[] = [
   {
     title: "Real Estate Management Services",
     icon: "management",
-    href: "/services/transform-outcomes1",
+    href: "/services/real-estate-management-services",
   },
   {
     title: "Valuation and Advisory Services",
     icon: "valuation",
-    href: "/services/transform-outcomes2",
+    href: "/services/valuation-and-advisory-services",
   },
-  { title: "Residential", icon: "residential", href: "/services/manage-portfolios" },
-  { title: "Industrial", icon: "industrial", href: "/properties/industrial" },
-  { title: "Sustainability Services", icon: "sustainability", href: "/services/sustainability" },
+  { title: "Residential", icon: "residential", href: "/services/residential-services" },
+  { title: "Industrial Services", icon: "industrial", href: "/services/industrial" },
+  { title: "Sustainability Services", icon: "sustainability", href: "/services/sustainability-services" },
 ];
 
-function ServiceCardIcon({ icon }: { icon: ServiceIcon }) {
+export function ServiceCardIcon({ icon }: { icon: ServiceIcon }) {
   const base = "h-16 w-16 text-[#5f74ab]";
   const strokeProps = {
     fill: "none",
