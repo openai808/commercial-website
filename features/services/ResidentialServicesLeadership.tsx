@@ -55,7 +55,7 @@ export default function ResidentialServicesLeadership() {
                 <div className="relative h-[88px] w-[88px] shrink-0 overflow-hidden rounded-full bg-[#eef0f5] ring-1 ring-[#d9dce5]">
                   <Image
                     src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80"
-                    alt="Portrait of Gigi Limguangco"
+                    alt="Portrait of Claire Donovan"
                     fill
                     className="object-cover"
                     sizes="88px"
@@ -63,31 +63,31 @@ export default function ResidentialServicesLeadership() {
                 </div>
                 <div className="min-w-0 flex-1 pt-0.5 text-left">
                   <h3 className="text-base font-bold leading-tight text-[#27386e] md:text-lg">
-                    Gigi Limguangco
+                    Claire Donovan
                   </h3>
                   <p className="mt-1 text-sm text-[#27386e]">Associate Director,</p>
-                  <p className="text-sm text-[#27386e]">Residential Services,</p>
-                  <p className="text-sm text-[#27386e]">Manila</p>
+                  <p className="text-sm text-[#27386e]">Luxury Homes Division,</p>
+                  <p className="text-sm text-[#27386e]">Vancouver</p>
                 </div>
               </div>
 
               <div className="flex flex-col gap-2.5 border-t border-[#eceef3] pt-4 text-left">
                 <a
-                  href="tel:+63288880100"
+                  href="tel:+16045551234"
                   className="flex items-center gap-2 text-sm font-medium text-[#23408e] hover:text-[#1d3575]"
                 >
                   <IconPhone className="shrink-0 text-[#23408e]" />
                   Call now
                 </a>
                 <a
-                  href="tel:+639178888100"
+                  href="tel:+16045559876"
                   className="flex items-center gap-2 text-sm font-medium text-[#23408e] hover:text-[#1d3575]"
                 >
                   <IconMobile className="shrink-0 text-[#23408e]" />
                   Call Mobile
                 </a>
                 <a
-                  href="mailto:gigi.limguangco@example.com"
+                  href="mailto:claire.donovan@example.com"
                   className="flex items-center gap-2 text-sm font-medium text-[#23408e] hover:text-[#1d3575]"
                 >
                   <IconEnvelope className="shrink-0 text-[#23408e]" />

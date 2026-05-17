@@ -12,19 +12,19 @@ type Expert = {
 
 const EXPERTS: Expert[] = [
   {
-    name: "Julius Guevara",
+    name: "Marcus Whitfield",
     role: "Senior Director",
-    team: "Capital Markets and Investment Services",
-    location: "Manila",
+    team: "Debt & Structured Finance",
+    location: "Singapore",
     image:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
     profileHref: "/professionals",
   },
   {
-    name: "Edmarc Delima",
+    name: "Sofia Andersson",
     role: "Associate Director",
-    team: "Capital Markets & Investment Services",
-    location: "Manila",
+    team: "Investment Sales Advisory",
+    location: "Hong Kong",
     image:
       "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80",
     profileHref: "/professionals",

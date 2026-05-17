@@ -29,9 +29,9 @@ const PROPERTY_TYPE_OPTIONS = [
 
 const EXPERT_OPTIONS = [
   { value: "", label: "Experts" },
-  { value: "broker-1", label: "Maria Santos" },
-  { value: "broker-2", label: "James Rivera" },
-  { value: "broker-3", label: "Ana Dela Cruz" },
+  { value: "broker-1", label: "Elena Marsh" },
+  { value: "broker-2", label: "Daniel Okonkwo" },
+  { value: "broker-3", label: "Priya Nair" },
 ] as const;
 
 type AreaUnit = "sqft" | "sqm";
