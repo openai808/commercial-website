@@ -1,3 +1,13 @@
+/** Property types shown on the public properties page. */
+export const ALLOWED_LISTING_PROPERTY_TYPES = [
+  "Commercial Lot",
+  "Commercial Space",
+  "Commercial or Residential Building",
+  "Industrial Lot",
+  "Office Space",
+  "Warehouse or Storage Facility",
+] as const;
+
 export type ListingAgent = {
   id: string;
   first_name: string | null;

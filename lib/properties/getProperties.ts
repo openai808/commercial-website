@@ -1,8 +1,9 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import type {
-  ListingAgent,
-  ListingWithAgent,
-  PropertiesPageResult,
+import {
+  ALLOWED_LISTING_PROPERTY_TYPES,
+  type ListingAgent,
+  type ListingWithAgent,
+  type PropertiesPageResult,
 } from "@/lib/properties/types";
 
 const AGENT_SELECT =
@@ -22,6 +23,7 @@ export async function getProperties(
     .from("listings_secure")
     .select("*", { count: "exact" })
     .eq("status", "Available")
+    .in("property_type", [...ALLOWED_LISTING_PROPERTY_TYPES])
     .order("created_at", { ascending: false })
     .range(from, to);
 
