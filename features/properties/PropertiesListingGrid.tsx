@@ -6,6 +6,7 @@ import Link from "next/link";
 import {
   getListingExtraTagsCount,
   getListingHref,
+  getListingIdentifier,
   getListingImage,
   getListingLocation,
   getListingSize,
@@ -46,10 +47,13 @@ export default function PropertiesListingGrid({
     <div
       aria-label="Property listings"
       {...(pending ? { "aria-busy": true as const } : {})}
-      className={`mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 transition-[filter,opacity] duration-200 ease-out motion-reduce:transition-none ${pendingClass}`}
+      className={`mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 md:grid-cols-3 lg:grid-cols-2 lg:gap-4 xl:grid-cols-3 xl:gap-4 2xl:grid-cols-4 min-[2000px]:grid-cols-4 min-[2000px]:gap-4 transition-[filter,opacity] duration-200 ease-out motion-reduce:transition-none ${pendingClass}`}
     >
       {listings.map((listing) => (
-        <PropertyListingCard key={listing.id} listing={listing} />
+        <PropertyListingCard
+          key={getListingIdentifier(listing) ?? getListingTitle(listing)}
+          listing={listing}
+        />
       ))}
     </div>
   );
@@ -70,7 +74,7 @@ function PropertyListingCard({ listing }: { listing: ListingWithAgent }) {
           alt={getListingTitle(listing)}
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-          sizes="(max-width: 1024px) 100vw, 50vw"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, (max-width: 1536px) 25vw, 200px"
         />
         <div
           aria-hidden

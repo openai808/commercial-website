@@ -12,7 +12,11 @@ export type ListingAgent = {
   id: string;
   first_name: string | null;
   last_name: string | null;
-  profile_picture_url: string | null;
+  profile_picture_url?: string | null;
+  avatar_url?: string | null;
+  email?: string | null;
+  mobile_number?: string | null;
+  department?: string | null;
   position: string | null;
 };
 
@@ -23,6 +27,7 @@ export type ListingWithAgent = {
   status: string;
   agent_id?: string | null;
   slug?: string | null;
+  listing_code?: string | null;
   title?: string | null;
   property_title?: string | null;
   name?: string | null;
@@ -42,6 +47,7 @@ export type ListingWithAgent = {
   images?: string[] | null;
   price?: number | string | null;
   display_price?: string | null;
+  lot_area?: number | string | null;
   floor_area?: number | string | null;
   floor_area_sqm?: number | string | null;
   floor_area_sqft?: number | string | null;

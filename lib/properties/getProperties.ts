@@ -7,7 +7,7 @@ import {
 } from "@/lib/properties/types";
 
 const AGENT_SELECT =
-  "id, first_name, last_name, profile_picture_url, position";
+  "id, first_name, last_name, avatar_url, email, mobile_number, department, position";
 
 export async function getProperties(
   page = 1,
@@ -56,6 +56,48 @@ export async function getProperties(
     pageSize,
     total,
     totalPages: Math.ceil(total / pageSize),
+  };
+}
+
+const LISTING_UUID =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+export async function getListingBySlugOrId(
+  slugOrId: string,
+): Promise<ListingWithAgent | null> {
+  const supabase = createSupabaseServerClient();
+  const segment = decodeURIComponent(slugOrId);
+  const isUuid = LISTING_UUID.test(segment);
+
+  let query = supabase
+    .from("listings_secure")
+    .select("*")
+    .eq("status", "Available")
+    .in("property_type", [...ALLOWED_LISTING_PROPERTY_TYPES]);
+
+  // `listings_secure` exposes `listing_code`; `id` and `slug` are often null.
+  query = isUuid
+    ? query.eq("id", segment)
+    : query.eq("listing_code", segment);
+
+  const { data: row, error } = await query.maybeSingle();
+
+  if (error) throw error;
+  if (!row) return null;
+
+  const listing = row as ListingWithAgent;
+  const agentId =
+    typeof listing.agent_id === "string" && listing.agent_id.length > 0
+      ? listing.agent_id
+      : null;
+
+  const agentsById = agentId
+    ? await fetchAgentsById(supabase, [agentId])
+    : new Map<string, ListingAgent>();
+
+  return {
+    ...listing,
+    agent: agentId ? (agentsById.get(agentId) ?? null) : null,
   };
 }
 

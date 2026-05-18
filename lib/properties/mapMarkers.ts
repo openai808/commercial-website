@@ -1,5 +1,6 @@
 import {
   getListingCoordinates,
+  getListingIdentifier,
   getListingTitle,
 } from "@/lib/properties/listingDisplay";
 import type { ListingWithAgent } from "@/lib/properties/types";
@@ -18,9 +19,12 @@ export function buildListingMapMarkers(
     const coordinates = getListingCoordinates(listing);
     if (!coordinates) return [];
 
+    const id = getListingIdentifier(listing);
+    if (!id) return [];
+
     return [
       {
-        id: listing.id,
+        id,
         lat: coordinates.lat,
         lng: coordinates.lng,
         title: getListingTitle(listing),

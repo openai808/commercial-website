@@ -32,7 +32,11 @@ export default function PropertiesListingsSection({
         }
         belowColumns={
           totalPages > 1 ? (
-            <PropertiesPagination page={page} totalPages={totalPages} className="pt-10" />
+            <PropertiesPagination
+              page={page}
+              totalPages={totalPages}
+              className="pt-10 !px-0 md:!px-0"
+            />
           ) : null
         }
       />
