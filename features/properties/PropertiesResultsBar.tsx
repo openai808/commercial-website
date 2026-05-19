@@ -1,8 +1,15 @@
 "use client";
 
-import { useState } from "react";
-
-type SortField = "relevance" | "date" | "price" | "size";
+import { usePropertiesListingsNavigation } from "@/features/properties/PropertiesListingsNavigationContext";
+import {
+  appendPropertiesSortParams,
+  sortFieldHasDirection,
+  type PropertiesSort,
+  type SortDirection,
+  type SortField,
+} from "@/lib/properties/sortParams";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const SORT_OPTIONS: {
   id: SortField;
@@ -46,35 +53,60 @@ type PropertiesResultsBarProps = {
   start?: number;
   end?: number;
   total?: number;
+  initialSort: PropertiesSort;
 };
 
 export default function PropertiesResultsBar({
   start = 1,
   end = 30,
   total = 1018,
+  initialSort,
 }: PropertiesResultsBarProps) {
-  const [sortBy, setSortBy] = useState<SortField>("price");
-  const [sortDirections, setSortDirections] = useState<Record<"price" | "size", "asc" | "desc">>({
-    price: "desc",
-    size: "desc",
-  });
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const nav = usePropertiesListingsNavigation();
+  const [sort, setSort] = useState<PropertiesSort>(initialSort);
+
+  useEffect(() => {
+    setSort(initialSort);
+  }, [initialSort]);
 
   const formattedTotal = total.toLocaleString("en-US");
 
-  const handleSortClick = (field: SortField) => {
-    if (field === "price" || field === "size") {
-      if (sortBy === field) {
-        setSortDirections((current) => ({
-          ...current,
-          [field]: current[field] === "desc" ? "asc" : "desc",
-        }));
-      } else {
-        setSortBy(field);
-      }
+  const applySort = (next: PropertiesSort) => {
+    setSort(next);
+
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("sort");
+    params.delete("dir");
+    appendPropertiesSortParams(params, next);
+    params.delete("page");
+
+    const qs = params.toString();
+    const url = qs.length > 0 ? `${pathname}?${qs}` : pathname;
+
+    if (nav) {
+      nav.navigateListings(url);
       return;
     }
 
-    setSortBy(field);
+    window.location.assign(url);
+  };
+
+  const handleSortClick = (field: SortField) => {
+    if (sortFieldHasDirection(field)) {
+      if (sort.field === field) {
+        const nextDirection: SortDirection =
+          sort.direction === "desc" ? "asc" : "desc";
+        applySort({ field, direction: nextDirection });
+        return;
+      }
+
+      applySort({ field, direction: "desc" });
+      return;
+    }
+
+    applySort({ field, direction: "desc" });
   };
 
   return (
@@ -82,7 +114,7 @@ export default function PropertiesResultsBar({
       aria-label="Search results and sorting"
       className="w-full bg-[#f0f4fa] text-[#000759]"
     >
-      <div className="mx-auto flex w-full flex-wrap items-center justify-end gap-x-4 gap-y-2 px-6 py-7 mt-2 md:px-10">
+      <div className="mx-auto mt-2 flex w-full flex-wrap items-center justify-end gap-x-4 gap-y-2 px-6 py-7 md:px-10">
         <p className={barTextClass}>
           Results {start}-{end} of {formattedTotal}
         </p>
@@ -97,10 +129,10 @@ export default function PropertiesResultsBar({
           <span className={barTextClass}>Sort by</span>
 
           {SORT_OPTIONS.map((option) => {
-            const isActive = sortBy === option.id;
+            const isActive = sort.field === option.id;
             const direction =
-              option.id === "price" || option.id === "size"
-                ? sortDirections[option.id]
+              isActive && sortFieldHasDirection(option.id)
+                ? sort.direction
                 : null;
 
             return (

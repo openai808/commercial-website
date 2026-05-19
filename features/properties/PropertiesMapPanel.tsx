@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import type { ListingMapMarker } from "@/lib/properties/mapMarkers";
+import type { ListingMapMarkerSource } from "@/lib/properties/mapMarkers";
 
 const PropertiesMap = dynamic(
   () => import("@/features/properties/PropertiesMap"),
@@ -19,13 +19,15 @@ const PropertiesMap = dynamic(
 );
 
 type PropertiesMapPanelProps = {
-  markers: ListingMapMarker[];
+  markerSources: ListingMapMarkerSource[];
 };
 
-export default function PropertiesMapPanel({ markers }: PropertiesMapPanelProps) {
+export default function PropertiesMapPanel({
+  markerSources,
+}: PropertiesMapPanelProps) {
   return (
     <div className="h-full min-h-0 w-full overflow-hidden">
-      <PropertiesMap markers={markers} />
+      <PropertiesMap markerSources={markerSources} />
     </div>
   );
 }

@@ -1,37 +1,31 @@
 "use client";
 
-import { type ChangeEvent, FormEvent, useId, useState } from "react";
+import CheckboxFilterMultiSelect from "@/features/properties/CheckboxFilterMultiSelect";
+import {
+  formStateToPropertiesQuery,
+  propertiesQueryToFormState,
+  type PropertiesQueryFormState,
+} from "@/lib/properties/propertiesQueryForm";
+import {
+  buildPropertiesSearchParams,
+  EMPTY_PROPERTIES_QUERY,
+  parsePropertiesSortParams,
+  type PropertiesQuery,
+} from "@/lib/properties/searchParams";
+import { usePropertiesListingsNavigation } from "@/features/properties/PropertiesListingsNavigationContext";
+import type {
+  ListingAgentCount,
+  ListingCityCount,
+  ListingPropertyTypeCount,
+} from "@/lib/properties/types";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { type ChangeEvent, FormEvent, useEffect, useId, useState } from "react";
 
 const LISTING_OPTIONS = [
   { value: "", label: "All Listings" },
   { value: "for-lease", label: "For Lease" },
   { value: "for-sale", label: "For Sale" },
   { value: "investment", label: "Investment Properties" },
-] as const;
-
-const LOCATION_OPTIONS = [
-  { value: "", label: "Location" },
-  { value: "metro-manila", label: "Metro Manila" },
-  { value: "cebu", label: "Cebu" },
-  { value: "davao", label: "Davao" },
-  { value: "clark", label: "Clark" },
-  { value: "iloilo", label: "Iloilo" },
-] as const;
-
-const PROPERTY_TYPE_OPTIONS = [
-  { value: "", label: "Property Type" },
-  { value: "office", label: "Office" },
-  { value: "retail", label: "Retail" },
-  { value: "industrial", label: "Industrial" },
-  { value: "multifamily", label: "Multifamily" },
-  { value: "hospitality", label: "Hotels" },
-] as const;
-
-const EXPERT_OPTIONS = [
-  { value: "", label: "Experts" },
-  { value: "broker-1", label: "Elena Marsh" },
-  { value: "broker-2", label: "Daniel Okonkwo" },
-  { value: "broker-3", label: "Priya Nair" },
 ] as const;
 
 type AreaUnit = "sqft" | "sqm";
@@ -140,44 +134,74 @@ function UnderlineSelect({
   );
 }
 
-const INITIAL_FILTERS = {
-  listing: "",
-  location: "",
-  propertyType: "",
-  keywords: "",
-  floorAreaMin: "",
-  floorAreaMax: "",
-  areaUnit: "sqft" as AreaUnit,
-  expert: "",
+const INITIAL_FORM = propertiesQueryToFormState(EMPTY_PROPERTIES_QUERY);
+
+type PropertiesSearchFiltersProps = {
+  initialQuery: PropertiesQuery;
+  cityOptions: ListingCityCount[];
+  propertyTypeOptions: ListingPropertyTypeCount[];
+  agentOptions: ListingAgentCount[];
 };
 
-export default function PropertiesSearchFilters() {
+export default function PropertiesSearchFilters({
+  initialQuery,
+  cityOptions,
+  propertyTypeOptions,
+  agentOptions,
+}: PropertiesSearchFiltersProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const nav = usePropertiesListingsNavigation();
   const formId = useId();
   const advancedPanelId = `${formId}-advanced-panel`;
-  const [advancedOpen, setAdvancedOpen] = useState(false);
-  const [listing, setListing] = useState(INITIAL_FILTERS.listing);
-  const [location, setLocation] = useState(INITIAL_FILTERS.location);
-  const [propertyType, setPropertyType] = useState(INITIAL_FILTERS.propertyType);
-  const [keywords, setKeywords] = useState(INITIAL_FILTERS.keywords);
-  const [floorAreaMin, setFloorAreaMin] = useState(INITIAL_FILTERS.floorAreaMin);
-  const [floorAreaMax, setFloorAreaMax] = useState(INITIAL_FILTERS.floorAreaMax);
-  const [areaUnit, setAreaUnit] = useState<AreaUnit>(INITIAL_FILTERS.areaUnit);
-  const [expert, setExpert] = useState(INITIAL_FILTERS.expert);
+  const [form, setForm] = useState<PropertiesQueryFormState>(() =>
+    propertiesQueryToFormState(initialQuery),
+  );
+  const [advancedOpen, setAdvancedOpen] = useState(() =>
+    hasAdvancedFields(initialQuery),
+  );
+
+  useEffect(() => {
+    setForm(propertiesQueryToFormState(initialQuery));
+    if (hasAdvancedFields(initialQuery)) {
+      setAdvancedOpen(true);
+    }
+  }, [initialQuery]);
+
+  const applyForm = (nextForm: PropertiesQueryFormState) => {
+    setForm(nextForm);
+    const query = formStateToPropertiesQuery(nextForm);
+    const sort = parsePropertiesSortParams(
+      Object.fromEntries(searchParams.entries()),
+    );
+    const params = buildPropertiesSearchParams(query, { sort });
+    const qs = params.toString();
+    const url = qs.length > 0 ? `${pathname}?${qs}` : pathname;
+
+    if (nav) {
+      nav.navigateListings(url);
+      return;
+    }
+
+    router.push(url, { scroll: false });
+  };
 
   const handleReset = () => {
-    setListing(INITIAL_FILTERS.listing);
-    setLocation(INITIAL_FILTERS.location);
-    setPropertyType(INITIAL_FILTERS.propertyType);
-    setKeywords(INITIAL_FILTERS.keywords);
-    setFloorAreaMin(INITIAL_FILTERS.floorAreaMin);
-    setFloorAreaMax(INITIAL_FILTERS.floorAreaMax);
-    setAreaUnit(INITIAL_FILTERS.areaUnit);
-    setExpert(INITIAL_FILTERS.expert);
+    setForm(INITIAL_FORM);
+    setAdvancedOpen(false);
+
+    if (nav) {
+      nav.navigateListings(pathname);
+      return;
+    }
+
+    router.push(pathname, { scroll: false });
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Filter submission can be wired to query params or an API later.
+    applyForm(form);
   };
 
   return (
@@ -190,40 +214,60 @@ export default function PropertiesSearchFilters() {
       </h1>
 
       <div className="mx-auto w-full px-6 md:px-10">
-        <form role="search" aria-label="Search properties" onSubmit={handleSubmit}>
+        <form
+          role="search"
+          aria-label="Search properties"
+          onSubmit={handleSubmit}
+          aria-busy={nav?.isListingsPending}
+        >
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6 xl:gap-10">
             <label className="flex min-w-0 flex-col gap-1.5">
               <span className={fieldLabelClass}>All Listings</span>
               <UnderlineSelect
                 name="listing"
-                value={listing}
-                onChange={(event) => setListing(event.target.value)}
+                value={form.listing}
+                onChange={(event) =>
+                  setForm((current) => ({
+                    ...current,
+                    listing: event.target.value as PropertiesQueryFormState["listing"],
+                  }))
+                }
                 options={LISTING_OPTIONS}
                 aria-label="Listing type"
               />
             </label>
 
-            <label className="flex min-w-0 flex-col gap-1.5">
-              <span className={fieldLabelClass}>Location</span>
-              <UnderlineSelect
-                name="location"
-                value={location}
-                onChange={(event) => setLocation(event.target.value)}
-                options={LOCATION_OPTIONS}
-                aria-label="Location"
-              />
-            </label>
+            <CheckboxFilterMultiSelect
+              label="Location"
+              placeholder="Location"
+              emptyMessage="No locations available"
+              inputName="location"
+              multipleLabel="locations"
+              options={cityOptions.map(({ city, count }) => ({
+                value: city,
+                label: city,
+                count,
+              }))}
+              selectedValues={form.cities}
+              onChange={(cities) => setForm((current) => ({ ...current, cities }))}
+            />
 
-            <label className="flex min-w-0 flex-col gap-1.5">
-              <span className={fieldLabelClass}>Property Type</span>
-              <UnderlineSelect
-                name="propertyType"
-                value={propertyType}
-                onChange={(event) => setPropertyType(event.target.value)}
-                options={PROPERTY_TYPE_OPTIONS}
-                aria-label="Property type"
-              />
-            </label>
+            <CheckboxFilterMultiSelect
+              label="Property Type"
+              placeholder="Property Type"
+              emptyMessage="No property types available"
+              inputName="propertyType"
+              multipleLabel="property types"
+              options={propertyTypeOptions.map(({ propertyType, count }) => ({
+                value: propertyType,
+                label: propertyType,
+                count,
+              }))}
+              selectedValues={form.propertyTypes}
+              onChange={(propertyTypes) =>
+                setForm((current) => ({ ...current, propertyTypes }))
+              }
+            />
 
             <label className="flex min-w-0 flex-col gap-1.5">
               <span className={fieldLabelClass}>Keywords</span>
@@ -231,8 +275,10 @@ export default function PropertiesSearchFilters() {
                 <input
                   type="search"
                   name="keywords"
-                  value={keywords}
-                  onChange={(event) => setKeywords(event.target.value)}
+                  value={form.keywords}
+                  onChange={(event) =>
+                    setForm((current) => ({ ...current, keywords: event.target.value }))
+                  }
                   placeholder="Keywords"
                   className={keywordInputClass}
                   aria-label="Search keywords"
@@ -242,7 +288,7 @@ export default function PropertiesSearchFilters() {
                   className={`${fieldIconClass} pointer-events-auto p-0 transition hover:opacity-70`}
                   aria-label="Search properties"
                 >
-                  <SearchIcon className="h-6 w- -mt-1" />
+                  <SearchIcon className="-mt-1 h-6 w-6" />
                 </button>
               </div>
             </label>
@@ -298,8 +344,10 @@ export default function PropertiesSearchFilters() {
                         name="floorAreaMin"
                         min={0}
                         placeholder="Min"
-                        value={floorAreaMin}
-                        onChange={(event) => setFloorAreaMin(event.target.value)}
+                        value={form.areaMin}
+                        onChange={(event) =>
+                          setForm((current) => ({ ...current, areaMin: event.target.value }))
+                        }
                         className={underlineInputClass}
                       />
                       <span className="shrink-0 pb-2.5 text-base text-[#000759]">to</span>
@@ -312,8 +360,10 @@ export default function PropertiesSearchFilters() {
                         name="floorAreaMax"
                         min={0}
                         placeholder="Max"
-                        value={floorAreaMax}
-                        onChange={(event) => setFloorAreaMax(event.target.value)}
+                        value={form.areaMax}
+                        onChange={(event) =>
+                          setForm((current) => ({ ...current, areaMax: event.target.value }))
+                        }
                         className={underlineInputClass}
                       />
                     </div>
@@ -323,8 +373,10 @@ export default function PropertiesSearchFilters() {
                           type="radio"
                           name="areaUnit"
                           value="sqft"
-                          checked={areaUnit === "sqft"}
-                          onChange={() => setAreaUnit("sqft")}
+                          checked={form.areaUnit === "sqft"}
+                          onChange={() =>
+                            setForm((current) => ({ ...current, areaUnit: "sqft" }))
+                          }
                           className="h-4 w-4 accent-[#2563eb]"
                         />
                         Square Feet
@@ -334,8 +386,10 @@ export default function PropertiesSearchFilters() {
                           type="radio"
                           name="areaUnit"
                           value="sqm"
-                          checked={areaUnit === "sqm"}
-                          onChange={() => setAreaUnit("sqm")}
+                          checked={form.areaUnit === "sqm"}
+                          onChange={() =>
+                            setForm((current) => ({ ...current, areaUnit: "sqm" }))
+                          }
                           className="h-4 w-4 accent-[#2563eb]"
                         />
                         Meters Squared
@@ -343,16 +397,22 @@ export default function PropertiesSearchFilters() {
                     </div>
                   </fieldset>
 
-                  <label className="flex min-w-0 flex-col gap-1.5">
-                    <span className={fieldLabelClass}>Experts</span>
-                    <UnderlineSelect
-                      name="expert"
-                      value={expert}
-                      onChange={(event) => setExpert(event.target.value)}
-                      options={EXPERT_OPTIONS}
-                      aria-label="Expert"
-                    />
-                  </label>
+                  <CheckboxFilterMultiSelect
+                    label="Experts"
+                    placeholder="Experts"
+                    emptyMessage="No experts available"
+                    inputName="expert"
+                    multipleLabel="experts"
+                    options={agentOptions.map(({ agentId, name, count }) => ({
+                      value: agentId,
+                      label: name,
+                      count,
+                    }))}
+                    selectedValues={form.agentIds}
+                    onChange={(agentIds) =>
+                      setForm((current) => ({ ...current, agentIds }))
+                    }
+                  />
 
                   <p className="text-sm leading-relaxed text-[#4a5f9a] lg:pt-6">
                     Selecting a listing type will unlock more advanced search options.
@@ -374,5 +434,13 @@ export default function PropertiesSearchFilters() {
         </form>
       </div>
     </section>
+  );
+}
+
+function hasAdvancedFields(query: PropertiesQuery): boolean {
+  return (
+    query.areaMin != null ||
+    query.areaMax != null ||
+    query.agentIds.length > 0
   );
 }

@@ -1,3 +1,10 @@
+import { applyPropertiesQuery } from "@/lib/properties/applyPropertiesQuery";
+import { applyPropertiesSort } from "@/lib/properties/applyPropertiesSort";
+import type { PropertiesQuery } from "@/lib/properties/searchParams";
+import {
+  DEFAULT_PROPERTIES_SORT,
+  type PropertiesSort,
+} from "@/lib/properties/sortParams";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import {
   ALLOWED_LISTING_PROPERTY_TYPES,
@@ -12,6 +19,8 @@ const AGENT_SELECT =
 export async function getProperties(
   page = 1,
   pageSize = 20,
+  filters?: PropertiesQuery,
+  sort: PropertiesSort = DEFAULT_PROPERTIES_SORT,
 ): Promise<PropertiesPageResult> {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
@@ -19,13 +28,19 @@ export async function getProperties(
   const supabase = createSupabaseServerClient();
 
   // `listings_secure` is a view — PostgREST cannot embed via FK hints on views.
-  const { data: listings, error, count } = await supabase
+  const baseQuery = supabase
     .from("listings_secure")
     .select("*", { count: "exact" })
     .eq("status", "Available")
-    .in("property_type", [...ALLOWED_LISTING_PROPERTY_TYPES])
-    .order("created_at", { ascending: false })
-    .range(from, to);
+    .in("property_type", [...ALLOWED_LISTING_PROPERTY_TYPES]);
+
+  let scopedQuery = (
+    filters ? applyPropertiesQuery(baseQuery, filters) : baseQuery
+  ) as typeof baseQuery;
+
+  scopedQuery = applyPropertiesSort(scopedQuery, sort) as typeof scopedQuery;
+
+  const { data: listings, error, count } = await scopedQuery.range(from, to);
 
   if (error) throw error;
 

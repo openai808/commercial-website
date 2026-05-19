@@ -2,7 +2,6 @@ import PropertiesExpertsCta from "@/features/properties/PropertiesExpertsCta";
 import PropertiesListingGrid from "@/features/properties/PropertiesListingGrid";
 import PropertiesListingsLayout from "@/features/properties/PropertiesListingsLayout";
 import PropertiesListingsListColumn from "@/features/properties/PropertiesListingsListColumn";
-import { PropertiesListingsNavigationProvider } from "@/features/properties/PropertiesListingsNavigationContext";
 import PropertiesPagination from "@/features/properties/PropertiesPagination";
 import { buildListingMapMarkers } from "@/lib/properties/mapMarkers";
 import type { ListingWithAgent } from "@/lib/properties/types";
@@ -18,28 +17,26 @@ export default function PropertiesListingsSection({
   page,
   totalPages,
 }: PropertiesListingsSectionProps) {
-  const markers = buildListingMapMarkers(listings);
+  const markerSources = buildListingMapMarkers(listings);
 
   return (
-    <PropertiesListingsNavigationProvider>
-      <PropertiesListingsLayout
-        markers={markers}
-        leftColumn={
-          <PropertiesListingsListColumn page={page}>
-            <PropertiesExpertsCta />
-            <PropertiesListingGrid listings={listings} />
-          </PropertiesListingsListColumn>
-        }
-        belowColumns={
-          totalPages > 1 ? (
-            <PropertiesPagination
-              page={page}
-              totalPages={totalPages}
-              className="pt-10 !px-0 md:!px-0"
-            />
-          ) : null
-        }
-      />
-    </PropertiesListingsNavigationProvider>
+    <PropertiesListingsLayout
+      markerSources={markerSources}
+      leftColumn={
+        <PropertiesListingsListColumn page={page}>
+          <PropertiesExpertsCta />
+          <PropertiesListingGrid listings={listings} />
+        </PropertiesListingsListColumn>
+      }
+      belowColumns={
+        totalPages > 1 ? (
+          <PropertiesPagination
+            page={page}
+            totalPages={totalPages}
+            className="pt-10 !px-0 md:!px-0"
+          />
+        ) : null
+      }
+    />
   );
 }

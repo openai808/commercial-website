@@ -1,6 +1,7 @@
 import {
   getListingCoordinates,
   getListingIdentifier,
+  getListingMapQuery,
   getListingTitle,
 } from "@/lib/properties/listingDisplay";
 import type { ListingWithAgent } from "@/lib/properties/types";
@@ -12,23 +13,41 @@ export type ListingMapMarker = {
   title: string;
 };
 
+/** Marker passed to the map before optional client-side geocoding. */
+export type ListingMapMarkerSource = {
+  id: string;
+  title: string;
+  lat?: number;
+  lng?: number;
+  geocodeQuery?: string;
+};
+
 export function buildListingMapMarkers(
   listings: ListingWithAgent[],
-): ListingMapMarker[] {
-  return listings.flatMap((listing) => {
-    const coordinates = getListingCoordinates(listing);
-    if (!coordinates) return [];
+): ListingMapMarkerSource[] {
+  const markers: ListingMapMarkerSource[] = [];
 
+  for (const listing of listings) {
     const id = getListingIdentifier(listing);
-    if (!id) return [];
+    if (!id) continue;
 
-    return [
-      {
+    const title = getListingTitle(listing);
+    const coordinates = getListingCoordinates(listing);
+    if (coordinates) {
+      markers.push({
         id,
+        title,
         lat: coordinates.lat,
         lng: coordinates.lng,
-        title: getListingTitle(listing),
-      },
-    ];
-  });
+      });
+      continue;
+    }
+
+    const geocodeQuery = getListingMapQuery(listing);
+    if (!geocodeQuery || geocodeQuery === "Philippines") continue;
+
+    markers.push({ id, title, geocodeQuery });
+  }
+
+  return markers;
 }

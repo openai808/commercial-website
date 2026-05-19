@@ -64,3 +64,19 @@ export type PropertiesPageResult = {
   total: number;
   totalPages: number;
 };
+
+export type ListingCityCount = {
+  city: string;
+  count: number;
+};
+
+export type ListingPropertyTypeCount = {
+  propertyType: string;
+  count: number;
+};
+
+export type ListingAgentCount = {
+  agentId: string;
+  name: string;
+  count: number;
+};

@@ -17,8 +17,12 @@ function pageFromSearchParams(searchParams: URLSearchParams): number {
 }
 
 type PropertiesListingsNavigationContextValue = {
+  /** True while listings URL is updating (search, filters, or pagination). */
+  isListingsPending: boolean;
+  /** @deprecated Use `isListingsPending`. */
   isPaginationPending: boolean;
   navigateToPage: (page: number) => void;
+  navigateListings: (url: string) => void;
 };
 
 const PropertiesListingsNavigationContext =
@@ -33,6 +37,15 @@ export function PropertiesListingsNavigationProvider({
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
 
+  const navigateListings = useCallback(
+    (url: string) => {
+      startTransition(() => {
+        router.push(url, { scroll: false });
+      });
+    },
+    [router],
+  );
+
   const navigateToPage = useCallback(
     (nextPage: number) => {
       const normalized =
@@ -44,24 +57,27 @@ export function PropertiesListingsNavigationProvider({
       if (normalized === currentPage) return;
 
       const nextParams = new URLSearchParams(params.toString());
-      if (normalized <= 1) nextParams.delete("page");
-      else nextParams.set("page", String(normalized));
+      if (normalized <= 1) {
+        nextParams.delete("page");
+      } else {
+        nextParams.set("page", String(normalized));
+      }
       const qs = nextParams.toString();
       const url = qs.length > 0 ? `${pathname}?${qs}` : pathname;
 
-      startTransition(() => {
-        router.push(url, { scroll: false });
-      });
+      navigateListings(url);
     },
-    [pathname, router],
+    [navigateListings, pathname],
   );
 
   const value = useMemo(
     () => ({
+      isListingsPending: isPending,
       isPaginationPending: isPending,
       navigateToPage,
+      navigateListings,
     }),
-    [isPending, navigateToPage],
+    [isPending, navigateListings, navigateToPage],
   );
 
   return (

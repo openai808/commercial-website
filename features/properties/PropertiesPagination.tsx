@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePropertiesListingsNavigation } from "@/features/properties/PropertiesListingsNavigationContext";
+import { useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
 
 type PropertiesPaginationProps = {
@@ -15,9 +16,18 @@ export default function PropertiesPagination({
   totalPages,
   className = "",
 }: PropertiesPaginationProps) {
+  const searchParams = useSearchParams();
+
   if (totalPages <= 1) return null;
 
   const pages = buildPageNumbers(page, totalPages);
+  const pageHref = (targetPage: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (targetPage <= 1) params.delete("page");
+    else params.set("page", String(targetPage));
+    const qs = params.toString();
+    return qs.length > 0 ? `?${qs}` : "";
+  };
 
   return (
     <nav
@@ -27,7 +37,7 @@ export default function PropertiesPagination({
       <ul className="mx-auto flex flex-wrap items-center justify-center gap-2">
         <li>
           <PaginationLink
-            href={page > 1 ? `?page=${page - 1}` : undefined}
+            href={page > 1 ? pageHref(page - 1) : undefined}
             targetPage={page > 1 ? page - 1 : undefined}
             label="Previous page"
             disabled={page <= 1}
@@ -48,7 +58,7 @@ export default function PropertiesPagination({
           ) : (
             <li key={item}>
               <PaginationLink
-                href={`?page=${item}`}
+                href={pageHref(item)}
                 targetPage={item}
                 label={`Page ${item}`}
                 active={item === page}
@@ -61,7 +71,7 @@ export default function PropertiesPagination({
 
         <li>
           <PaginationLink
-            href={page < totalPages ? `?page=${page + 1}` : undefined}
+            href={page < totalPages ? pageHref(page + 1) : undefined}
             targetPage={page < totalPages ? page + 1 : undefined}
             label="Next page"
             disabled={page >= totalPages}

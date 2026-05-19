@@ -1,8 +1,10 @@
 "use client";
 
+import { usePropertiesListingHighlight } from "@/features/properties/PropertiesListingHighlightContext";
 import { usePropertiesListingsNavigation } from "@/features/properties/PropertiesListingsNavigationContext";
 import Image from "next/image";
 import Link from "next/link";
+import { useCallback } from "react";
 import {
   getListingExtraTagsCount,
   getListingHref,
@@ -24,7 +26,7 @@ export default function PropertiesListingGrid({
   listings,
 }: PropertiesListingGridProps) {
   const nav = usePropertiesListingsNavigation();
-  const pending = nav?.isPaginationPending ?? false;
+  const pending = nav?.isListingsPending ?? false;
 
   const pendingClass = pending
     ? "blur-[2px] opacity-[0.72] pointer-events-none select-none motion-reduce:blur-none motion-reduce:opacity-80"
@@ -62,11 +64,34 @@ export default function PropertiesListingGrid({
 function PropertyListingCard({ listing }: { listing: ListingWithAgent }) {
   const status = getListingStatus(listing);
   const extraTags = getListingExtraTagsCount(listing);
+  const listingId = getListingIdentifier(listing);
+  const highlight = usePropertiesListingHighlight();
+  const isHighlighted =
+    listingId != null && (highlight?.isListingHighlighted(listingId) ?? false);
+
+  const setCardRef = useCallback(
+    (node: HTMLAnchorElement | null) => {
+      if (!listingId) return;
+      highlight?.registerListingCardRef(listingId, node);
+    },
+    [highlight, listingId],
+  );
 
   return (
     <Link
+      ref={setCardRef}
       href={getListingHref(listing)}
-      className="group flex flex-col overflow-hidden border border-[#d9dce5] bg-white text-left transition-shadow hover:shadow-md"
+      data-listing-id={listingId ?? undefined}
+      onMouseEnter={() => {
+        if (listingId) highlight?.setHoveredListingId(listingId);
+      }}
+      onMouseLeave={() => highlight?.setHoveredListingId(null)}
+      className={
+        "group flex scroll-mt-[var(--listing-map-top,112px)] flex-col overflow-hidden bg-white text-left transition-[border-color,box-shadow] duration-200 " +
+        (isHighlighted
+          ? "border-2 border-[#23408e] shadow-md ring-1 ring-[#23408e]/15"
+          : "border border-[#d9dce5] hover:shadow-md")
+      }
     >
       <div className="cursor-pointer relative aspect-[4/3] w-full cursor-pointer overflow-hidden">
         <Image

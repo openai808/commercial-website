@@ -1,7 +1,8 @@
 "use client";
 
+import { PropertiesListingHighlightProvider } from "@/features/properties/PropertiesListingHighlightContext";
 import PropertiesMapPanel from "@/features/properties/PropertiesMapPanel";
-import type { ListingMapMarker } from "@/lib/properties/mapMarkers";
+import type { ListingMapMarkerSource } from "@/lib/properties/mapMarkers";
 import {
   useCallback,
   useEffect,
@@ -17,14 +18,14 @@ const LG_PX = 1024;
 const FALLBACK_HEADER_STICKY_PX = 112;
 
 type PropertiesListingsLayoutProps = {
-  markers: ListingMapMarker[];
+  markerSources: ListingMapMarkerSource[];
   leftColumn: ReactNode;
   /** Full-width block below the listings + map row (e.g. pagination). */
   belowColumns?: ReactNode;
 };
 
 export default function PropertiesListingsLayout({
-  markers,
+  markerSources,
   leftColumn,
   belowColumns,
 }: PropertiesListingsLayoutProps) {
@@ -114,8 +115,11 @@ export default function PropertiesListingsLayout({
     "lg:h-[min(calc(100vh_-_370px),calc(100dvh_-_var(--listing-map-top)_-_1rem))] " +
     (releasedFromSticky ? "lg:relative" : "lg:sticky lg:top-[var(--listing-map-top)]");
 
+  const listingIds = markerSources.map((source) => source.id);
+
   return (
-    <section
+    <PropertiesListingHighlightProvider listingIds={listingIds}>
+      <section
       aria-label="Property listings and map"
       className="mt-9 bg-white text-[#000759]"
       style={mapWrapStyle}
@@ -135,7 +139,7 @@ export default function PropertiesListingsLayout({
         >
           <div ref={mapOuterRef} className={mapOuterClass}>
             <div className="relative h-full min-h-0 w-full lg:absolute lg:inset-0">
-              <PropertiesMapPanel markers={markers} />
+              <PropertiesMapPanel markerSources={markerSources} />
             </div>
           </div>
         </aside>
@@ -145,6 +149,7 @@ export default function PropertiesListingsLayout({
           {belowColumns}
         </div>
       ) : null}
-    </section>
+      </section>
+    </PropertiesListingHighlightProvider>
   );
 }

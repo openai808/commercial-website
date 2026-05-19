@@ -1,4 +1,5 @@
 import type { ListingWithAgent } from "@/lib/properties/types";
+import { fixUtf8Mojibake } from "@/lib/text/fixUtf8Mojibake";
 
 const PLACEHOLDER_IMAGE =
   "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=900&q=80";
@@ -6,7 +7,9 @@ const PLACEHOLDER_IMAGE =
 const INVALID_PATH_SEGMENTS = new Set(["null", "undefined", "none"]);
 
 function asString(value: unknown): string | null {
-  if (typeof value === "string" && value.trim()) return value.trim();
+  if (typeof value === "string" && value.trim()) {
+    return fixUtf8Mojibake(value.trim());
+  }
   return null;
 }
 
@@ -193,6 +196,53 @@ export type ListingCoordinates = {
   lng: number;
 };
 
+function parseCoordinatePair(
+  latRaw: string,
+  lngRaw: string,
+): ListingCoordinates | null {
+  const lat = Number(latRaw);
+  const lng = Number(lngRaw);
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+  if (lat < -90 || lat > 90 || lng < -180 || lng > 180) return null;
+  return { lat, lng };
+}
+
+/** Extract lat/lng embedded in Google Maps share URLs when DB columns are empty. */
+export function parseCoordinatesFromGoogleMapLink(
+  link: string,
+): ListingCoordinates | null {
+  const trimmed = link.trim();
+  if (!trimmed) return null;
+
+  const d3d4 = trimmed.match(/!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/i);
+  if (d3d4) {
+    const parsed = parseCoordinatePair(d3d4[1], d3d4[2]);
+    if (parsed) return parsed;
+  }
+
+  const at = trimmed.match(/@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/);
+  if (at) {
+    const parsed = parseCoordinatePair(at[1], at[2]);
+    if (parsed) return parsed;
+  }
+
+  try {
+    const url = new URL(trimmed);
+    const q = url.searchParams.get("q") ?? url.searchParams.get("query");
+    if (q) {
+      const comma = q.match(/^(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)$/);
+      if (comma) {
+        const parsed = parseCoordinatePair(comma[1], comma[2]);
+        if (parsed) return parsed;
+      }
+    }
+  } catch {
+    // Not a valid URL; ignore.
+  }
+
+  return null;
+}
+
 export function getListingCoordinates(
   listing: ListingWithAgent,
 ): ListingCoordinates | null {
@@ -206,10 +256,18 @@ export function getListingCoordinates(
     asNumber(listing.geo_lng) ??
     asNumber(listing.long);
 
-  if (lat == null || lng == null) return null;
-  if (lat < -90 || lat > 90 || lng < -180 || lng > 180) return null;
+  if (lat != null && lng != null) {
+    const parsed = parseCoordinatePair(String(lat), String(lng));
+    if (parsed) return parsed;
+  }
 
-  return { lat, lng };
+  const googleMapLink = getListingGoogleMapLink(listing);
+  if (googleMapLink) {
+    const fromLink = parseCoordinatesFromGoogleMapLink(googleMapLink);
+    if (fromLink) return fromLink;
+  }
+
+  return null;
 }
 
 export function getListingImageLabel(listing: ListingWithAgent): string | null {
@@ -331,6 +389,7 @@ export function getListingGoogleMapLink(
 
 export function getListingMapQuery(listing: ListingWithAgent): string {
   const parts = [
+    asString(listing.address),
     asString(listing.street),
     asString(listing.barangay),
     asString(listing.submunicipality),
