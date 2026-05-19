@@ -41,7 +41,7 @@ type MegaMenu = {
   columns: [MegaIntroColumn, MegaLinkStackColumn, MegaLinkStackColumn, ...MegaLinkStackColumn[]];
 };
 
-type NavItem = { id: string; href: string; label: string; mega: MegaMenu };
+type NavItem = { id: string; href: string; label: string; mega?: MegaMenu };
 
 /** Edge Tools ARIA rule expects concrete "true" | "false" tokens, not boolean JSX props. */
 function ariaExpandedProps(expanded: boolean) {
@@ -90,6 +90,11 @@ const navConfig: NavItem[] = [
         },
       ],
     },
+  },
+  {
+    id: "people-offices",
+    href: "/people-and-offices",
+    label: "People & Offices",
   },
   {
     id: "services",
@@ -645,6 +650,21 @@ function MobileNavGroup({
   item: (typeof navConfig)[number];
   onNavigate: () => void;
 }) {
+  if (!item.mega) {
+    return (
+      <div className="border-b border-[#000759]/25">
+        <Link
+          href={item.href}
+          className="flex w-full items-center justify-between gap-4 py-5 text-left text-xl font-normal tracking-tight text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f] sm:py-6 sm:text-2xl"
+          onClick={onNavigate}
+        >
+          {item.label}
+          <LinkStackRowChevron />
+        </Link>
+      </div>
+    );
+  }
+
   const [expanded, setExpanded] = useState(false);
   const mega = item.mega;
   const [intro, ...stacks] = mega.columns;
@@ -953,7 +973,10 @@ function DesktopHeaderSection({
             {navConfig.map((item) => (
               <li
                 key={item.id}
-                onMouseEnter={() => onOpenMega(item.id)}
+                onMouseEnter={() => {
+                  if (item.mega) onOpenMega(item.id);
+                  else onCloseMega();
+                }}
                 className="relative"
               >
                 <Link

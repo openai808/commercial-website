@@ -5,6 +5,7 @@ const SOCIAL_ICON_TINT_FILTER =
   "brightness(0) saturate(100%) invert(8%) sepia(98%) saturate(5567%) hue-rotate(244deg) brightness(67%) contrast(131%)";
 
 const navItems = [
+  { href: "/people-and-offices", label: "People & Offices" },
   { href: "/about", label: "About" },
   { href: "/news", label: "News" },
   { href: "/inverstor-relations", label: "Investor Relations" },

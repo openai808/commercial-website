@@ -22,8 +22,8 @@ export const metadata: Metadata = {
   description:
     "Connect with RE/MAX Commercial for commercial real estate services, investment, leasing, and property solutions across the Philippines.",
   icons: {
-    icon: "/remax-black.png",
-    apple: "/remax-black.png",
+    icon: "/remax-ico.ico.png",
+    apple: "/remax-ico.ico.png",
   },
 };
 
