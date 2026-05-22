@@ -38,7 +38,7 @@ export default function PropertiesListingsListColumn({
     <div
       ref={rootRef}
       className={
-        "min-w-0 flex-1 basis-0 overflow-x-hidden scroll-mt-[var(--listing-map-top,112px)] px-6 md:px-10 lg:flex-[3] lg:px-0 " +
+        "min-w-0 overflow-x-hidden scroll-mt-[var(--listing-map-top,112px)] px-6 md:px-10 lg:flex-[3] lg:px-0 " +
         className
       }
     >
