@@ -3,33 +3,16 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const NEWS_ITEMS = [
-  {
-    date: "Apr 18, 2026",
-    dateTime: "2026-04-18",
-    title: "Logistics hubs in Luzon: Capacity, rents, and tenant demand outlook",
-  },
-  {
-    date: "Apr 20, 2026",
-    dateTime: "2026-04-20",
-    title: "Rising energy risks in the office sector: Who bears the cost?",
-  },
-  {
-    date: "Apr 22, 2026",
-    dateTime: "2026-04-22",
-    title: "Retail footfall rebounds in Metro Manila malls as leasing stabilizes",
-  },
-  {
-    date: "Apr 24, 2026",
-    dateTime: "2026-04-24",
-    title: "Industrial parks outside the capital: What investors are watching next",
-  },
-  {
-    date: "Apr 26, 2026",
-    dateTime: "2026-04-26",
-    title: "Hospitality assets in secondary cities: Yield trends and buyer appetite",
-  },
-];
+export type NewsInsightItem = {
+  date: string;
+  dateTime: string;
+  title: string;
+  href: string;
+};
+
+type HomeNewsInsightsProps = {
+  items?: NewsInsightItem[];
+};
 
 function wheelDeltaPixels(e: WheelEvent): number {
   let y = e.deltaY;
@@ -54,7 +37,7 @@ function newsScrollProgressbarAria(progressFraction: number) {
   } as const;
 }
 
-export default function HomeNewsInsights() {
+export default function HomeNewsInsights({ items = [] }: HomeNewsInsightsProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const dragStateRef = useRef<{
@@ -62,6 +45,7 @@ export default function HomeNewsInsights() {
     startX: number;
     startScrollLeft: number;
   } | null>(null);
+  const wasDraggingRef = useRef(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [centeredIndex, setCenteredIndex] = useState(0);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -181,37 +165,55 @@ export default function HomeNewsInsights() {
     }
   };
 
+  const DRAG_THRESHOLD = 5;
+
+  useEffect(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+
+    const onPointerMove = (e: PointerEvent) => {
+      const drag = dragStateRef.current;
+      if (!drag || drag.pointerId !== e.pointerId) return;
+      const deltaX = e.clientX - drag.startX;
+      if (Math.abs(deltaX) > DRAG_THRESHOLD) {
+        wasDraggingRef.current = true;
+        scroller.scrollLeft = drag.startScrollLeft - deltaX;
+      }
+    };
+
+    const onPointerUp = (e: PointerEvent) => {
+      const drag = dragStateRef.current;
+      if (!drag || drag.pointerId !== e.pointerId) return;
+      dragStateRef.current = null;
+    };
+
+    document.addEventListener("pointermove", onPointerMove);
+    document.addEventListener("pointerup", onPointerUp);
+    document.addEventListener("pointercancel", onPointerUp);
+
+    return () => {
+      document.removeEventListener("pointermove", onPointerMove);
+      document.removeEventListener("pointerup", onPointerUp);
+      document.removeEventListener("pointercancel", onPointerUp);
+    };
+  }, []);
+
   const onScrollerPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     if (e.pointerType !== "mouse") return;
     const scroller = scrollerRef.current;
     if (!scroller || scroller.scrollWidth <= scroller.clientWidth) return;
-    e.preventDefault();
+    wasDraggingRef.current = false;
     dragStateRef.current = {
       pointerId: e.pointerId,
       startX: e.clientX,
       startScrollLeft: scroller.scrollLeft,
     };
-    scroller.setPointerCapture(e.pointerId);
   };
 
-  const onScrollerPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    const drag = dragStateRef.current;
-    const scroller = scrollerRef.current;
-    if (!drag || !scroller || drag.pointerId !== e.pointerId) return;
-    const deltaX = e.clientX - drag.startX;
-    scroller.scrollLeft = drag.startScrollLeft - deltaX;
-  };
-
-  const endScrollerDrag = (e: React.PointerEvent<HTMLDivElement>) => {
-    const scroller = scrollerRef.current;
-    const drag = dragStateRef.current;
-    if (!scroller || !drag || drag.pointerId !== e.pointerId) return;
-    try {
-      scroller.releasePointerCapture(e.pointerId);
-    } catch {
-      /* capture already released */
+  const onCardClick = (e: React.MouseEvent) => {
+    if (wasDraggingRef.current) {
+      e.preventDefault();
     }
-    dragStateRef.current = null;
   };
 
   return (
@@ -233,18 +235,17 @@ export default function HomeNewsInsights() {
         aria-label="News and insights articles"
         onMouseLeave={() => setHoveredIndex(null)}
         onPointerDown={onScrollerPointerDown}
-        onPointerMove={onScrollerPointerMove}
-        onPointerUp={endScrollerDrag}
-        onPointerCancel={endScrollerDrag}
       >
-        {NEWS_ITEMS.map((item, index) => {
+        {items.map((item, index) => {
           const isHighlighted = index === highlightedIndex;
 
           return (
-            <article
+            <Link
               key={item.title}
+              href={item.href}
               data-news-card
-              className={`relative w-[min(88vw,300px)] shrink-0 snap-center rounded-2xl px-6 py-7 transition-colors duration-200 sm:w-[min(72vw,320px)] md:w-[min(52vw,380px)] md:px-7 md:py-8 lg:w-[min(44vw,420px)] ${
+              onClick={onCardClick}
+              className={`relative block w-[min(88vw,300px)] shrink-0 snap-center rounded-2xl px-6 py-7 transition-colors duration-200 sm:w-[min(72vw,320px)] md:w-[min(52vw,380px)] md:px-7 md:py-8 lg:w-[min(44vw,420px)] ${
                 isHighlighted
                   ? "bg-[#243768] text-white shadow-md"
                   : "border border-[#dfe6f0] bg-[#eef2f8] text-[#243768]"
@@ -266,7 +267,7 @@ export default function HomeNewsInsights() {
               >
                 {item.title}
               </h3>
-            </article>
+            </Link>
           );
         })}
       </div>

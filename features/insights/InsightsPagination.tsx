@@ -1,0 +1,148 @@
+"use client";
+
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import type { ReactNode } from "react";
+
+type InsightsPaginationProps = {
+  page: number;
+  totalPages: number;
+  className?: string;
+};
+
+export default function InsightsPagination({
+  page,
+  totalPages,
+  className = "",
+}: InsightsPaginationProps) {
+  const searchParams = useSearchParams();
+
+  if (totalPages <= 1) return null;
+
+  const pages = buildPageNumbers(page, totalPages);
+  const pageHref = (targetPage: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (targetPage <= 1) params.delete("page");
+    else params.set("page", String(targetPage));
+    const qs = params.toString();
+    return `/insights${qs.length > 0 ? `?${qs}` : ""}`;
+  };
+
+  return (
+    <nav
+      aria-label="Blog pagination"
+      className={`bg-white px-6 pb-16 text-[#000759] md:px-10 ${className}`}
+    >
+      <ul className="mx-auto flex flex-wrap items-center justify-center gap-2">
+        <li>
+          <PaginationLink
+            href={page > 1 ? pageHref(page - 1) : undefined}
+            label="Previous page"
+            disabled={page <= 1}
+          >
+            Previous
+          </PaginationLink>
+        </li>
+
+        {pages.map((item, index) =>
+          item === "ellipsis" ? (
+            <li
+              key={`ellipsis-${index}`}
+              className="px-2 text-sm text-[#4a5f9a]"
+              aria-hidden
+            >
+              …
+            </li>
+          ) : (
+            <li key={item}>
+              <PaginationLink
+                href={pageHref(item)}
+                label={`Page ${item}`}
+                active={item === page}
+              >
+                {item}
+              </PaginationLink>
+            </li>
+          ),
+        )}
+
+        <li>
+          <PaginationLink
+            href={page < totalPages ? pageHref(page + 1) : undefined}
+            label="Next page"
+            disabled={page >= totalPages}
+          >
+            Next
+          </PaginationLink>
+        </li>
+      </ul>
+    </nav>
+  );
+}
+
+function PaginationLink({
+  href,
+  label,
+  children,
+  active = false,
+  disabled = false,
+}: {
+  href?: string;
+  label: string;
+  children: ReactNode;
+  active?: boolean;
+  disabled?: boolean;
+}) {
+  const className = `inline-flex min-w-9 items-center justify-center rounded border px-3 py-2 text-xs font-semibold uppercase tracking-[0.08em] transition ${
+    active
+      ? "border-[#23408e] bg-[#23408e] text-white"
+      : "border-[#d9dce5] text-[#23408e] hover:bg-[#f0f4fa]"
+  } ${disabled ? "pointer-events-none opacity-40" : ""}`;
+
+  if (!href || disabled) {
+    return (
+      <span className={className} aria-label={label} aria-disabled="true">
+        {children}
+      </span>
+    );
+  }
+
+  if (active) {
+    return (
+      <span className={className} aria-label={label} aria-current="page">
+        {children}
+      </span>
+    );
+  }
+
+  return (
+    <Link href={href} scroll={false} className={className} aria-label={label}>
+      {children}
+    </Link>
+  );
+}
+
+function buildPageNumbers(
+  current: number,
+  total: number,
+): Array<number | "ellipsis"> {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, index) => index + 1);
+  }
+
+  const pages: Array<number | "ellipsis"> = [1];
+
+  if (current > 3) pages.push("ellipsis");
+
+  const start = Math.max(2, current - 1);
+  const end = Math.min(total - 1, current + 1);
+
+  for (let page = start; page <= end; page += 1) {
+    pages.push(page);
+  }
+
+  if (current < total - 2) pages.push("ellipsis");
+
+  pages.push(total);
+  return pages;
+}

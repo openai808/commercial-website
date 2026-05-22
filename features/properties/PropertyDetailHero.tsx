@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type PropertyDetailHeroProps = {
   photos: string[];
@@ -134,6 +134,51 @@ function PropertyGallery({
   );
 }
 
+function PropertyGalleryImage({
+  src,
+  alt,
+  className,
+  sizes,
+  priority,
+  ariaHidden,
+}: {
+  src: string;
+  alt: string;
+  className: string;
+  sizes: string;
+  priority?: boolean;
+  ariaHidden?: boolean;
+}) {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    setIsLoaded(false);
+  }, [src]);
+
+  return (
+    <>
+      {!isLoaded ? (
+        <div
+          className="absolute inset-0 z-[1] animate-pulse bg-[#1c2860] motion-reduce:animate-none"
+          aria-hidden
+        />
+      ) : null}
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes={sizes}
+        priority={priority}
+        aria-hidden={ariaHidden}
+        onLoad={() => setIsLoaded(true)}
+        className={`${className} transition-opacity duration-300 motion-reduce:transition-none ${
+          isLoaded ? "opacity-100" : "opacity-0"
+        }`}
+      />
+    </>
+  );
+}
+
 function PropertyGalleryView({
   current,
   title,
@@ -157,22 +202,20 @@ function PropertyGalleryView({
 }) {
   return (
     <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#0a1030] sm:aspect-[21/9]">
-      <Image
+      <PropertyGalleryImage
         src={current}
         alt=""
-        fill
         className="scale-110 object-cover opacity-50 blur-2xl"
         sizes="100vw"
         priority
-        aria-hidden
+        ariaHidden
       />
 
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="relative h-full w-full max-w-[min(100%,72rem)]">
-          <Image
+          <PropertyGalleryImage
             src={current}
             alt={title}
-            fill
             className="object-contain"
             sizes="(max-width: 1280px) 100vw, 1152px"
             priority

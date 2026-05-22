@@ -8,6 +8,9 @@ export const ALLOWED_LISTING_PROPERTY_TYPES = [
   "Warehouse or Storage Facility",
 ] as const;
 
+/** Status values treated as publicly visible on the properties pages. */
+export const PUBLIC_LISTING_STATUSES = ["Available", "available"] as const;
+
 export type ListingAgent = {
   id: string;
   first_name: string | null;

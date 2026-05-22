@@ -8,6 +8,7 @@ import {
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import {
   ALLOWED_LISTING_PROPERTY_TYPES,
+  PUBLIC_LISTING_STATUSES,
   type ListingAgent,
   type ListingWithAgent,
   type PropertiesPageResult,
@@ -31,7 +32,7 @@ export async function getProperties(
   const baseQuery = supabase
     .from("listings_secure")
     .select("*", { count: "exact" })
-    .eq("status", "Available")
+    .in("status", [...PUBLIC_LISTING_STATUSES])
     .in("property_type", [...ALLOWED_LISTING_PROPERTY_TYPES]);
 
   let scopedQuery = (
@@ -87,7 +88,7 @@ export async function getListingBySlugOrId(
   let query = supabase
     .from("listings_secure")
     .select("*")
-    .eq("status", "Available")
+    .in("status", [...PUBLIC_LISTING_STATUSES])
     .in("property_type", [...ALLOWED_LISTING_PROPERTY_TYPES]);
 
   // `listings_secure` exposes `listing_code`; `id` and `slug` are often null.

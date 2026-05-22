@@ -9,6 +9,8 @@ import {
   getAgentPosition,
   getListingIdentifier,
   getListingLocation,
+  getListingPropertyType,
+  getListingStatus,
   getListingTitle,
 } from "@/lib/properties/listingDisplay";
 import type { ListingWithAgent } from "@/lib/properties/types";
@@ -50,6 +52,12 @@ export default function PropertyDetailSidebar({
   const listingCode = getListingIdentifier(listing) ?? "";
   const listingTitle = getListingTitle(listing);
   const location = getListingLocation(listing);
+  const propertyType = getListingPropertyType(listing);
+  const contractType = getListingStatus(listing) === "lease" ? "Lease" : "Sale";
+  const city = (listing.city as string) ?? "";
+  const price = String(
+    listing.selling_price ?? listing.monthly_rental_price ?? listing.price ?? "",
+  );
 
   return (
     <aside className="lg:sticky lg:top-8 lg:self-start">
@@ -78,6 +86,10 @@ export default function PropertyDetailSidebar({
           listingCode={listingCode}
           listingTitle={listingTitle}
           agentId={listing.agent?.id ?? null}
+          price={price}
+          propertyType={propertyType}
+          contractType={contractType}
+          city={city}
         />
       </div>
     </aside>

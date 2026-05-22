@@ -1,5 +1,6 @@
 import {
   ALLOWED_LISTING_PROPERTY_TYPES,
+  PUBLIC_LISTING_STATUSES,
   type ListingAgent,
   type ListingAgentCount,
 } from "@/lib/properties/types";
@@ -67,7 +68,7 @@ export async function getListingAgentCounts(): Promise<ListingAgentCount[]> {
     const { data, error } = await supabase
       .from("listings_secure")
       .select("agent_id")
-      .eq("status", "Available")
+      .in("status", [...PUBLIC_LISTING_STATUSES])
       .in("property_type", [...ALLOWED_LISTING_PROPERTY_TYPES])
       .not("agent_id", "is", null)
       .range(from, to);

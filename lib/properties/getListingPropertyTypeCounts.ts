@@ -1,5 +1,6 @@
 import {
   ALLOWED_LISTING_PROPERTY_TYPES,
+  PUBLIC_LISTING_STATUSES,
   type ListingPropertyTypeCount,
 } from "@/lib/properties/types";
 import { fixUtf8Mojibake } from "@/lib/text/fixUtf8Mojibake";
@@ -26,7 +27,7 @@ export async function getListingPropertyTypeCounts(): Promise<
     const { data, error } = await supabase
       .from("listings_secure")
       .select("property_type")
-      .eq("status", "Available")
+      .in("status", [...PUBLIC_LISTING_STATUSES])
       .in("property_type", [...ALLOWED_LISTING_PROPERTY_TYPES])
       .not("property_type", "is", null)
       .order("property_type", { ascending: true })

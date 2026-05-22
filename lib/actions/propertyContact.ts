@@ -35,9 +35,20 @@ export async function submitPropertyContact(
   const email = String(formData.get("email") ?? "")
     .trim()
     .slice(0, MAX.email);
+  const phone = String(formData.get("phone") ?? "")
+    .trim()
+    .slice(0, MAX.phone);
   const message = String(formData.get("message") ?? "")
     .trim()
     .slice(0, MAX.message);
+  const listingCode = String(formData.get("listingCode") ?? "")
+    .trim()
+    .slice(0, MAX.listingCode);
+  const agentId = String(formData.get("agentId") ?? "").trim();
+  const price = String(formData.get("price") ?? "").trim();
+  const propertyType = String(formData.get("propertyType") ?? "").trim();
+  const contractType = String(formData.get("contractType") ?? "").trim();
+  const city = String(formData.get("city") ?? "").trim();
   const consentRequired = formData.get("consentRequired") === "on";
 
   if (!firstName || !lastName || !email || !message || !consentRequired) {
@@ -48,11 +59,62 @@ export async function submitPropertyContact(
     return { ok: false, error: "Please enter a valid email address." };
   }
 
-  void String(formData.get("phone") ?? "").trim().slice(0, MAX.phone);
-  void String(formData.get("company") ?? "").trim().slice(0, MAX.company);
-  void String(formData.get("listingCode") ?? "").trim().slice(0, MAX.listingCode);
-  void String(formData.get("listingTitle") ?? "").trim().slice(0, MAX.listingTitle);
-  void String(formData.get("agentId") ?? "").trim();
+  if (!listingCode) {
+    return { ok: false, error: "Listing information is missing." };
+  }
 
-  return { ok: true, error: null };
+  const endpoint = process.env.SUPABASE_LEADENPOINT;
+  const apiKey = process.env.SUPABASE_LEAD_INGEST_API_KEY;
+
+  if (!endpoint || !apiKey) {
+    return { ok: false, error: "Service configuration error. Please try again later." };
+  }
+
+  const today = new Date().toISOString().split("T")[0];
+
+  const body: Record<string, string | undefined> = {
+    user_id: agentId || undefined,
+    lead_name: `${firstName} ${lastName}`,
+    lead_source: "Website",
+    budget: price ? Number(price.replace(/,/g, "")).toLocaleString("en-US") : undefined,
+    email,
+    mobile: phone || undefined,
+    notes: message || undefined,
+    listing_code: listingCode,
+    property_type: propertyType || undefined,
+    contract_type: contractType || undefined,
+    city: city || undefined,
+    date_inquired: today,
+  };
+
+  Object.keys(body).forEach((key) => {
+    if (body[key] === undefined) delete body[key];
+  });
+
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      const errorMessage = errorData?.error ?? "Failed to submit inquiry.";
+      return { ok: false, error: errorMessage };
+    }
+
+    const result = await response.json();
+
+    if (!result.success) {
+      return { ok: false, error: result.error ?? "Failed to submit inquiry." };
+    }
+
+    return { ok: true, error: null };
+  } catch {
+    return { ok: false, error: "Network error. Please try again later." };
+  }
 }

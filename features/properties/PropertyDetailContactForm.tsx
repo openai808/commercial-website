@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useActionState } from "react";
+import { useRef, useState, useTransition } from "react";
 import {
   submitPropertyContact,
   type PropertyContactState,
@@ -16,6 +16,10 @@ type PropertyDetailContactFormProps = {
   listingCode: string;
   listingTitle: string;
   agentId: string | null;
+  price: string;
+  propertyType: string;
+  contractType: string;
+  city: string;
 };
 
 function FieldLabel({
@@ -37,14 +41,29 @@ export default function PropertyDetailContactForm({
   listingCode,
   listingTitle,
   agentId,
+  price,
+  propertyType,
+  contractType,
+  city,
 }: PropertyDetailContactFormProps) {
-  const [state, formAction, pending] = useActionState(
-    submitPropertyContact,
-    initialState,
-  );
+  const [state, setState] = useState<PropertyContactState>(initialState);
+  const [pending, startTransition] = useTransition();
+  const formRef = useRef<HTMLFormElement>(null);
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    startTransition(async () => {
+      const result = await submitPropertyContact(state, formData);
+      setState(result);
+      if (result.ok) {
+        formRef.current?.reset();
+      }
+    });
+  }
 
   return (
-    <form action={formAction} className="mt-6">
+    <form ref={formRef} onSubmit={handleSubmit} className="mt-6">
       <p className="text-[11px] font-semibold tracking-wide text-[#000759]">
         <span className="text-red-600">*</span> REQUIRED FIELD
       </p>
@@ -64,6 +83,10 @@ export default function PropertyDetailContactForm({
       <input type="hidden" name="listingCode" value={listingCode} />
       <input type="hidden" name="listingTitle" value={listingTitle} />
       {agentId ? <input type="hidden" name="agentId" value={agentId} /> : null}
+      <input type="hidden" name="price" value={price} />
+      <input type="hidden" name="propertyType" value={propertyType} />
+      <input type="hidden" name="contractType" value={contractType} />
+      <input type="hidden" name="city" value={city} />
 
       <div className="mt-5 space-y-5">
         <label className="block">
