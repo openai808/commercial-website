@@ -58,6 +58,10 @@ export function getListingTitle(listing: ListingWithAgent): string {
   );
 }
 
+export function getListingCity(listing: ListingWithAgent): string | null {
+  return asString(listing.city) ?? asString(listing.municipality);
+}
+
 export function getListingLocation(listing: ListingWithAgent): string {
   const municipality = asString(listing.municipality);
   const city = asString(listing.city);
@@ -68,6 +72,30 @@ export function getListingLocation(listing: ListingWithAgent): string {
   const unique = [...new Set(parts)];
 
   return unique.join(", ") || "Philippines";
+}
+
+export function getListingLotAreaDisplay(
+  listing: ListingWithAgent,
+): string | null {
+  const lotSqm = asNumber(listing.lot_area);
+  if (lotSqm == null || lotSqm <= 0) return null;
+  return formatSqm(lotSqm);
+}
+
+export function getListingFloorAreaDisplay(
+  listing: ListingWithAgent,
+): string | null {
+  const floorSqm =
+    asNumber(listing.floor_area_sqm) ?? asNumber(listing.floor_area);
+  if (floorSqm != null && floorSqm > 0) return formatSqm(floorSqm);
+
+  const sqft =
+    asNumber(listing.floor_area_sqft) ?? asNumber(listing.building_size);
+  if (sqft != null && sqft > 0) {
+    return `${sqft.toLocaleString("en-US")} sq ft`;
+  }
+
+  return null;
 }
 
 function photosFromList(value: unknown): string[] {
@@ -452,64 +480,147 @@ function addListingNumericDetail(
   items.push({ label, value: format(amount) });
 }
 
-function dedupeDetailItems(items: ListingDetailItem[]): ListingDetailItem[] {
-  const seen = new Set<string>();
+function getListingPricePerSqmFloor(listing: ListingWithAgent): string | null {
+  const direct =
+    asNumber(listing.price_per_sqm_floor_area) ??
+    asNumber(listing.price_per_sqm) ??
+    asNumber(listing.floor_area_price_per_sqm);
 
-  return items.filter((item) => {
-    const key = `${item.label.toLowerCase()}::${item.value.toLowerCase()}`;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
+  if (direct != null && direct > 0) {
+    return `PHP ${direct.toLocaleString("en-US")}`;
+  }
+
+  const display = asString(listing.price_per_sqm_floor_area_display);
+  if (display) return display;
+
+  const price =
+    asNumber(listing.selling_price) ?? asNumber(listing.monthly_rental_price);
+  const floorSqm =
+    asNumber(listing.floor_area_sqm) ?? asNumber(listing.floor_area);
+
+  if (price != null && price > 0 && floorSqm != null && floorSqm > 0) {
+    const perSqm = price / floorSqm;
+    return `PHP ${perSqm.toLocaleString("en-US", { maximumFractionDigits: 2 })}`;
+  }
+
+  return null;
 }
 
-function dedupeStrings(values: string[]): string[] {
-  const seen = new Set<string>();
-
-  return values.filter((value) => {
-    const key = value.toLowerCase();
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
+function getListingListingType(listing: ListingWithAgent): string | null {
+  return (
+    asString(listing.listing_type) ??
+    asString(listing.contract_type) ??
+    null
+  );
 }
 
-export function getListingSummaryDetails(
+function getListingOccupancy(listing: ListingWithAgent): string | null {
+  return (
+    asString(listing.occupancy) ??
+    asString(listing.occupancy_status) ??
+    null
+  );
+}
+
+function getListingTurnover(listing: ListingWithAgent): string | null {
+  return (
+    asString(listing.turnover) ??
+    asString(listing.turnover_date) ??
+    asString(listing.turnover_status) ??
+    null
+  );
+}
+
+function getListingShowingNotes(listing: ListingWithAgent): string | null {
+  return (
+    asString(listing.showing_notes) ??
+    asString(listing.showing_note) ??
+    asString(listing.notes_for_showing) ??
+    null
+  );
+}
+
+export function getListingPropertyDetails(
   listing: ListingWithAgent,
 ): ListingDetailItem[] {
   const items: ListingDetailItem[] = [];
 
-  addListingDetailItem(items, "Property type", listing.property_type);
-  addListingDetailItem(items, "Asset class", listing.asset_class);
-  addListingNumericDetail(items, "Land area", listing.lot_area, formatSqm);
+  addListingDetailItem(
+    items,
+    "Property Type",
+    listing.property_type ?? listing.asset_class,
+  );
+  addListingNumericDetail(items, "Lot Area (sqm)", listing.lot_area, (sqm) =>
+    sqm.toLocaleString("en-US"),
+  );
   addListingNumericDetail(
     items,
-    "Building size",
-    listing.building_size ?? listing.floor_area_sqft,
-    (sqft) => `${sqft.toLocaleString("en-US")} sq ft`,
+    "Floor Area (sqm)",
+    listing.floor_area_sqm ?? listing.floor_area,
+    (sqm) => sqm.toLocaleString("en-US"),
   );
-
-  addListingDetailItem(items, "Payment term", listing.payment_term);
-  addListingDetailItem(items, "Minimum lease term", listing.minimum_lease_term);
-  addListingDetailItem(items, "Occupancy status", listing.occupancy_status);
-  addListingDetailItem(items, "Title status", listing.title_status);
-  addListingDetailItem(items, "Lot shape", listing.lot_shape);
-  addListingDetailItem(items, "Lot location", listing.lot_location);
-  addListingDetailItem(items, "Orientation", listing.orientation);
+  addListingDetailItem(
+    items,
+    "Price/sqm (Floor Area)",
+    getListingPricePerSqmFloor(listing),
+  );
   addListingNumericDetail(items, "Stories", listing.stories, (value) =>
     String(value),
   );
-  addListingNumericDetail(items, "Bedrooms", listing.bedrooms, (value) =>
+  addListingNumericDetail(items, "Bedroom", listing.bedrooms, (value) =>
     String(value),
   );
-  addListingNumericDetail(items, "Bathrooms", listing.bathrooms, (value) =>
+  addListingNumericDetail(items, "Bathroom", listing.bathrooms, (value) =>
     String(value),
   );
   addListingDetailItem(items, "Parking", listing.parking);
-  addListingDetailItem(items, "Association dues / CUSA", listing.association_dues_cusa);
-  addListingDetailItem(items, "Brand type", listing.brand_type);
+  addListingDetailItem(items, "Turnover", getListingTurnover(listing));
+  addListingDetailItem(items, "Listing Type", getListingListingType(listing));
+  addListingDetailItem(items, "Occupancy", getListingOccupancy(listing));
+  addListingDetailItem(items, "Showing Notes", getListingShowingNotes(listing));
 
-  return dedupeDetailItems(items);
+  return items;
+}
+
+function getListingCompleteAddressForMap(
+  listing: ListingWithAgent,
+): string | null {
+  const locationSearch = asString(listing.location_search);
+  if (locationSearch) return locationSearch;
+
+  const address = asString(listing.address);
+  if (address) return address;
+
+  const mapQuery = getListingMapQuery(listing);
+  if (mapQuery && mapQuery !== "Philippines") return mapQuery;
+
+  return null;
+}
+
+function getListingStreetFloor(listing: ListingWithAgent): string | null {
+  const street = asString(listing.street);
+  const floor =
+    asString(listing.floor) ??
+    asString(listing.floor_number) ??
+    asString(listing.floor_no) ??
+    asString(listing.street_floor);
+
+  if (street && floor) return `${street}, ${floor}`;
+  return street ?? floor;
+}
+
+function getListingCondominiumSubdivision(
+  listing: ListingWithAgent,
+): string | null {
+  const condominium = asString(listing.condominium_name);
+  const subdivision =
+    asString(listing.subdivision_name) ?? asString(listing.subdivision);
+
+  if (condominium && subdivision) {
+    return `${condominium} / ${subdivision}`;
+  }
+
+  return condominium ?? subdivision;
 }
 
 export function getListingAddressDetails(
@@ -517,25 +628,23 @@ export function getListingAddressDetails(
 ): ListingDetailItem[] {
   const items: ListingDetailItem[] = [];
 
-  addListingDetailItem(items, "Street", listing.street);
   addListingDetailItem(
     items,
-    "House / block / unit",
-    listing.house_block_unit_number,
+    "Complete Address (Map Search)",
+    getListingCompleteAddressForMap(listing),
   );
-  addListingDetailItem(items, "Barangay", listing.barangay);
-  addListingDetailItem(items, "Sub-municipality", listing.submunicipality);
-  addListingDetailItem(items, "City", listing.city);
-  addListingDetailItem(items, "Municipality", listing.municipality);
-  addListingDetailItem(items, "Province", listing.province);
   addListingDetailItem(items, "Region", listing.region);
-  addListingDetailItem(items, "Location", listing.location);
-  addListingDetailItem(items, "Junction", listing.junction, formatLabel);
-  addListingDetailItem(items, "Lot location", listing.lot_location);
-  addListingDetailItem(items, "Common area", listing.common_area_name);
-  addListingDetailItem(items, "Condominium", listing.condominium_name);
+  addListingDetailItem(items, "Province", listing.province);
+  addListingDetailItem(items, "City", listing.city ?? listing.municipality);
+  addListingDetailItem(items, "Barangay", listing.barangay);
+  addListingDetailItem(items, "Street/Floor", getListingStreetFloor(listing));
+  addListingDetailItem(
+    items,
+    "Condominium/Subdivision",
+    getListingCondominiumSubdivision(listing),
+  );
 
-  return dedupeDetailItems(items);
+  return items;
 }
 
 export function getListingRemarksParagraphs(
@@ -547,7 +656,11 @@ export function getListingRemarksParagraphs(
   return splitDescriptionParagraphs(remarks);
 }
 
-function formatListingPrice(listing: ListingWithAgent): string | null {
+export function getListingCode(listing: ListingWithAgent): string | null {
+  return asString(listing.listing_code);
+}
+
+export function getListingPrice(listing: ListingWithAgent): string | null {
   const displayPrice = asString(listing.display_price);
   if (displayPrice) return displayPrice;
 
@@ -573,7 +686,7 @@ function composeListingDescriptionParagraphs(
   const propertyType = getListingPropertyType(listing);
   const specs = getListingDetailSpecs(listing);
   const size = getListingSize(listing);
-  const price = formatListingPrice(listing);
+  const price = getListingPrice(listing);
   const statusPhrase =
     getListingStatus(listing) === "lease" ? "for lease" : "for sale";
 
@@ -623,54 +736,3 @@ export function getListingDescriptionParagraphs(
   );
 }
 
-function getParsedListingFeatures(listing: ListingWithAgent): string[] {
-  const features: string[] = [];
-
-  const additional = asString(listing.additional_description);
-  if (additional) {
-    for (const line of additional.split("\n")) {
-      const trimmed = line.trim();
-      if (/^[-•*–]/.test(trimmed)) {
-        features.push(trimmed.replace(/^[-•*–]\s*/, ""));
-      }
-    }
-  }
-
-  const seo = asString(listing.seo_description);
-  if (seo) {
-    const pipeParts = seo
-      .split("|")
-      .map((part) => part.trim())
-      .filter(Boolean);
-    if (pipeParts.length > 1) {
-      features.push(...pipeParts.slice(1));
-    }
-
-    for (const line of seo.split("\n")) {
-      const trimmed = line.trim();
-      const numbered = trimmed.match(/^\d+\.\s*(.+)$/);
-      if (numbered?.[1]) {
-        features.push(numbered[1].trim());
-      }
-    }
-  }
-
-  if (Array.isArray(listing.tags)) {
-    for (const tag of listing.tags) {
-      if (typeof tag === "string" && tag.trim()) {
-        features.push(tag.trim());
-      }
-    }
-  }
-
-  return features.map((feature) => feature.trim()).filter(Boolean);
-}
-
-export function getListingFeatures(listing: ListingWithAgent): string[] {
-  const summaryFeatures = getListingSummaryDetails(listing).map(
-    (item) => `${item.label}: ${item.value}`,
-  );
-  const parsedFeatures = getParsedListingFeatures(listing);
-
-  return dedupeStrings([...summaryFeatures, ...parsedFeatures]);
-}

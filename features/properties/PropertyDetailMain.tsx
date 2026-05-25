@@ -3,10 +3,9 @@ import {
   getListingAddressDetails,
   getListingCoordinates,
   getListingDescriptionParagraphs,
-  getListingFeatures,
   getListingGoogleMapLink,
   getListingMapQuery,
-  getListingPropertyType,
+  getListingPropertyDetails,
   getListingRemarksParagraphs,
 } from "@/lib/properties/listingDisplay";
 import type { ListingWithAgent } from "@/lib/properties/types";
@@ -21,35 +20,15 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
   );
 }
 
-function FeatureIcon() {
-  return (
-    <span
-      className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#23408e]/10 text-[#23408e]"
-      aria-hidden
-    >
-      <svg
-        viewBox="0 0 16 16"
-        className="h-3 w-3"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
-        <path d="M4 8l2.5 2.5L12 5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    </span>
-  );
-}
-
 function DetailDivider() {
   return <hr className="border-[#e8ebf2]" />;
 }
 
 export default function PropertyDetailMain({ listing }: PropertyDetailMainProps) {
   const paragraphs = getListingDescriptionParagraphs(listing);
-  const features = getListingFeatures(listing);
   const remarks = getListingRemarksParagraphs(listing);
   const addressDetails = getListingAddressDetails(listing);
-  const propertyType = getListingPropertyType(listing);
+  const propertyDetails = getListingPropertyDetails(listing);
   const coordinates = getListingCoordinates(listing);
   const mapQuery = getListingMapQuery(listing);
   const googleMapLink = getListingGoogleMapLink(listing);
@@ -71,33 +50,21 @@ export default function PropertyDetailMain({ listing }: PropertyDetailMainProps)
 
       <DetailDivider />
 
-      <section aria-labelledby="property-details-heading" className="space-y-4">
-        <SectionHeading>
-          <span id="property-details-heading">Property Details</span>
-        </SectionHeading>
-        <PropertyDetailRow label="Property Types" value={propertyType} />
-      </section>
-
-      {features.length > 0 ? (
-        <>
-          <DetailDivider />
-          <section aria-labelledby="property-features-heading" className="space-y-4">
-            <SectionHeading>
-              <span id="property-features-heading">Features</span>
-            </SectionHeading>
-            <ul className="space-y-3">
-              {features.map((feature) => (
-                <li
-                  key={feature}
-                  className="flex gap-3 text-sm text-[#000759]/90 md:text-[15px]"
-                >
-                  <FeatureIcon />
-                  <span className="leading-relaxed">{feature}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        </>
+      {propertyDetails.length > 0 ? (
+        <section aria-labelledby="property-details-heading" className="space-y-4">
+          <SectionHeading>
+            <span id="property-details-heading">Property Details</span>
+          </SectionHeading>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {propertyDetails.map((item) => (
+              <PropertyDetailRow
+                key={`${item.label}-${item.value}`}
+                label={item.label}
+                value={item.value}
+              />
+            ))}
+          </div>
+        </section>
       ) : null}
 
       {remarks.length > 0 ? (

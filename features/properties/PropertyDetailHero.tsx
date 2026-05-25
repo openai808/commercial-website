@@ -9,6 +9,8 @@ type PropertyDetailHeroProps = {
   projectName: string | null;
   title: string;
   specs: string;
+  price: string | null;
+  listingCode: string | null;
 };
 
 function ChevronIcon({ direction }: { direction: "left" | "right" }) {
@@ -206,7 +208,7 @@ function PropertyGalleryView({
         src={current}
         alt=""
         className="scale-110 object-cover opacity-50 blur-2xl"
-        sizes="100vw"
+        sizes="(max-width: 1400px) 100vw, 1400px"
         priority
         ariaHidden
       />
@@ -267,6 +269,8 @@ export default function PropertyDetailHero({
   projectName,
   title,
   specs,
+  price,
+  listingCode,
 }: PropertyDetailHeroProps) {
   const handleShare = useCallback(async () => {
     const url = window.location.href;
@@ -289,39 +293,53 @@ export default function PropertyDetailHero({
 
   return (
     <section aria-label="Property gallery and summary">
-      <PropertyGallery photos={photos} title={title} status={status} />
+      <div className="mx-auto w-full max-w-[1400px] px-5 lg:px-8 xl:px-10">
+        <PropertyGallery photos={photos} title={title} status={status} />
 
-      <div className="bg-[#000759] text-white">
-        <div className="mx-auto flex max-w-[1400px] flex-col gap-6 px-5 py-6 md:flex-row md:items-center md:justify-between md:gap-10 md:px-8 md:py-7 lg:px-10">
-          <div className="min-w-0 flex-1 space-y-1.5">
-            {projectName ? (
-              <p className="text-sm font-medium text-white/90 md:text-[15px]">
-                {projectName}
-              </p>
-            ) : null}
-            <h1 className="text-xl font-bold leading-snug md:text-2xl lg:text-[1.75rem] lg:leading-tight">
-              {title}
-            </h1>
-            <p className="text-sm text-white/95 md:text-base">{specs}</p>
-          </div>
+        <div className="bg-[#000759] text-white">
+          <div className="flex flex-col gap-6 px-6 py-6 md:flex-row md:items-center md:justify-between md:gap-10 md:py-7">
+            <div className="min-w-0 flex-1 space-y-1.5">
+              {projectName ? (
+                <p className="text-sm font-medium text-white/90 md:text-[15px]">
+                  {projectName}
+                </p>
+              ) : null}
+              <h1 className="text-xl font-bold leading-snug md:text-2xl lg:text-[1.75rem] lg:leading-tight">
+                {title}
+              </h1>
+              <p className="text-sm text-white/95 md:text-base">{specs}</p>
+            </div>
 
-          <div className="flex shrink-0 items-center gap-6 md:gap-8">
-            <button
-              type="button"
-              onClick={handleShare}
-              className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-white transition hover:text-white/80"
-            >
-              <ShareIcon />
-              Share
-            </button>
-            <button
-              type="button"
-              onClick={handlePrint}
-              className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-white transition hover:text-white/80"
-            >
-              <PrintIcon />
-              Print
-            </button>
+            <div className="flex shrink-0 flex-col items-start gap-4 md:items-end">
+              {price ? (
+                <p className="text-lg font-bold leading-tight md:text-xl lg:text-2xl">
+                  {price}
+                </p>
+              ) : null}
+              <div className="flex flex-wrap items-center gap-6 md:gap-8">
+                {listingCode ? (
+                  <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-white/90">
+                    Listing ID: {listingCode}
+                  </span>
+                ) : null}
+                <button
+                  type="button"
+                  onClick={handleShare}
+                  className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-white transition hover:text-white/80"
+                >
+                  <ShareIcon />
+                  Share
+                </button>
+                <button
+                  type="button"
+                  onClick={handlePrint}
+                  className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-white transition hover:text-white/80"
+                >
+                  <PrintIcon />
+                  Print
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

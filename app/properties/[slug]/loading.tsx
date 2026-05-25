@@ -14,7 +14,7 @@ export default function PropertyDetailLoading() {
           <div className="h-5 max-w-xl rounded bg-[#000759]/10" />
         </div>
       </div>
-      <section className="border-t border-[#e8ebf2] bg-white">
+      <section className="bg-white">
         <div className="mx-auto grid max-w-[1400px] gap-10 px-5 py-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-12 lg:px-8 lg:py-12 xl:gap-16 xl:px-10">
           <div className="animate-pulse space-y-6">
             <div className="h-6 w-40 rounded bg-[#000759]/10" />

@@ -4,8 +4,10 @@ import PropertyDetailContent from "@/features/properties/PropertyDetailContent";
 import PropertyDetailHero from "@/features/properties/PropertyDetailHero";
 import { getListingBySlugOrId } from "@/lib/properties/getProperties";
 import {
+  getListingCode,
   getListingDetailSpecs,
   getListingPhotos,
+  getListingPrice,
   getListingProjectName,
   getListingStatus,
   getListingTitle,
@@ -51,6 +53,8 @@ export default async function PropertyDetailPage({
         projectName={getListingProjectName(listing)}
         title={title}
         specs={getListingDetailSpecs(listing)}
+        price={getListingPrice(listing)}
+        listingCode={getListingCode(listing)}
       />
       <PropertyDetailContent listing={listing} />
     </main>

@@ -11,6 +11,7 @@ import {
   useState,
   type CSSProperties,
   type ReactNode,
+  Fragment,
 } from "react";
 
 const LG_PX = 1024;
@@ -128,9 +129,10 @@ export default function PropertiesListingsLayout({
         ref={rowRef}
         className="mx-auto flex w-full max-w-[1600px] flex-col gap-6 px-6 md:px-10 lg:flex-row lg:items-stretch lg:gap-4 lg:px-8 xl:gap-5 xl:px-10 min-[2000px]:max-w-none min-[2000px]:gap-5 min-[2000px]:px-6"
       >
-        {leftColumn}
+        <Fragment key="listings-column">{leftColumn}</Fragment>
 
         <aside
+          key="map-column"
           className={
             "min-w-0 w-full border-t border-[#e8ebf2] lg:flex lg:min-h-0 lg:flex-[2] lg:flex-col lg:basis-0 lg:border-t-0 " +
             (releasedFromSticky ? "lg:self-end" : "lg:self-stretch")

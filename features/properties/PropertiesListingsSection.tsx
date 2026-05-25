@@ -24,8 +24,8 @@ export default function PropertiesListingsSection({
       markerSources={markerSources}
       leftColumn={
         <PropertiesListingsListColumn page={page}>
-          <PropertiesExpertsCta />
-          <PropertiesListingGrid listings={listings} />
+          <PropertiesExpertsCta key="experts-cta" />
+          <PropertiesListingGrid key="listing-grid" listings={listings} />
         </PropertiesListingsListColumn>
       }
       belowColumns={

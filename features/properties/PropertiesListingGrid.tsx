@@ -6,12 +6,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import {
+  getListingCity,
   getListingExtraTagsCount,
+  getListingFloorAreaDisplay,
   getListingHref,
   getListingIdentifier,
   getListingImage,
-  getListingLocation,
-  getListingSize,
+  getListingLotAreaDisplay,
   getListingStatus,
   getListingTag,
   getListingTitle,
@@ -64,6 +65,9 @@ export default function PropertiesListingGrid({
 function PropertyListingCard({ listing }: { listing: ListingWithAgent }) {
   const [isNavigating, setIsNavigating] = useState(false);
   const status = getListingStatus(listing);
+  const city = getListingCity(listing);
+  const lotArea = getListingLotAreaDisplay(listing);
+  const floorArea = getListingFloorAreaDisplay(listing);
   const extraTags = getListingExtraTagsCount(listing);
   const listingId = getListingIdentifier(listing);
   const highlight = usePropertiesListingHighlight();
@@ -138,18 +142,26 @@ function PropertyListingCard({ listing }: { listing: ListingWithAgent }) {
       </div>
 
       <div className="flex flex-1 flex-col gap-3 p-4 md:p-5">
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1">
           <h2 className="text-sm font-bold leading-snug text-[#000759] group-hover:underline md:text-[15px] md:leading-6">
             {getListingTitle(listing)}
           </h2>
-          <p className="text-xs text-[#000759]/80 md:text-sm">
-            {getListingLocation(listing)}
-          </p>
+          {city ? (
+            <p className="text-xs text-[#000759]/80 md:text-sm">{city}</p>
+          ) : null}
+          {lotArea ? (
+            <p className="text-xs text-[#000759]/80 md:text-sm">
+              <span className="font-semibold text-[#000759]">Lot:</span>{" "}
+              {lotArea}
+            </p>
+          ) : null}
+          {floorArea ? (
+            <p className="text-xs text-[#000759]/80 md:text-sm">
+              <span className="font-semibold text-[#000759]">Floor area:</span>{" "}
+              {floorArea}
+            </p>
+          ) : null}
         </div>
-
-        <p className="text-sm font-bold text-[#000759] md:text-base">
-          {getListingSize(listing)}
-        </p>
 
         <div className="mt-auto border-t border-[#e8ebf2] pt-3">
           <div className="flex flex-wrap items-center gap-2">

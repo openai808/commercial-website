@@ -13,10 +13,21 @@ const navItems = [
 ];
 
 const socialsItems = [
-  { href: "/linkedin", label: "About", img: "/logo-linkedin.png" },
-  { href: "/twitter", label: "News", img: "/logo-twitter.svg" },
-  { href: "/facebook", label: "Investor Relations", img: "/facebook.png" },
-  { href: "/instagram", label: "Feedback", img: "/Instagram-logo-footer.png" },
+  {
+    href: "https://www.facebook.com/remax8philippines",
+    label: "Facebook",
+    img: "/facebook.png",
+  },
+  {
+    href: "https://www.instagram.com/remax8philippinesofficial/",
+    label: "Instagram",
+    img: "/Instagram-logo-footer.png",
+  },
+  {
+    href: "https://www.linkedin.com/company/remax8philippines",
+    label: "LinkedIn",
+    img: "/logo-linkedin.png",
+  },
 ];
 
 export default function Footer() {
@@ -64,6 +75,8 @@ export default function Footer() {
                 <li key={item.label}>
                   <Link
                     href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="transition-colors text-[#000759] hover:underline hover:font-bold"
                   >
                     <Image
