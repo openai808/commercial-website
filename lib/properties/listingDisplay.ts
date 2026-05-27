@@ -1,3 +1,4 @@
+import { getListingContractStatus } from "@/lib/properties/listingContractStatus";
 import type { ListingWithAgent } from "@/lib/properties/types";
 import { fixUtf8Mojibake } from "@/lib/text/fixUtf8Mojibake";
 
@@ -44,6 +45,26 @@ const LOT_PRIMARY_PROPERTY_TYPES = new Set([
   "Commercial Lot",
   "Industrial Lot",
 ]);
+
+const WAREHOUSE_PROPERTY_TYPES = new Set([
+  "Warehouse or Storage Facility",
+]);
+
+function isWarehouseType(propertyType: string | null): boolean {
+  return propertyType != null && WAREHOUSE_PROPERTY_TYPES.has(propertyType);
+}
+
+export function getFloorAreaLabel(listing: ListingWithAgent): string {
+  return isWarehouseType(asString(listing.property_type))
+    ? "Covered Area"
+    : "Floor Area";
+}
+
+export function getLotAreaLabel(listing: ListingWithAgent): string {
+  return isWarehouseType(asString(listing.property_type))
+    ? "Open Area"
+    : "Lot Area";
+}
 
 function formatSqm(sqm: number): string {
   return `${sqm.toLocaleString("en-US")} m²`;
@@ -159,15 +180,7 @@ export function getListingHref(listing: ListingWithAgent): string {
 export function getListingStatus(
   listing: ListingWithAgent,
 ): "sale" | "lease" {
-  const listingType = (
-    asString(listing.listing_type) ?? ""
-  ).toLowerCase();
-
-  if (listingType.includes("lease") || listingType.includes("rent")) {
-    return "lease";
-  }
-
-  return "sale";
+  return getListingContractStatus(listing);
 }
 
 export function getListingTag(listing: ListingWithAgent): string {
@@ -337,17 +350,20 @@ export function getListingDetailSpecs(listing: ListingWithAgent): string {
 
   const lotFirst =
     propertyType != null && LOT_PRIMARY_PROPERTY_TYPES.has(propertyType);
+  const warehouse = isWarehouseType(propertyType);
+  const floorLabel = warehouse ? "Covered Area" : "Floor Area";
+  const lotLabel = warehouse ? "Open Area" : "Land Area";
 
   if (lotFirst && lotSqm != null && lotSqm > 0) {
-    return `${propertyType} | Land Area: ${formatSqm(lotSqm)}`;
+    return `${propertyType} | ${lotLabel}: ${formatSqm(lotSqm)}`;
   }
 
   if (floorSqm != null && floorSqm > 0) {
-    return `${propertyType} | Floor Area: ${formatSqm(floorSqm)}`;
+    return `${propertyType} | ${floorLabel}: ${formatSqm(floorSqm)}`;
   }
 
   if (lotSqm != null && lotSqm > 0) {
-    return `${propertyType} | Land Area: ${formatSqm(lotSqm)}`;
+    return `${propertyType} | ${lotLabel}: ${formatSqm(lotSqm)}`;
   }
 
   if (sqft != null && sqft > 0) {
@@ -545,23 +561,30 @@ export function getListingPropertyDetails(
 ): ListingDetailItem[] {
   const items: ListingDetailItem[] = [];
 
+  const warehouse = isWarehouseType(asString(listing.property_type));
+  const lotAreaLabel = warehouse ? "Open Area (sqm)" : "Lot Area (sqm)";
+  const floorAreaLabel = warehouse ? "Covered Area (sqm)" : "Floor Area (sqm)";
+  const pricePerSqmLabel = warehouse
+    ? "Price/sqm (Covered Area)"
+    : "Price/sqm (Floor Area)";
+
   addListingDetailItem(
     items,
     "Property Type",
     listing.property_type ?? listing.asset_class,
   );
-  addListingNumericDetail(items, "Lot Area (sqm)", listing.lot_area, (sqm) =>
+  addListingNumericDetail(items, lotAreaLabel, listing.lot_area, (sqm) =>
     sqm.toLocaleString("en-US"),
   );
   addListingNumericDetail(
     items,
-    "Floor Area (sqm)",
+    floorAreaLabel,
     listing.floor_area_sqm ?? listing.floor_area,
     (sqm) => sqm.toLocaleString("en-US"),
   );
   addListingDetailItem(
     items,
-    "Price/sqm (Floor Area)",
+    pricePerSqmLabel,
     getListingPricePerSqmFloor(listing),
   );
   addListingNumericDetail(items, "Stories", listing.stories, (value) =>
@@ -628,11 +651,6 @@ export function getListingAddressDetails(
 ): ListingDetailItem[] {
   const items: ListingDetailItem[] = [];
 
-  addListingDetailItem(
-    items,
-    "Complete Address (Map Search)",
-    getListingCompleteAddressForMap(listing),
-  );
   addListingDetailItem(items, "Region", listing.region);
   addListingDetailItem(items, "Province", listing.province);
   addListingDetailItem(items, "City", listing.city ?? listing.municipality);

@@ -226,12 +226,13 @@ export default function PropertiesSearchFilters({
               <UnderlineSelect
                 name="listing"
                 value={form.listing}
-                onChange={(event) =>
-                  setForm((current) => ({
-                    ...current,
-                    listing: event.target.value as PropertiesQueryFormState["listing"],
-                  }))
-                }
+                onChange={(event) => {
+                  applyForm({
+                    ...form,
+                    listing: event.target
+                      .value as PropertiesQueryFormState["listing"],
+                  });
+                }}
                 options={LISTING_OPTIONS}
                 aria-label="Listing type"
               />

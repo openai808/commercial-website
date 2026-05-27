@@ -1,3 +1,4 @@
+import { listingCategoryOrFilter } from "@/lib/properties/listingCategoryFilters";
 import type { AreaUnit, PropertiesQuery } from "@/lib/properties/searchParams";
 import { expandDbTextVariantsList } from "@/lib/text/fixUtf8Mojibake";
 
@@ -68,10 +69,8 @@ export function applyPropertiesQuery(
 
   switch (filters.listing) {
     case "for-lease":
-      next = next.eq("contract_type", "Lease");
-      break;
     case "for-sale":
-      next = next.eq("contract_type", "Sale");
+      next = next.or(listingCategoryOrFilter(filters.listing));
       break;
     case "investment":
       next = next.or(

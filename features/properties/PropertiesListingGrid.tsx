@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import {
+  getFloorAreaLabel,
   getListingCity,
   getListingExtraTagsCount,
   getListingFloorAreaDisplay,
@@ -13,6 +14,7 @@ import {
   getListingIdentifier,
   getListingImage,
   getListingLotAreaDisplay,
+  getLotAreaLabel,
   getListingStatus,
   getListingTag,
   getListingTitle,
@@ -50,7 +52,7 @@ export default function PropertiesListingGrid({
     <div
       aria-label="Property listings"
       {...(pending ? { "aria-busy": true as const } : {})}
-      className={`mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 md:grid-cols-3 lg:grid-cols-2 lg:gap-4 xl:grid-cols-3 xl:gap-4 2xl:grid-cols-4 min-[2000px]:grid-cols-4 min-[2000px]:gap-4 transition-[filter,opacity] duration-200 ease-out motion-reduce:transition-none ${pendingClass}`}
+      className={`grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 md:grid-cols-3 lg:grid-cols-2 lg:gap-4 xl:grid-cols-3 xl:gap-4 2xl:grid-cols-4 min-[2000px]:grid-cols-4 min-[2000px]:gap-4 transition-[filter,opacity] duration-200 ease-out motion-reduce:transition-none ${pendingClass}`}
     >
       {listings.map((listing) => (
         <PropertyListingCard
@@ -68,6 +70,8 @@ function PropertyListingCard({ listing }: { listing: ListingWithAgent }) {
   const city = getListingCity(listing);
   const lotArea = getListingLotAreaDisplay(listing);
   const floorArea = getListingFloorAreaDisplay(listing);
+  const lotLabel = getLotAreaLabel(listing);
+  const floorLabel = getFloorAreaLabel(listing);
   const extraTags = getListingExtraTagsCount(listing);
   const listingId = getListingIdentifier(listing);
   const highlight = usePropertiesListingHighlight();
@@ -151,13 +155,13 @@ function PropertyListingCard({ listing }: { listing: ListingWithAgent }) {
           ) : null}
           {lotArea ? (
             <p className="text-xs text-[#000759]/80 md:text-sm">
-              <span className="font-semibold text-[#000759]">Lot:</span>{" "}
+              <span className="font-semibold text-[#000759]">{lotLabel}:</span>{" "}
               {lotArea}
             </p>
           ) : null}
           {floorArea ? (
             <p className="text-xs text-[#000759]/80 md:text-sm">
-              <span className="font-semibold text-[#000759]">Floor area:</span>{" "}
+              <span className="font-semibold text-[#000759]">{floorLabel}:</span>{" "}
               {floorArea}
             </p>
           ) : null}

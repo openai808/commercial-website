@@ -21,6 +21,8 @@ const FALLBACK_HEADER_STICKY_PX = 112;
 type PropertiesListingsLayoutProps = {
   markerSources: ListingMapMarkerSource[];
   leftColumn: ReactNode;
+  /** Content rendered directly below the map container. */
+  belowMap?: ReactNode;
   /** Full-width block below the listings + map row (e.g. pagination). */
   belowColumns?: ReactNode;
 };
@@ -28,6 +30,7 @@ type PropertiesListingsLayoutProps = {
 export default function PropertiesListingsLayout({
   markerSources,
   leftColumn,
+  belowMap,
   belowColumns,
 }: PropertiesListingsLayoutProps) {
   const rowRef = useRef<HTMLDivElement>(null);
@@ -112,8 +115,8 @@ export default function PropertiesListingsLayout({
   } as CSSProperties;
 
   const mapOuterClass =
-    "h-[min(52vh,420px)] w-full overflow-hidden lg:z-10 lg:shrink-0 " +
-    "lg:h-[min(calc(100vh_-_370px),calc(100dvh_-_var(--listing-map-top)_-_1rem))] " +
+    "flex flex-col w-full lg:z-10 lg:shrink-0 " +
+    "h-[min(52vh,420px)] lg:h-[min(calc(100vh_-_370px),calc(100dvh_-_var(--listing-map-top)_-_1rem))] " +
     (releasedFromSticky ? "lg:relative" : "lg:sticky lg:top-[var(--listing-map-top)]");
 
   const listingIds = markerSources.map((source) => source.id);
@@ -140,9 +143,12 @@ export default function PropertiesListingsLayout({
           aria-label="Property locations map"
         >
           <div ref={mapOuterRef} className={mapOuterClass}>
-            <div className="relative h-full min-h-0 w-full lg:absolute lg:inset-0">
-              <PropertiesMapPanel markerSources={markerSources} />
+            <div className="relative min-h-0 flex-1 w-full">
+              <div className="absolute inset-0">
+                <PropertiesMapPanel markerSources={markerSources} />
+              </div>
             </div>
+            {belowMap}
           </div>
         </aside>
       </div>

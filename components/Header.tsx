@@ -32,9 +32,14 @@ type MegaIntroColumn = {
 type MegaLinkStackColumn = {
   kind: "linkStack";
   heading: string;
+  headingHref?: string;
   items: { label: string; href: string; external?: boolean }[];
   viewAll?: { label: string; href: string };
 };
+
+const PROPERTIES_FOR_LEASE_HREF = "/properties?listing=for-lease";
+const PROPERTIES_FOR_SALE_HREF = "/properties?listing=for-sale";
+const PROPERTIES_INVESTMENT_HREF = "/properties?listing=investment";
 
 type MegaMenu = {
   /** Intro column plus two or more link stacks (desktop mega-menu layout). */
@@ -68,25 +73,36 @@ const navConfig: NavItem[] = [
         {
           kind: "linkStack",
           heading: "For Lease",
+          headingHref: PROPERTIES_FOR_LEASE_HREF,
           items: [
             {
               label: "Properties for Lease",
-              href: "/properties/for-lease",
+              href: PROPERTIES_FOR_LEASE_HREF,
             },
           ],
-          viewAll: { label: "View all leases", href: "/properties/for-lease" },
+          viewAll: {
+            label: "View all leases",
+            href: PROPERTIES_FOR_LEASE_HREF,
+          },
         },
         {
           kind: "linkStack",
           heading: "For Sale",
+          headingHref: PROPERTIES_FOR_SALE_HREF,
           items: [
-            { label: "Properties for Sale", href: "/properties/for-sale" },
+            {
+              label: "Properties for Sale",
+              href: PROPERTIES_FOR_SALE_HREF,
+            },
             {
               label: "Investment Properties for Sale",
-              href: "/properties/investment",
+              href: PROPERTIES_INVESTMENT_HREF,
             },
           ],
-          viewAll: { label: "View all sales", href: "/properties/for-sale" },
+          viewAll: {
+            label: "View all sales",
+            href: PROPERTIES_FOR_SALE_HREF,
+          },
         },
       ],
     },
@@ -520,7 +536,16 @@ function LinkStackMegaColumn({
     >
       {column.heading && (
         <h3 className="font-serif text-sm font-normal tracking-wide text-zinc-500">
-          {column.heading}
+          {column.headingHref ? (
+            <Link
+              href={column.headingHref}
+              className="transition-colors duration-200 ease-in-out hover:text-[#000759]"
+            >
+              {column.heading}
+            </Link>
+          ) : (
+            column.heading
+          )}
         </h3>
       )}
       <ul className={column.heading ? "mt-5" : "mt-0"}>
@@ -744,7 +769,19 @@ function MobileNavGroup({
             </div>
             {stacks.map((col) => (
               <div key={col.heading}>
-                <p className="font-serif text-sm text-zinc-500">{col.heading}</p>
+                <p className="font-serif text-sm text-zinc-500">
+                  {col.headingHref ? (
+                    <Link
+                      href={col.headingHref}
+                      className="transition-colors duration-200 ease-in-out hover:text-[#000759]"
+                      onClick={onNavigate}
+                    >
+                      {col.heading}
+                    </Link>
+                  ) : (
+                    col.heading
+                  )}
+                </p>
                 <ul className="mt-2">
                   {col.items.map((l) => (
                     <li
@@ -879,6 +916,7 @@ function DesktopHeaderSection({
   openId,
   desktopSearchOpen,
   desktopSearchInputRef,
+  hideSearch,
   onOpenMega,
   onCloseMega,
   onOpenSearch,
@@ -887,12 +925,13 @@ function DesktopHeaderSection({
   openId: string | null;
   desktopSearchOpen: boolean;
   desktopSearchInputRef: RefObject<HTMLInputElement | null>;
+  hideSearch: boolean;
   onOpenMega: (id: string) => void;
   onCloseMega: () => void;
   onOpenSearch: () => void;
   onCloseSearch: () => void;
 }) {
-  if (desktopSearchOpen) {
+  if (desktopSearchOpen && !hideSearch) {
     return (
       <div className="hidden min-w-0 flex-1 items-center gap-6 lg:flex">
         <Link
@@ -995,16 +1034,18 @@ function DesktopHeaderSection({
         </nav>
       </div>
 
-      <div className="hidden shrink-0 items-center gap-3 lg:ml-auto lg:flex">
-        <button
-          type="button"
-          className="cursor-pointer flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#c5d3f0] bg-white text-[#000759] shadow-sm transition-colors hover:border-[#000759] hover:bg-[#000759] hover:text-white dark:border-[#4a5a8a] dark:text-[#000759] dark:hover:border-[#000759] dark:hover:bg-[#000759] dark:hover:text-white"
-          aria-label="Open search"
-          onClick={onOpenSearch}
-        >
-          <MobileSearchIcon className="h-[22px] w-[22px]" />
-        </button>
-      </div>
+      {!hideSearch && (
+        <div className="hidden shrink-0 items-center gap-3 lg:ml-auto lg:flex">
+          <button
+            type="button"
+            className="cursor-pointer flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#c5d3f0] bg-white text-[#000759] shadow-sm transition-colors hover:border-[#000759] hover:bg-[#000759] hover:text-white dark:border-[#4a5a8a] dark:text-[#000759] dark:hover:border-[#000759] dark:hover:bg-[#000759] dark:hover:text-white"
+            aria-label="Open search"
+            onClick={onOpenSearch}
+          >
+            <MobileSearchIcon className="h-[22px] w-[22px]" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -1014,6 +1055,7 @@ function MobileHeaderSection({
   mobileOpen,
   mobileSearchInputRef,
   pathname,
+  hideSearch,
   closeMobile,
   toggleMobile,
 }: {
@@ -1021,6 +1063,7 @@ function MobileHeaderSection({
   mobileOpen: boolean;
   mobileSearchInputRef: RefObject<HTMLInputElement | null>;
   pathname: string;
+  hideSearch: boolean;
   closeMobile: () => void;
   toggleMobile: () => void;
 }) {
@@ -1118,37 +1161,39 @@ function MobileHeaderSection({
               </div>
             </div>
 
-            <div className="mx-auto w-full shrink-0 px-6 pb-2 pt-2">
-              <div className="mx-auto w-full px-7">
-                <form
-                  role="search"
-                  className="pt-1"
-                  onSubmit={(e) => e.preventDefault()}
-                >
-                  <div className="ml-auto flex h-11 w-full items-center overflow-hidden border-b border-[#000759] bg-white">
-                    <label className="sr-only" htmlFor="header-search-mobile">
-                      Search
-                    </label>
-                    <input
-                      ref={mobileSearchInputRef}
-                      id="header-search-mobile"
-                      type="text"
-                      inputMode="search"
-                      enterKeyHint="search"
-                      placeholder="What are you looking for?"
-                      className="min-w-0 flex-1 border-0 bg-transparent py-1 pr-2 text-base text-[#000759] placeholder:text-[#000759]/70 outline-none"
-                    />
-                    <button
-                      type="submit"
-                      className="shrink-0 px-2 py-1 text-[#000759] transition hover:opacity-70"
-                      aria-label="Submit search"
-                    >
-                      <MobileSearchIcon className="h-5 w-5" />
-                    </button>
-                  </div>
-                </form>
+            {!hideSearch && (
+              <div className="mx-auto w-full shrink-0 px-6 pb-2 pt-2">
+                <div className="mx-auto w-full px-7">
+                  <form
+                    role="search"
+                    className="pt-1"
+                    onSubmit={(e) => e.preventDefault()}
+                  >
+                    <div className="ml-auto flex h-11 w-full items-center overflow-hidden border-b border-[#000759] bg-white">
+                      <label className="sr-only" htmlFor="header-search-mobile">
+                        Search
+                      </label>
+                      <input
+                        ref={mobileSearchInputRef}
+                        id="header-search-mobile"
+                        type="text"
+                        inputMode="search"
+                        enterKeyHint="search"
+                        placeholder="What are you looking for?"
+                        className="min-w-0 flex-1 border-0 bg-transparent py-1 pr-2 text-base text-[#000759] placeholder:text-[#000759]/70 outline-none"
+                      />
+                      <button
+                        type="submit"
+                        className="shrink-0 px-2 py-1 text-[#000759] transition hover:opacity-70"
+                        aria-label="Submit search"
+                      >
+                        <MobileSearchIcon className="h-5 w-5" />
+                      </button>
+                    </div>
+                  </form>
+                </div>
               </div>
-            </div>
+            )}
 
             <nav
               className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain px-6 pb-10 pt-2"
@@ -1276,6 +1321,7 @@ export default function Header() {
     };
   }, [mobileOpen, closeMobile]);
 
+  const isPropertiesPage = pathname.startsWith("/properties");
   const megaMenuAnimId = openId ?? lastHoveredMenuId ?? "";
 
   return (
@@ -1294,6 +1340,7 @@ export default function Header() {
               openId={openId}
               desktopSearchOpen={desktopSearchOpen}
               desktopSearchInputRef={desktopSearchInputRef}
+              hideSearch={isPropertiesPage}
               onOpenMega={handleEnter}
               onCloseMega={closeDesktopMega}
               onOpenSearch={() => {
@@ -1309,6 +1356,7 @@ export default function Header() {
                 mobileOpen={mobileOpen}
                 mobileSearchInputRef={mobileSearchInputRef}
                 pathname={pathname}
+                hideSearch={isPropertiesPage}
                 closeMobile={closeMobile}
                 toggleMobile={() => setMobileOpen((o) => !o)}
               />

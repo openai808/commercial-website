@@ -24,10 +24,10 @@ export default function PropertiesListingsSection({
       markerSources={markerSources}
       leftColumn={
         <PropertiesListingsListColumn page={page}>
-          <PropertiesExpertsCta key="experts-cta" />
           <PropertiesListingGrid key="listing-grid" listings={listings} />
         </PropertiesListingsListColumn>
       }
+      belowMap={<PropertiesExpertsCta />}
       belowColumns={
         totalPages > 1 ? (
           <PropertiesPagination
