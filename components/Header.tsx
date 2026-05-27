@@ -1021,7 +1021,7 @@ function DesktopHeaderSection({
                 <Link
                   href={item.href}
                   onClick={onCloseMega}
-                  className={`decoration-2 transition-colors duration-300 ease-in-out ${openId === item.id ? "font-semibold text-[#000759] decoration-[#000759]" : "text-[#000759] no-underline hover:underline hover:decoration-[#000759]"} after:absolute after:left-0 after:-bottom-1
+                  className={`no-underline transition-colors duration-300 ease-in-out ${openId === item.id ? "font-semibold text-[#000759]" : "text-[#000759]"} after:absolute after:left-0 after:-bottom-1
                   after:h-[2px] after:w-0 after:bg-[#000759]
                   after:transition-all after:duration-300 after:ease-in-out
                   hover:after:w-full hover:font-bold`}
