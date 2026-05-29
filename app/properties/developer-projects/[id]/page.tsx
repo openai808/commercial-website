@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import DeveloperProjectAvailability from "@/features/properties/DeveloperProjectAvailability";
 import DeveloperProjectBuildingInfo from "@/features/properties/DeveloperProjectBuildingInfo";
 import DeveloperProjectDetailHero from "@/features/properties/DeveloperProjectDetailHero";
+import { mapDeveloperBuildingAvailabilityRows } from "@/lib/properties/developerProjectAvailability";
+import { getDeveloperBuildingAvailability } from "@/lib/properties/getDeveloperBuildingAvailability";
 import { getDeveloperProjectById } from "@/lib/properties/getDeveloperProjects";
 
 type DeveloperProjectDetailPageProps = {
@@ -30,16 +33,24 @@ export default async function DeveloperProjectDetailPage({
   params,
 }: DeveloperProjectDetailPageProps) {
   const { id } = await params;
-  const project = await getDeveloperProjectById(id);
+  const [project, availabilityRecords] = await Promise.all([
+    getDeveloperProjectById(id),
+    getDeveloperBuildingAvailability(id).catch(() => []),
+  ]);
 
   if (!project) {
     notFound();
   }
 
+  const availabilityRows = mapDeveloperBuildingAvailabilityRows(
+    availabilityRecords,
+  );
+
   return (
     <main className="bg-white text-[#000759]">
       <DeveloperProjectDetailHero project={project} />
       <DeveloperProjectBuildingInfo project={project} />
+      <DeveloperProjectAvailability rows={availabilityRows} />
     </main>
   );
 }
