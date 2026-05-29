@@ -108,7 +108,7 @@ function PaginationLink({
       : "border-[#d9dce5] text-[#23408e] hover:bg-[#f0f4fa]"
   } ${disabled ? "pointer-events-none opacity-40" : ""}`;
 
-  if (!href || disabled) {
+  if (href == null || disabled) {
     return (
       <span className={className} aria-label={label} aria-disabled="true">
         {children}
@@ -124,7 +124,7 @@ function PaginationLink({
     );
   }
 
-  if (!nav || targetPage == null) {
+  if (nav == null || targetPage == null) {
     return (
       <Link
         href={href}

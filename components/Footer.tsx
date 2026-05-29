@@ -44,7 +44,7 @@ export default function Footer() {
                 alt="RE/MAX"
                 width={200}
                 height={200}
-                // className="h-8 w-auto sm:h-10 md:h-12"
+                className="h-8 w-auto sm:h-10 md:h-12"
                 priority
               />
             </Link>
@@ -84,8 +84,7 @@ export default function Footer() {
                       alt={item.label}
                       width={20}
                       height={20}
-                      // className="h-8 w-auto sm:h-10 md:h-12"
-                      style={{ filter: SOCIAL_ICON_TINT_FILTER }}
+                      style={{ filter: SOCIAL_ICON_TINT_FILTER, width: "auto", height: "auto" }}
                     />
                   </Link>
                 </li>

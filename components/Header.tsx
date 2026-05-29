@@ -40,6 +40,7 @@ type MegaLinkStackColumn = {
 const PROPERTIES_FOR_LEASE_HREF = "/properties?listing=for-lease";
 const PROPERTIES_FOR_SALE_HREF = "/properties?listing=for-sale";
 const PROPERTIES_INVESTMENT_HREF = "/properties?listing=investment";
+const PROPERTIES_DEVELOPER_PROJECTS_HREF = "/properties/developer-projects";
 
 type MegaMenu = {
   /** Intro column plus two or more link stacks (desktop mega-menu layout). */
@@ -102,6 +103,21 @@ const navConfig: NavItem[] = [
           viewAll: {
             label: "View all sales",
             href: PROPERTIES_FOR_SALE_HREF,
+          },
+        },
+        {
+          kind: "linkStack",
+          heading: "Developer Projects",
+          headingHref: PROPERTIES_DEVELOPER_PROJECTS_HREF,
+          items: [
+            {
+              label: "Browse Developer Projects",
+              href: PROPERTIES_DEVELOPER_PROJECTS_HREF,
+            },
+          ],
+          viewAll: {
+            label: "View all projects",
+            href: PROPERTIES_DEVELOPER_PROJECTS_HREF,
           },
         },
       ],
@@ -944,7 +960,7 @@ function DesktopHeaderSection({
             alt="RE/MAX"
             width={200}
             height={200}
-            // className="h-8 w-auto sm:h-9 lg:h-12"
+            className="h-8 w-auto sm:h-9 lg:h-12"
             priority
           />
         </Link>
@@ -999,7 +1015,7 @@ function DesktopHeaderSection({
             alt="RE/MAX"
             width={200}
             height={200}
-            // className="h-8 w-auto sm:h-9 lg:h-12"
+            className="h-8 w-auto sm:h-9 lg:h-12"
             priority
           />
         </Link>

@@ -26,6 +26,7 @@ const LISTING_OPTIONS = [
   { value: "for-lease", label: "For Lease" },
   { value: "for-sale", label: "For Sale" },
   { value: "investment", label: "Investment Properties" },
+  { value: "developer-projects", label: "Developer Projects" },
 ] as const;
 
 type AreaUnit = "sqft" | "sqm";
@@ -227,10 +228,14 @@ export default function PropertiesSearchFilters({
                 name="listing"
                 value={form.listing}
                 onChange={(event) => {
+                  const value = event.target.value;
+                  if (value === "developer-projects") {
+                    router.push("/properties/developer-projects");
+                    return;
+                  }
                   applyForm({
                     ...form,
-                    listing: event.target
-                      .value as PropertiesQueryFormState["listing"],
+                    listing: value as PropertiesQueryFormState["listing"],
                   });
                 }}
                 options={LISTING_OPTIONS}

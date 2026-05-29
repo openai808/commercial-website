@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
 type PropertyDetailHeroProps = {
@@ -272,6 +273,16 @@ export default function PropertyDetailHero({
   price,
   listingCode,
 }: PropertyDetailHeroProps) {
+  const router = useRouter();
+
+  const handleBack = useCallback(() => {
+    if (window.history.length > 1) {
+      router.back();
+    } else {
+      router.push("/properties");
+    }
+  }, [router]);
+
   const handleShare = useCallback(async () => {
     const url = window.location.href;
 
@@ -294,6 +305,27 @@ export default function PropertyDetailHero({
   return (
     <section aria-label="Property gallery and summary">
       <div className="mx-auto w-full max-w-[1400px] px-5 lg:px-8 xl:px-10">
+        <button
+          type="button"
+          onClick={handleBack}
+          className="inline-flex items-center gap-1.5 py-5 text-sm font-medium text-[#1a3fb5] transition hover:text-[#000759]"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.25"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden
+          >
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+          Back to Properties
+        </button>
+
         <PropertyGallery photos={photos} title={title} status={status} />
 
         <div className="bg-[#000759] text-white">
