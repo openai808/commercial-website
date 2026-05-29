@@ -116,7 +116,7 @@ export default function PropertiesListingsLayout({
 
   const mapOuterClass =
     "flex flex-col w-full lg:z-10 lg:shrink-0 " +
-    "h-[min(52vh,420px)] lg:h-[min(calc(100vh_-_370px),calc(100dvh_-_var(--listing-map-top)_-_1rem))] " +
+    "lg:h-[calc(100dvh-var(--listing-map-top)-1.5rem)] " +
     (releasedFromSticky ? "lg:relative" : "lg:sticky lg:top-[var(--listing-map-top)]");
 
   const listingIds = markerSources.map((source) => source.id);
@@ -143,12 +143,12 @@ export default function PropertiesListingsLayout({
           aria-label="Property locations map"
         >
           <div ref={mapOuterRef} className={mapOuterClass}>
-            <div className="relative min-h-0 flex-1 w-full">
+            <div className="relative min-h-[min(52vh,420px)] w-full flex-1 lg:min-h-0">
               <div className="absolute inset-0">
                 <PropertiesMapPanel markerSources={markerSources} />
               </div>
             </div>
-            {belowMap}
+            {belowMap ? <div className="shrink-0">{belowMap}</div> : null}
           </div>
         </aside>
       </div>
