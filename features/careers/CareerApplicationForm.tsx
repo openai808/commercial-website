@@ -239,7 +239,7 @@ export default function CareerApplicationForm({
                   </label>
 
                   <div>
-                    <FieldLabel>Resume</FieldLabel>
+                    <FieldLabel required>Resume</FieldLabel>
                     <div className="mt-1 flex items-center gap-3">
                       <label className="group inline-flex cursor-pointer items-center gap-2 border border-[#d9dce5] px-4 py-2.5 text-xs font-semibold uppercase tracking-[0.1em] text-[#23408e] transition hover:border-[#23408e] hover:bg-[#23408e]/5">
                         <svg
@@ -265,6 +265,7 @@ export default function CareerApplicationForm({
                           name="resume"
                           type="file"
                           accept=".pdf,.doc,.docx"
+                          required
                           onChange={handleResumeChange}
                           className="sr-only"
                         />

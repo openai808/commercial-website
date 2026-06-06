@@ -46,7 +46,7 @@ function InsightCard({ post }: { post: BlogPost }) {
 
   return (
     <Link
-      href={`/insights/${post.slug}`}
+      href={`/blogs-and-news/${post.slug}`}
       className="group flex flex-col overflow-hidden border border-[#d9dce5] bg-white transition-shadow duration-200 hover:shadow-lg"
     >
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#e8ebf2]">

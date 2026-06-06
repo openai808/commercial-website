@@ -296,7 +296,7 @@ export default function HomeNewsInsights({ items = [] }: HomeNewsInsightsProps) 
         </div>
 
         <Link
-          href="/insights"
+          href="/blogs-and-news"
           className="group mt-8 inline-flex items-center gap-4 text-sm font-semibold text-[#243768] transition-colors duration-300 ease-out hover:text-[#2f5fe3] focus-visible:text-[#2f5fe3] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#243768]"
         >
           <span

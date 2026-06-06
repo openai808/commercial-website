@@ -46,8 +46,8 @@ export default function InsightDetailHero({
         <nav aria-label="Breadcrumb" className="mb-6">
           <ol className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/60">
             <li>
-              <Link href="/insights" className="transition hover:text-white">
-                Insights
+              <Link href="/blogs-and-news" className="transition hover:text-white">
+                Blogs &amp; News
               </Link>
             </li>
             <li aria-hidden>

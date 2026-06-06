@@ -40,7 +40,7 @@ export default function SustainabilityServicesCorporateBanner() {
               future.
             </p>
             <Link
-              href="/insights/sustainability"
+              href="/blogs-and-news/sustainability"
               className={`group mt-8 inline-flex w-fit items-center gap-1.5 text-left text-sm font-bold uppercase tracking-[0.14em] text-white underline decoration-white underline-offset-[6px] ${textShadow}`}
             >
               Learn more

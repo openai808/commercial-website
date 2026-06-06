@@ -69,49 +69,44 @@ export async function submitCareerApplication(
     return { ok: false, error: "Please enter a valid LinkedIn profile URL." };
   }
 
+  if (!resumeFile || resumeFile.size === 0) {
+    return { ok: false, error: "Please upload your resume." };
+  }
+
+  if (!ALLOWED_RESUME_TYPES.includes(resumeFile.type)) {
+    return {
+      ok: false,
+      error: "Resume must be a PDF or Word document (.pdf, .doc, .docx).",
+    };
+  }
+
+  if (resumeFile.size > MAX_RESUME_SIZE) {
+    return { ok: false, error: "Resume file must be under 10 MB." };
+  }
+
   const supabase = createSupabaseServerClient();
-  let resumeUrl: string | null = null;
 
-  if (resumeFile && resumeFile.size > 0) {
-    if (!ALLOWED_RESUME_TYPES.includes(resumeFile.type)) {
-      return {
-        ok: false,
-        error: "Resume must be a PDF or Word document (.pdf, .doc, .docx).",
-      };
-    }
+  const ext = resumeFile.name.split(".").pop() || "pdf";
+  const path = `${crypto.randomUUID()}/${Date.now()}.${ext}`;
 
-    if (resumeFile.size > MAX_RESUME_SIZE) {
-      return { ok: false, error: "Resume file must be under 10 MB." };
-    }
+  const { error: uploadError } = await supabase.storage
+    .from("career-resumes")
+    .upload(path, resumeFile, { cacheControl: "3600" });
 
-    const ext = resumeFile.name.split(".").pop() || "pdf";
-    const path = `${crypto.randomUUID()}/${Date.now()}.${ext}`;
-
-    const { error: uploadError } = await supabase.storage
-      .from("career-resumes")
-      .upload(path, resumeFile, { cacheControl: "3600" });
-
-    if (uploadError) {
-      return { ok: false, error: "Failed to upload resume. Please try again." };
-    }
-
-    resumeUrl = path;
+  if (uploadError) {
+    return { ok: false, error: "Failed to upload resume. Please try again." };
   }
 
   try {
-    const { error } = await supabase
-      .from("career_applications")
-      .insert({
-        career_id: careerId,
-        full_name: fullName,
-        email,
-        phone: phone || null,
-        linkedin_url: linkedinUrl || null,
-        cover_letter: coverLetter || null,
-        resume_url: resumeUrl,
-      })
-      .select()
-      .single();
+    const { error } = await supabase.from("career_applications").insert({
+      career_id: careerId,
+      full_name: fullName,
+      email,
+      phone: phone || null,
+      linkedin_url: linkedinUrl || null,
+      cover_letter: coverLetter || null,
+      resume_url: path,
+    });
 
     if (error) {
       return {

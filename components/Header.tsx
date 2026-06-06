@@ -227,24 +227,24 @@ const navConfig: NavItem[] = [
     },
   },
   {
-    id: "insights",
-    href: "/insights",
-    label: "Insights",
+    id: "blogs-and-news",
+    href: "/blogs-and-news",
+    label: "Blogs & News",
     mega: {
       columns: [
         {
           kind: "intro",
-          title: "Insights & Research",
+          title: "Blogs & News",
           description:
             "Our unmatched research and thought leadership platform delivers actionable insights to help our clients make informed business decisions.",
-          overviewLabel: "Explore Insights & Research",
-          overviewHref: "/insights",
+          overviewLabel: "Explore Blogs & News",
+          overviewHref: "/blogs-and-news",
           featured: {
             imageSrc:
               "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=320&q=80",
             imageAlt: "Newsletter and notebook on a desk",
             title: "Our Take Newsletter",
-            href: "/insights/our-take-newsletter",
+            href: "/blogs-and-news/our-take-newsletter",
             linkLabel: "Learn More",
           },
         },
@@ -252,7 +252,7 @@ const navConfig: NavItem[] = [
           kind: "linkStack",
           heading: "Latest Research",
           items: [
-            { label: "Market Reports", href: "/insights/reports" },
+            { label: "Market Reports", href: "/blogs-and-news/reports" },
           ],
         },
         {
@@ -261,37 +261,37 @@ const navConfig: NavItem[] = [
           items: [
             {
               label: "The Weekly Take Podcast",
-              href: "/insights/weekly-take-podcast",
+              href: "/blogs-and-news/weekly-take-podcast",
             },
             {
               label: "Our Take Newsletter",
-              href: "/insights/our-take-newsletter",
+              href: "/blogs-and-news/our-take-newsletter",
             },
-            { label: "Sustainability", href: "/insights/sustainability" },
+            { label: "Sustainability", href: "/blogs-and-news/sustainability" },
             {
               label: "Total Cost of Occupancy",
-              href: "/insights/total-cost-of-occupancy",
+              href: "/blogs-and-news/total-cost-of-occupancy",
             },
-            { label: "Data Center", href: "/insights/data-center" },
+            { label: "Data Center", href: "/blogs-and-news/data-center" },
           ],
         },
         {
           kind: "linkStack",
-          heading: "Featured Insights",
+          heading: "Featured Blogs & News",
           items: [
             {
               label: "Intelligent Investment",
-              href: "/insights/intelligent-investment",
+              href: "/blogs-and-news/intelligent-investment",
             },
-            { label: "Future Cities", href: "/insights/future-cities" },
-            { label: "Adaptive Spaces", href: "/insights/adaptive-spaces" },
+            { label: "Future Cities", href: "/blogs-and-news/future-cities" },
+            { label: "Adaptive Spaces", href: "/blogs-and-news/adaptive-spaces" },
             {
               label: "Evolving Workforces",
-              href: "/insights/evolving-workforces",
+              href: "/blogs-and-news/evolving-workforces",
             },
             {
               label: "Creating Resilience",
-              href: "/insights/creating-resilience",
+              href: "/blogs-and-news/creating-resilience",
             },
           ],
         },

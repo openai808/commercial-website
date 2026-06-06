@@ -23,11 +23,11 @@ export default function InsightDetailContent({
 
         <div className="mt-12 border-t border-[#e8ebf2] pt-8">
           <Link
-            href="/insights"
+            href="/blogs-and-news"
             className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-[#23408e] transition hover:text-[#1d3575]"
           >
             <span aria-hidden className="h-px w-5 bg-current" />
-            Back to all insights
+            Back to all blogs &amp; news
           </Link>
         </div>
       </div>

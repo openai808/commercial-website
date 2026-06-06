@@ -8,10 +8,10 @@ export default function InsightNotFound() {
         This article may have been removed or is no longer available.
       </p>
       <Link
-        href="/insights"
+        href="/blogs-and-news"
         className="mt-8 inline-flex rounded-full bg-[#23408e] px-6 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-white transition hover:bg-[#1d3575]"
       >
-        Back to insights
+        Back to Blogs &amp; News
       </Link>
     </main>
   );

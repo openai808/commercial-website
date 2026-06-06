@@ -25,7 +25,7 @@ export default function InsightsPagination({
     if (targetPage <= 1) params.delete("page");
     else params.set("page", String(targetPage));
     const qs = params.toString();
-    return `/insights${qs.length > 0 ? `?${qs}` : ""}`;
+    return `/blogs-and-news${qs.length > 0 ? `?${qs}` : ""}`;
   };
 
   return (

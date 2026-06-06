@@ -14,7 +14,7 @@ const MAIN_INSIGHT: InsightCard = {
   title: "Colliers Survey Results | Q4 2025 | Makati fringe, Quezon City emerge as top destinations",
   description:
     "Discover key trends in the Metro Manila real estate market from office space demand and residential investment hotspots to hotel growth and industrial logistics opportunities.",
-  href: "/insights",
+  href: "/blogs-and-news",
   image:
     "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=1800&q=80",
 };
@@ -23,21 +23,21 @@ const SIDE_INSIGHTS: InsightCard[] = [
   {
     date: "Mar 17, 2026",
     title: "Global Capital Flows March 2026",
-    href: "/insights",
+    href: "/blogs-and-news",
     image:
       "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1200&q=80",
   },
   {
     date: "Mar 9, 2026",
     title: "Asia Pacific Investment Insights | March 2026",
-    href: "/insights",
+    href: "/blogs-and-news",
     image:
       "https://images.unsplash.com/photo-1555636222-cae831e670b3?auto=format&fit=crop&w=1200&q=80",
   },
   {
     date: "Mar 2, 2026",
     title: "Colliers Flash | GDP | Property pins hope on rate cuts amid stifled GDP",
-    href: "/insights",
+    href: "/blogs-and-news",
     image:
       "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80",
   },
@@ -131,7 +131,7 @@ export default function CapitalMarketsResearchInsights() {
 
         <div className="mt-8 flex justify-center">
           <Link
-            href="/insights"
+            href="/blogs-and-news"
             className="rounded-full bg-[#23408e] px-7 py-2.5 text-xs font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#1d3575]"
           >
             View more

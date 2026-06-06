@@ -16,14 +16,14 @@ export default async function HomeBelowHero() {
       { month: "short", day: "numeric", year: "numeric" },
     ),
     dateTime: (post.published_at ?? post.created_at).split("T")[0],
-    href: `/insights/${post.slug}`,
+    href: `/blogs-and-news/${post.slug}`,
   }));
 
   const sliderPosts = recentPosts.map((post) => ({
     title: post.title,
     category: post.category ?? "Insights",
     excerpt: post.excerpt ?? "",
-    href: `/insights/${post.slug}`,
+    href: `/blogs-and-news/${post.slug}`,
     image: post.cover_image_url ?? "",
   }));
 

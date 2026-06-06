@@ -207,7 +207,7 @@ const SERVICES: ServiceItem[] = [
   {
     id: "research",
     label: "Research Services",
-    href: "/insights/reports",
+    href: "/blogs-and-news/reports",
     icon: <IconResearch />,
   },
 ];

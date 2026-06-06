@@ -40,7 +40,7 @@ export default async function InsightsPage({
             RE/MAX Philippines
           </p>
           <h1 className="mt-3 font-serif text-3xl font-normal leading-snug text-white md:text-5xl md:leading-tight">
-            Insights &amp; Articles
+            Blogs &amp; News
           </h1>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/70 md:text-base">
             Market trends, expert analysis, and the latest from the Philippine
