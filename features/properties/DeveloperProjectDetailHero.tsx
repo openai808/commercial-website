@@ -169,49 +169,9 @@ function DeveloperProjectContactForm({
     });
   }
 
-  const contacts = project.contacts ?? [];
-
   return (
     <div className="mt-8 rounded-lg bg-[#dfe3f0]/50 px-6 py-6 md:mt-10 md:px-8 md:py-8">
-      {contacts.length > 0 ? (
-        <>
-          <h2 className="text-base font-bold uppercase tracking-[0.08em] text-[#000759] md:text-lg">
-            Assigned Brokers
-          </h2>
-          <hr className="mt-3 border-[#000759]/20" />
-          <div className="mt-5 space-y-5">
-            {contacts.map((contact) => (
-              <div key={contact.email || contact.name}>
-                <p className="text-base font-bold text-[#000759] md:text-lg">
-                  {contact.name}
-                </p>
-                {contact.number ? (
-                  <a
-                    href={`tel:${contact.number.replace(/\s/g, "")}`}
-                    className="mt-1 block text-sm text-[#4a5f9a] hover:underline"
-                  >
-                    {contact.number}
-                  </a>
-                ) : null}
-                {contact.email ? (
-                  <a
-                    href={`mailto:${contact.email}`}
-                    className="block text-sm text-[#1a3fb5] hover:underline"
-                  >
-                    {contact.email}
-                  </a>
-                ) : null}
-              </div>
-            ))}
-          </div>
-        </>
-      ) : null}
-
-      <h2
-        className={`text-base font-bold uppercase tracking-[0.08em] text-[#000759] md:text-lg ${
-          contacts.length > 0 ? "mt-8" : ""
-        }`}
-      >
+      <h2 className="text-base font-bold uppercase tracking-[0.08em] text-[#000759] md:text-lg">
         Contact Us
       </h2>
       <hr className="mt-3 border-[#000759]/20" />

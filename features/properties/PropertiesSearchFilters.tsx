@@ -255,7 +255,7 @@ export default function PropertiesSearchFilters({
                 count,
               }))}
               selectedValues={form.cities}
-              onChange={(cities) => setForm((current) => ({ ...current, cities }))}
+              onChange={(cities) => applyForm({ ...form, cities })}
             />
 
             <CheckboxFilterMultiSelect
@@ -271,7 +271,7 @@ export default function PropertiesSearchFilters({
               }))}
               selectedValues={form.propertyTypes}
               onChange={(propertyTypes) =>
-                setForm((current) => ({ ...current, propertyTypes }))
+                applyForm({ ...form, propertyTypes })
               }
             />
 
