@@ -25,8 +25,7 @@ const LISTING_OPTIONS = [
   { value: "", label: "All Listings" },
   { value: "for-lease", label: "For Lease" },
   { value: "for-sale", label: "For Sale" },
-  { value: "investment", label: "Investment Properties" },
-  { value: "developer-projects", label: "Developer Projects" },
+  { value: "developer-projects", label: "Office Buildings" },
 ] as const;
 
 type AreaUnit = "sqft" | "sqm";
