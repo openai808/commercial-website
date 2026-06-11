@@ -1,5 +1,6 @@
 import { listingCategoryOrFilter } from "@/lib/properties/listingCategoryFilters";
 import type { AreaUnit, PropertiesQuery } from "@/lib/properties/searchParams";
+import { expandCityFilterVariantsList } from "@/lib/text/expandCityFilterVariants";
 import { expandDbTextVariantsList } from "@/lib/text/fixUtf8Mojibake";
 
 type ListingsQuery = {
@@ -82,7 +83,7 @@ export function applyPropertiesQuery(
   }
 
   if (filters.cities.length > 0) {
-    next = next.in("city", expandDbTextVariantsList(filters.cities));
+    next = next.in("city", expandCityFilterVariantsList(filters.cities));
   }
 
   if (filters.propertyTypes.length > 0) {
