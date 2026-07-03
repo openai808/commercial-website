@@ -6,7 +6,7 @@ import PeopleAndOfficesOffices from "@/features/people-and-offices/PeopleAndOffi
 export const metadata: Metadata = {
   title: "People & Offices",
   description:
-    "Meet the RE/MAX Commercial Philippines team and find office locations across the Philippines.",
+    "Meet the RE/MAX Commercial 8 Philippines team and find office locations across the Philippines.",
 };
 
 export default function PeopleAndOfficesPage() {

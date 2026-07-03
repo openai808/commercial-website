@@ -24,7 +24,7 @@ export async function generateMetadata({
 
   return {
     title: career.title,
-    description: `${parts.join(" — ")} at RE/MAX Commercial Philippines.`,
+    description: `${parts.join(" — ")} at RE/MAX Commercial 8 Philippines.`,
   };
 }
 

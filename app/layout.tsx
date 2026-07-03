@@ -12,11 +12,11 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: {
-    default: "RE/MAX Commercial Philippines",
-    template: "%s | RE/MAX Commercial Philippines",
+    default: "RE/MAX Commercial 8 Philippines",
+    template: "%s | RE/MAX Commercial 8 Philippines",
   },
   description:
-    "Connect with RE/MAX Commercial for commercial real estate services, investment, leasing, and property solutions across the Philippines.",
+    "Connect with RE/MAX Commercial 8 for commercial real estate services, investment, leasing, and property solutions across the Philippines.",
   icons: {
     icon: "/remax-ico.ico.png",
     apple: "/remax-ico.ico.png",

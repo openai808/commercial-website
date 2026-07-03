@@ -4,7 +4,7 @@ import LegalPageHero from "@/features/legal/LegalPageHero";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
-    "Privacy Policy for the RE/MAX Commercial Philippines website, in compliance with the Data Privacy Act of 2012 (RA 10173).",
+    "Privacy Policy for the RE/MAX Commercial 8 Philippines website, in compliance with the Data Privacy Act of 2012 (RA 10173).",
 };
 
 const LAST_UPDATED = "July 3, 2026";
@@ -14,7 +14,7 @@ export default function PrivacyPolicyPage() {
     <main className="bg-white text-[#000759]">
       <LegalPageHero
         title="Privacy Policy"
-        description="How RE/MAX Commercial Philippines collects, uses, and protects your personal data."
+        description="How RE/MAX Commercial 8 Philippines collects, uses, and protects your personal data."
         lastUpdated={LAST_UPDATED}
       />
 
@@ -22,7 +22,7 @@ export default function PrivacyPolicyPage() {
         <div className="prose prose-slate max-w-none prose-headings:font-serif prose-headings:text-[#000759] prose-p:text-[#2a3a5c] prose-a:text-[#23408e] prose-a:no-underline hover:prose-a:underline prose-li:text-[#2a3a5c] prose-strong:text-[#000759]">
           <h2>1. Introduction &amp; Scope</h2>
           <p>
-            RE/MAX Commercial Philippines (&ldquo;RE/MAX,&rdquo;
+            RE/MAX Commercial 8 Philippines (&ldquo;RE/MAX,&rdquo;
             &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) is
             committed to protecting your personal data in compliance with the
             Data Privacy Act of 2012 (Republic Act No. 10173), its
@@ -83,7 +83,7 @@ export default function PrivacyPolicyPage() {
 
           <h2>5. Sharing &amp; Disclosure</h2>
           <p>
-            We share personal data internally with the RE/MAX Commercial
+            We share personal data internally with the RE/MAX Commercial 8
             Philippines broker or office handling your inquiry, and, where
             necessary to act on your inquiry, with the relevant property
             developer, seller, or lessor. We do not sell your personal data
@@ -154,8 +154,8 @@ export default function PrivacyPolicyPage() {
           <p>
             For questions, concerns, or requests regarding this Privacy
             Policy or your personal data, please contact us at{" "}
-            <a href="mailto:metro.manila@remaxcommercial.ph">
-              metro.manila@remaxcommercial.ph
+            <a href="mailto:info@remaxcommercial.com.ph">
+              info@remaxcommercial.com.ph
             </a>
             . You may also file a complaint directly with the National
             Privacy Commission at{" "}

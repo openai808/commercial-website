@@ -4,7 +4,7 @@ import LegalPageHero from "@/features/legal/LegalPageHero";
 export const metadata: Metadata = {
   title: "Accessibility Statement",
   description:
-    "Accessibility Statement for the RE/MAX Commercial Philippines website, describing our commitment to accessible design and how to report barriers.",
+    "Accessibility Statement for the RE/MAX Commercial 8 Philippines website, describing our commitment to accessible design and how to report barriers.",
 };
 
 const LAST_UPDATED = "July 3, 2026";
@@ -22,7 +22,7 @@ export default function AccessibilityStatementPage() {
         <div className="prose prose-slate max-w-none prose-headings:font-serif prose-headings:text-[#000759] prose-p:text-[#2a3a5c] prose-a:text-[#23408e] prose-a:no-underline hover:prose-a:underline prose-li:text-[#2a3a5c] prose-strong:text-[#000759]">
           <h2>1. Our Commitment</h2>
           <p>
-            RE/MAX Commercial Philippines (&ldquo;RE/MAX,&rdquo;
+            RE/MAX Commercial 8 Philippines (&ldquo;RE/MAX,&rdquo;
             &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) is
             committed to ensuring digital accessibility for people with
             disabilities. We are continually improving the user experience
@@ -65,8 +65,9 @@ export default function AccessibilityStatementPage() {
             We welcome your feedback on the accessibility of this Site. If
             you encounter an accessibility barrier or have suggestions for
             improvement, please contact us at{" "}
-            <a href="mailto:metro.manila@remaxcommercial.ph">
-              metro.manila@remaxcommercial.ph
+            <a href="mailto:info@remaxcommercial.com.ph
+">
+              info@remaxcommercial.com.ph
             </a>
             . We try to respond to accessibility feedback within a reasonable
             timeframe.

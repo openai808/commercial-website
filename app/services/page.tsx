@@ -6,7 +6,7 @@ import ContactUsForm from "@/components/ContactUsForm";
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Explore RE/MAX Commercial Philippines services for investment, leasing, valuation, and property solutions.",
+    "Explore RE/MAX Commercial 8 Philippines services for investment, leasing, valuation, and property solutions.",
 };
 
 export default function ServicesPage() {

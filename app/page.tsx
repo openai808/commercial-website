@@ -29,7 +29,7 @@ const HomeBelowHero = dynamic(
 
 export const metadata: Metadata = {
   title: {
-    absolute: "RE/MAX Commercial Philippines | Commercial Real Estate",
+    absolute: "RE/MAX Commercial 8 Philippines | Commercial Real Estate",
   },
 };
 

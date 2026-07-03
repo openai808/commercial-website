@@ -6,7 +6,7 @@ import CareersGrid from "@/features/careers/CareersGrid";
 export const metadata: Metadata = {
   title: "Careers",
   description:
-    "Explore career opportunities at RE/MAX Commercial Philippines. Find open positions and join our growing team.",
+    "Explore career opportunities at RE/MAX Commercial 8 Philippines. Find open positions and join our growing team.",
 };
 
 export default async function CareersPage() {

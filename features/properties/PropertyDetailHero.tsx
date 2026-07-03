@@ -255,7 +255,7 @@ function GalleryLogo() {
     <div className="pointer-events-none absolute bottom-4 right-4 z-[2] rounded bg-white/95 px-3 py-2 shadow-sm">
       <Image
         src="/REMAX Commercial Logo.png"
-        alt="RE/MAX Commercial"
+        alt="RE/MAX Commercial 8"
         width={120}
         height={28}
         className="h-5 w-auto object-contain md:h-6"

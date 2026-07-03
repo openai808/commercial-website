@@ -267,9 +267,9 @@ export default function ContactUsForm({
                   className={`mt-1 h-4 w-4 focus-visible:ring-2 focus-visible:ring-[#223e83] focus-visible:ring-offset-2 ${errors.consentRequired ? "accent-[#b3435e]" : ""}`}
                 />
                 <span>
-                  I agree that RE/MAX Commercial Philippines may save and use my contact details
+                  I agree that RE/MAX Commercial 8 Philippines may save and use my contact details
                   to respond to my request via email or phone (if provided). I have read and
-                  accept the RE/MAX Commercial Philippines{" "}
+                  accept the RE/MAX Commercial 8 Philippines{" "}
                   <Link href="/terms-of-use" className="underline underline-offset-2">
                     Terms of Use
                   </Link>{" "}
@@ -298,7 +298,7 @@ export default function ContactUsForm({
                   className="mt-1 h-4 w-4"
                 />
                 <span>
-                  I agree to receive occasional marketing emails from RE/MAX Commercial
+                  I agree to receive occasional marketing emails from RE/MAX Commercial 8
                   Philippines. If unchecked, I
                   acknowledge that I am opting out of receiving such communications. (Optional)
                 </span>

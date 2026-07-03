@@ -5,7 +5,7 @@ import LegalPageHero from "@/features/legal/LegalPageHero";
 export const metadata: Metadata = {
   title: "Cookie Policy",
   description:
-    "Cookie Policy for the RE/MAX Commercial Philippines website, explaining what cookies are used and how to manage them.",
+    "Cookie Policy for the RE/MAX Commercial 8 Philippines website, explaining what cookies are used and how to manage them.",
 };
 
 const LAST_UPDATED = "July 3, 2026";
@@ -15,7 +15,7 @@ export default function CookiePolicyPage() {
     <main className="bg-white text-[#000759]">
       <LegalPageHero
         title="Cookie Policy"
-        description="How RE/MAX Commercial Philippines uses cookies and similar technologies on this website."
+        description="How RE/MAX Commercial 8 Philippines uses cookies and similar technologies on this website."
         lastUpdated={LAST_UPDATED}
       />
 
@@ -24,7 +24,7 @@ export default function CookiePolicyPage() {
           <h2>1. Introduction</h2>
           <p>
             This Cookie Policy explains what cookies are, how RE/MAX
-            Commercial Philippines (&ldquo;RE/MAX,&rdquo; &ldquo;we,&rdquo;
+            Commercial 8 Philippines (&ldquo;RE/MAX,&rdquo; &ldquo;we,&rdquo;
             &ldquo;us,&rdquo; or &ldquo;our&rdquo;) uses them on this website
             (the &ldquo;Site&rdquo;), and how you can manage your
             preferences. This policy should be read alongside our{" "}
@@ -86,8 +86,8 @@ export default function CookiePolicyPage() {
           <p>
             If you have questions about this Cookie Policy, please contact us
             at{" "}
-            <a href="mailto:metro.manila@remaxcommercial.ph">
-              metro.manila@remaxcommercial.ph
+            <a href="mailto:info@remaxcommercial.com.ph">
+              info@remaxcommercial.com.ph
             </a>
             .
           </p>
