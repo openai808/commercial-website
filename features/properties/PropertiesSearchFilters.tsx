@@ -36,13 +36,13 @@ const fieldLabelClass =
 const underlineFieldClass = "relative w-full border-b border-[#000759]";
 
 const selectInputClass =
-  "w-full cursor-pointer appearance-none border-0 bg-transparent pb-2.5 pr-8 pt-1 text-base text-[#000759] outline-none";
+  "w-full cursor-pointer appearance-none border-0 bg-transparent pb-2.5 pr-8 pt-1 text-base text-[#000759] outline-none focus-visible:ring-2 focus-visible:ring-[#000759] focus-visible:ring-offset-2";
 
 const underlineInputClass =
-  "min-w-0 flex-1 border-0 border-b border-[#000759] bg-transparent pb-2 pt-1 text-base text-[#000759] outline-none placeholder:text-[#000759]/70 focus:border-[#000759]";
+  "min-w-0 flex-1 border-0 border-b border-[#000759] bg-transparent pb-2 pt-1 text-base text-[#000759] outline-none placeholder:text-[#000759]/70 focus:border-[#000759] focus-visible:ring-2 focus-visible:ring-[#000759] focus-visible:ring-offset-2";
 
 const keywordInputClass =
-  "w-full border-0 bg-transparent pb-2.5 pr-9 pt-1 text-base text-[#000759] outline-none placeholder:italic placeholder:text-[#000759]/90";
+  "w-full border-0 bg-transparent pb-2.5 pr-9 pt-1 text-base text-[#000759] outline-none placeholder:italic placeholder:text-[#000759]/90 focus-visible:ring-2 focus-visible:ring-[#000759] focus-visible:ring-offset-2";
 
 /** Icons sit on the underline at the right edge, not vertically centered in the field. */
 const fieldIconClass =

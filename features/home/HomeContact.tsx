@@ -9,6 +9,7 @@ import {
   type ReactNode,
   type TransitionEvent,
 } from "react";
+import Link from "next/link";
 import { submitHomeContactModal } from "@/lib/actions/homeContact";
 
 const CONTACT_BG =
@@ -46,7 +47,7 @@ function FieldLabel({ children, required }: { children: ReactNode; required?: bo
 }
 
 const underlineInput =
-  "w-full border-0 border-b border-neutral-300 bg-transparent px-0 py-2 text-sm text-neutral-900 outline-none ring-0 placeholder:text-neutral-400 focus:border-[#000759]";
+  "w-full border-0 border-b border-neutral-300 bg-transparent px-0 py-2 text-sm text-neutral-900 outline-none ring-0 placeholder:text-neutral-400 focus:border-[#000759] focus-visible:ring-2 focus-visible:ring-[#000759] focus-visible:ring-offset-2";
 
 const selectClass =
   `${underlineInput} cursor-pointer appearance-none bg-[length:1rem] bg-[right_0_top_50%] bg-no-repeat pr-8` +
@@ -394,7 +395,7 @@ export default function HomeContact() {
                   rows={5}
                   maxLength={4000}
                   placeholder="Message"
-                  className="mt-1 w-full resize-y rounded-sm border border-neutral-300 bg-white px-3 py-2.5 text-sm text-neutral-900 outline-none placeholder:text-neutral-400 focus:border-[#000759] focus:ring-1 focus:ring-[#000759]/25"
+                  className="mt-1 w-full resize-y rounded-sm border border-neutral-300 bg-white px-3 py-2.5 text-sm text-neutral-900 outline-none placeholder:text-neutral-400 focus:border-[#000759] focus-visible:ring-2 focus-visible:ring-[#000759] focus-visible:ring-offset-2"
                 />
               </label>
 
@@ -408,13 +409,13 @@ export default function HomeContact() {
                   />
                   <span>
                     I agree that my information may be used to respond to this enquiry in line with the{" "}
-                    <a href="#" className="font-medium text-[#000759] underline underline-offset-2">
+                    <Link href="/terms-of-use" className="font-medium text-[#000759] underline underline-offset-2">
                       Terms of Use
-                    </a>{" "}
+                    </Link>{" "}
                     and{" "}
-                    <a href="#" className="font-medium text-[#000759] underline underline-offset-2">
+                    <Link href="/privacy-policy" className="font-medium text-[#000759] underline underline-offset-2">
                       Privacy Policy
-                    </a>
+                    </Link>
                     . <span className="text-red-600">(Required) *</span>
                   </span>
                 </label>

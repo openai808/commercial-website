@@ -97,28 +97,28 @@ export default function Footer() {
         <nav aria-label="Footer policies">
           <ul className="flex flex-col sm:flex-row w-full justify-between items-center gap-4 sm:gap-12 md:gap-6">
             <li>
-              <a href="#" className="text-xs text-[#000759] hover:underline hover:text-[#000759]">
+              <Link href="/cookie-policy" className="text-xs text-[#000759] hover:underline hover:text-[#000759]">
                 Cookie Policy
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" className="text-xs text-[#000759] hover:underline hover:text-[#000759]">
+              <Link href="/privacy-policy" className="text-xs text-[#000759] hover:underline hover:text-[#000759]">
                 Privacy Policy
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" className="text-xs text-[#000759] hover:underline hover:text-[#000759]">
+              <Link href="/terms-of-use" className="text-xs text-[#000759] hover:underline hover:text-[#000759]">
                 Terms of Use
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" className="text-xs text-[#000759] hover:underline hover:text-[#000759]">
+              <Link href="/accessibility-statement" className="text-xs text-[#000759] hover:underline hover:text-[#000759]">
                 Accessibility Statement
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>
-        <p className="text-[#000759] text-xs">Copyright &copy; {year} RE/MAX</p>
+        <p className="text-[#000759] text-xs">Copyright &copy; {year} RE/MAX 8 Commercial</p>
       </div>
     </footer>
   );

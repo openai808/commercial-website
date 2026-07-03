@@ -980,12 +980,12 @@ function DesktopHeaderSection({
             id="header-search"
             type="search"
             placeholder="What are you looking for?"
-            className="min-h-[44px] min-w-0 flex-1 border-0 bg-white px-4 text-base text-[#000759] outline-none placeholder:text-[#000759]/65"
+            className="min-h-[44px] min-w-0 flex-1 border-0 bg-white px-4 text-base text-[#000759] outline-none placeholder:text-[#000759]/65 focus-visible:ring-2 focus-visible:ring-[#000759] focus-visible:ring-inset"
           />
           <button
             type="submit"
             className="shrink-0 px-3 py-2 text-[#000759] transition hover:opacity-70 cursor-pointer"
-            aria-label="Submit search≈"
+            aria-label="Submit search"
           >
             <MobileSearchIcon className="h-5 w-5" />
           </button>
@@ -1035,8 +1035,17 @@ function DesktopHeaderSection({
                 className="relative"
               >
                 <Link
+                  id={`nav-trigger-${item.id}`}
                   href={item.href}
                   onClick={onCloseMega}
+                  onFocus={() => {
+                    if (item.mega) onOpenMega(item.id);
+                    else onCloseMega();
+                  }}
+                  aria-haspopup={item.mega ? "true" : undefined}
+                  aria-expanded={
+                    item.mega ? (openId === item.id ? "true" : "false") : undefined
+                  }
                   className={`no-underline transition-colors duration-300 ease-in-out ${openId === item.id ? "font-semibold text-[#000759]" : "text-[#000759]"} after:absolute after:left-0 after:-bottom-1
                   after:h-[2px] after:w-0 after:bg-[#000759]
                   after:transition-all after:duration-300 after:ease-in-out
@@ -1196,7 +1205,7 @@ function MobileHeaderSection({
                         inputMode="search"
                         enterKeyHint="search"
                         placeholder="What are you looking for?"
-                        className="min-w-0 flex-1 border-0 bg-transparent py-1 pr-2 text-base text-[#000759] placeholder:text-[#000759]/70 outline-none"
+                        className="min-w-0 flex-1 border-0 bg-transparent py-1 pr-2 text-base text-[#000759] placeholder:text-[#000759]/70 outline-none focus-visible:ring-2 focus-visible:ring-[#000759] focus-visible:ring-inset"
                       />
                       <button
                         type="submit"
@@ -1276,6 +1285,19 @@ export default function Header() {
     return () => window.removeEventListener("keydown", onKey);
   }, [desktopSearchOpen]);
 
+  useEffect(() => {
+    if (!openId) return;
+    const currentOpenId = openId;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpenId(null);
+        document.getElementById(`nav-trigger-${currentOpenId}`)?.focus();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [openId]);
+
   const handleEnter = useCallback((id: string) => {
     setLastHoveredMenuId(id);
     setOpenId(id);
@@ -1346,7 +1368,15 @@ export default function Header() {
         scrolled ? "shadow-sm" : ""
       }`}
     >
-      <div className="relative" onMouseLeave={handleLeave}>
+      <div
+        className="relative"
+        onMouseLeave={handleLeave}
+        onBlur={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+            handleLeave();
+          }
+        }}
+      >
         <div className="mx-auto w-full px-6">
           <div
             id="site-header-bar"

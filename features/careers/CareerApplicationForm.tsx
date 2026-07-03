@@ -10,7 +10,7 @@ import {
 const initialState: CareerApplicationState = { ok: false, error: null };
 
 const underlineInput =
-  "w-full border-0 border-b border-[#c5cad6] bg-transparent px-0 py-2.5 text-sm text-[#000759] outline-none ring-0 placeholder:text-[#000759]/45 focus:border-[#000759]";
+  "w-full border-0 border-b border-[#c5cad6] bg-transparent px-0 py-2.5 text-sm text-[#000759] outline-none ring-0 placeholder:text-[#000759]/45 focus:border-[#000759] focus-visible:ring-2 focus-visible:ring-[#000759] focus-visible:ring-offset-2";
 
 type CareerApplicationFormProps = {
   careerId: string;
@@ -158,7 +158,11 @@ export default function CareerApplicationForm({
             {state.ok ? (
               <ApplicationSuccess onClose={closeDialog} />
             ) : (
-              <form ref={formRef} onSubmit={handleSubmit}>
+              <form
+                ref={formRef}
+                onSubmit={handleSubmit}
+                aria-describedby={state.error ? "career-application-error" : undefined}
+              >
                 <p className="text-[11px] font-semibold tracking-wide text-[#000759]">
                   <span className="text-red-600">*</span> REQUIRED FIELD
                 </p>
@@ -234,7 +238,7 @@ export default function CareerApplicationForm({
                       rows={4}
                       maxLength={5000}
                       placeholder="Tell us why you're a great fit for this role"
-                      className="mt-1 w-full resize-y border border-[#d9dce5] bg-white px-3 py-2.5 text-sm text-[#000759] outline-none placeholder:text-[#000759]/45 focus:border-[#000759] focus:ring-1 focus:ring-[#000759]/20"
+                      className="mt-1 w-full resize-y border border-[#d9dce5] bg-white px-3 py-2.5 text-sm text-[#000759] outline-none placeholder:text-[#000759]/45 focus:border-[#000759] focus-visible:ring-2 focus-visible:ring-[#000759] focus-visible:ring-offset-2"
                     />
                   </label>
 
@@ -275,7 +279,7 @@ export default function CareerApplicationForm({
                           {resumeName}
                         </span>
                       ) : (
-                        <span className="text-xs text-[#000759]/40">
+                        <span className="text-xs text-[#000759]/70">
                           PDF or Word, max 10 MB
                         </span>
                       )}
@@ -284,7 +288,7 @@ export default function CareerApplicationForm({
                 </div>
 
                 {state.error ? (
-                  <p className="mt-4 text-sm text-red-600" role="alert">
+                  <p id="career-application-error" className="mt-4 text-sm text-red-600" role="alert">
                     {state.error}
                   </p>
                 ) : null}

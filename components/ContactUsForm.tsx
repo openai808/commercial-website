@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useLayoutEffect, useRef, useState } from "react";
+import Link from "next/link";
 
 type ContactUsFormProps = {
   title?: string;
@@ -103,12 +104,12 @@ export default function ContactUsForm({
   };
 
   const inputBaseClass =
-    "border-b bg-transparent px-0 py-2 text-base normal-case placeholder:text-[#4f5d85]/80 focus:border-[#223e83] focus:outline-none";
+    "border-b bg-transparent px-0 py-2 text-base normal-case placeholder:text-[#4f5d85] focus:border-[#223e83] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#223e83] focus-visible:ring-offset-2";
   const errorClass = "border-[#e07f91]";
   const defaultBorderClass = "border-[#a4aec8]";
   const fieldLabelClass = "flex flex-col gap-2 text-[11px] uppercase tracking-[0.12em] text-[#2d3a63]";
   const errorTextClass =
-    "mt-1 text-right text-[11px] font-semibold uppercase tracking-[0.08em] text-[#d6697d]";
+    "mt-1 text-right text-[11px] font-semibold uppercase tracking-[0.08em] text-[#b3435e]";
 
   return (
     <section
@@ -134,15 +135,19 @@ export default function ContactUsForm({
               <input
                 type="text"
                 name="firstName"
+                required
+                aria-required="true"
                 placeholder="Please enter your first name"
                 value={values.firstName}
                 onChange={(event) =>
                   setValues((current) => ({ ...current, firstName: event.target.value }))
                 }
+                aria-invalid={hasSubmitted && errors.firstName ? "true" : "false"}
+                aria-describedby={hasSubmitted && errors.firstName ? "firstName-error" : undefined}
                 className={`${inputBaseClass} ${errors.firstName ? errorClass : defaultBorderClass}`}
               />
               {hasSubmitted && errors.firstName ? (
-                <p className={errorTextClass}>⚠ {errors.firstName}</p>
+                <p id="firstName-error" className={errorTextClass}>⚠ {errors.firstName}</p>
               ) : null}
             </label>
 
@@ -151,15 +156,19 @@ export default function ContactUsForm({
               <input
                 type="text"
                 name="lastName"
+                required
+                aria-required="true"
                 placeholder="Please enter your last name"
                 value={values.lastName}
                 onChange={(event) =>
                   setValues((current) => ({ ...current, lastName: event.target.value }))
                 }
+                aria-invalid={hasSubmitted && errors.lastName ? "true" : "false"}
+                aria-describedby={hasSubmitted && errors.lastName ? "lastName-error" : undefined}
                 className={`${inputBaseClass} ${errors.lastName ? errorClass : defaultBorderClass}`}
               />
               {hasSubmitted && errors.lastName ? (
-                <p className={errorTextClass}>⚠ {errors.lastName}</p>
+                <p id="lastName-error" className={errorTextClass}>⚠ {errors.lastName}</p>
               ) : null}
             </label>
 
@@ -182,15 +191,19 @@ export default function ContactUsForm({
               <input
                 type="email"
                 name="email"
+                required
+                aria-required="true"
                 placeholder="Email Address"
                 value={values.email}
                 onChange={(event) =>
                   setValues((current) => ({ ...current, email: event.target.value }))
                 }
+                aria-invalid={hasSubmitted && errors.email ? "true" : "false"}
+                aria-describedby={hasSubmitted && errors.email ? "email-error" : undefined}
                 className={`${inputBaseClass} ${errors.email ? errorClass : defaultBorderClass}`}
               />
               {hasSubmitted && errors.email ? (
-                <p className={errorTextClass}>⚠ {errors.email}</p>
+                <p id="email-error" className={errorTextClass}>⚠ {errors.email}</p>
               ) : null}
             </label>
           </div>
@@ -213,18 +226,22 @@ export default function ContactUsForm({
             Message *
             <textarea
               name="message"
+              required
+              aria-required="true"
               placeholder="Message"
               rows={4}
               value={values.message}
               onChange={(event) =>
                 setValues((current) => ({ ...current, message: event.target.value }))
               }
-              className={`min-h-[110px] resize-y border bg-transparent px-4 py-3 text-base normal-case placeholder:text-[#4f5d85]/80 focus:border-[#223e83] focus:outline-none ${
+              aria-invalid={hasSubmitted && errors.message ? "true" : "false"}
+              aria-describedby={hasSubmitted && errors.message ? "message-error" : undefined}
+              className={`min-h-[110px] resize-y border bg-transparent px-4 py-3 text-base normal-case placeholder:text-[#4f5d85] focus:border-[#223e83] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#223e83] focus-visible:ring-offset-2 ${
                 errors.message ? errorClass : defaultBorderClass
               }`}
             />
             {hasSubmitted && errors.message ? (
-              <p className={errorTextClass}>⚠ {errors.message}</p>
+              <p id="message-error" className={errorTextClass}>⚠ {errors.message}</p>
             ) : null}
           </label>
 
@@ -234,6 +251,8 @@ export default function ContactUsForm({
                 <input
                   type="checkbox"
                   name="consentRequired"
+                  required
+                  aria-required="true"
                   checked={values.consentRequired}
                   onChange={(event) =>
                     setValues((current) => ({
@@ -241,16 +260,28 @@ export default function ContactUsForm({
                       consentRequired: event.target.checked,
                     }))
                   }
-                  className={`mt-1 h-4 w-4 ${errors.consentRequired ? "accent-[#d6697d]" : ""}`}
+                  aria-invalid={hasSubmitted && errors.consentRequired ? "true" : "false"}
+                  aria-describedby={
+                    hasSubmitted && errors.consentRequired ? "consentRequired-error" : undefined
+                  }
+                  className={`mt-1 h-4 w-4 focus-visible:ring-2 focus-visible:ring-[#223e83] focus-visible:ring-offset-2 ${errors.consentRequired ? "accent-[#b3435e]" : ""}`}
                 />
                 <span>
-                  I agree that REMAX/8 may save and use my contact details to respond to my
-                  request via email or phone (if provided). I have read and accept the Colliers
-                  Terms of Use and Privacy Policy. (Required)
+                  I agree that RE/MAX Commercial Philippines may save and use my contact details
+                  to respond to my request via email or phone (if provided). I have read and
+                  accept the RE/MAX Commercial Philippines{" "}
+                  <Link href="/terms-of-use" className="underline underline-offset-2">
+                    Terms of Use
+                  </Link>{" "}
+                  and{" "}
+                  <Link href="/privacy-policy" className="underline underline-offset-2">
+                    Privacy Policy
+                  </Link>
+                  . (Required)
                 </span>
               </label>
               {hasSubmitted && errors.consentRequired ? (
-                <p className={errorTextClass}>⚠ {errors.consentRequired}</p>
+                <p id="consentRequired-error" className={errorTextClass}>⚠ {errors.consentRequired}</p>
               ) : null}
 
               <label className="flex items-start gap-3 border-b border-[#a4aec8] pb-4">
@@ -267,7 +298,8 @@ export default function ContactUsForm({
                   className="mt-1 h-4 w-4"
                 />
                 <span>
-                  I agree to receive occasional marketing emails from REMAX/8. If unchecked, I
+                  I agree to receive occasional marketing emails from RE/MAX Commercial
+                  Philippines. If unchecked, I
                   acknowledge that I am opting out of receiving such communications. (Optional)
                 </span>
               </label>

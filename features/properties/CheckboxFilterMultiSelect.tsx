@@ -21,7 +21,7 @@ const fieldLabelClass =
 const underlineFieldClass = "relative w-full border-b border-[#000759]";
 
 const triggerButtonClass =
-  "flex w-full items-center justify-between gap-2 border-0 bg-transparent pb-2.5 pt-1 text-left text-base text-[#000759] outline-none";
+  "flex w-full items-center justify-between gap-2 border-0 bg-transparent pb-2.5 pt-1 text-left text-base text-[#000759] outline-none focus-visible:ring-2 focus-visible:ring-[#000759] focus-visible:ring-offset-2";
 
 const fieldIconClass =
   "pointer-events-none shrink-0 translate-y-px text-[#000759]";

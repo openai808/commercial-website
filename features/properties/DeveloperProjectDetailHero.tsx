@@ -2,6 +2,7 @@
 
 import type { DeveloperProject } from "@/lib/properties/getDeveloperProjects";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useRef, useState, useTransition } from "react";
 import {
@@ -146,7 +147,7 @@ export default function DeveloperProjectDetailHero({
 const initialContactState: PropertyContactState = { ok: false, error: null };
 
 const underlineInput =
-  "w-full border-0 border-b border-[#c5cad6] bg-transparent px-0 py-2.5 text-sm text-[#000759] outline-none ring-0 placeholder:text-[#000759]/45 focus:border-[#000759]";
+  "w-full border-0 border-b border-[#c5cad6] bg-transparent px-0 py-2.5 text-sm text-[#000759] outline-none ring-0 placeholder:text-[#000759]/45 focus:border-[#000759] focus-visible:ring-2 focus-visible:ring-[#000759] focus-visible:ring-offset-2";
 
 function DeveloperProjectContactForm({
   project,
@@ -208,7 +209,12 @@ function DeveloperProjectContactForm({
           </button>
         </div>
       ) : (
-        <form ref={formRef} onSubmit={handleSubmit} className="mt-5">
+        <form
+          ref={formRef}
+          onSubmit={handleSubmit}
+          className="mt-5"
+          aria-describedby={state.error ? "dev-contact-error" : undefined}
+        >
           <p className="text-[11px] font-semibold tracking-wide text-[#000759]">
             <span className="text-red-600">*</span> REQUIRED FIELD
           </p>
@@ -318,7 +324,7 @@ function DeveloperProjectContactForm({
                 rows={4}
                 maxLength={4000}
                 placeholder="How can we help you?"
-                className="mt-1 w-full resize-y border border-[#c5cad6] bg-white px-3 py-2.5 text-sm text-[#000759] outline-none placeholder:text-[#000759]/45 focus:border-[#000759] focus:ring-1 focus:ring-[#000759]/20"
+                className="mt-1 w-full resize-y border border-[#c5cad6] bg-white px-3 py-2.5 text-sm text-[#000759] outline-none placeholder:text-[#000759]/45 focus:border-[#000759] focus-visible:ring-2 focus-visible:ring-[#000759] focus-visible:ring-offset-2"
               />
             </label>
           </div>
@@ -333,25 +339,25 @@ function DeveloperProjectContactForm({
             <span>
               I agree that my information may be used to respond to this
               enquiry in line with the{" "}
-              <a
-                href="#"
+              <Link
+                href="/terms-of-use"
                 className="font-medium text-[#23408e] underline underline-offset-2"
               >
                 Terms of Use
-              </a>{" "}
+              </Link>{" "}
               and{" "}
-              <a
-                href="#"
+              <Link
+                href="/privacy-policy"
                 className="font-medium text-[#23408e] underline underline-offset-2"
               >
                 Privacy Policy
-              </a>
+              </Link>
               . <span className="text-red-600">(Required) *</span>
             </span>
           </label>
 
           {state.error ? (
-            <p className="mt-4 text-sm text-red-600" role="alert">
+            <p id="dev-contact-error" className="mt-4 text-sm text-red-600" role="alert">
               {state.error}
             </p>
           ) : null}

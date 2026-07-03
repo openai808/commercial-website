@@ -46,6 +46,8 @@ export default function HomeBlogSlider({ posts = [] }: HomeBlogSliderProps) {
         <div
           ref={sliderRef}
           onScroll={handleSliderScroll}
+          role="region"
+          aria-label="Blog articles"
           className="mt-8 flex h-[22rem] w-full snap-x snap-mandatory gap-2 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:h-[24rem] md:cursor-pointer md:snap-none"
         >
           {posts.map((post) => (
