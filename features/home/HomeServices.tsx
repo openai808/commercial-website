@@ -1,253 +1,235 @@
+"use client";
+
+import Image from "next/image";
 import Link from "next/link";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 
 type ServiceItem = {
   id: string;
-  label: string;
+  title: string;
+  description: string;
   href: string;
   icon: ReactNode;
 };
 
+function IconTenantRepresentation() {
+  return (
+    <Image
+      src="/images/tenant.png"
+      alt=""
+      width={60}
+      height={60}
+      className="w-[clamp(40px,8vw,60px)] h-[clamp(40px,8vw,60px)] shrink-0 object-contain"
+      aria-hidden
+    />
+  );
+}
+
+function IconLandlordRepresentation() {
+  return (
+    <Image
+      src="/images/landlord.png"
+      alt=""
+      width={60}
+      height={60}
+      className="w-[clamp(40px,8vw,60px)] h-[clamp(40px,8vw,60px)] shrink-0 object-contain"
+      aria-hidden
+    />
+  );
+}
+
+function IconResidentialServices() {
+  return (
+    <Image
+      src="/images/residential.png"
+      alt=""
+      width={60}
+      height={60}
+      className="w-[clamp(40px,8vw,60px)] h-[clamp(40px,8vw,60px)] shrink-0 object-contain"
+      aria-hidden
+    />
+  );
+}
+
 function IconCapitalMarkets() {
   return (
-    <svg viewBox="0 0 48 48" className="h-10 w-10 shrink-0" aria-hidden>
-      <path
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M8 36V20l6-4 6 4 8-10 8 6v16M8 36h32M14 24v12M20 28v8M28 18v18M36 20v16M10 12l3 2-3 2-3-2 3-2z"
-      />
-    </svg>
+    <Image
+      src="/images/capital.png"
+      alt=""
+      width={60}
+      height={60}
+      className="w-[clamp(40px,8vw,60px)] h-[clamp(40px,8vw,60px)] shrink-0 object-contain"
+      aria-hidden
+    />
   );
 }
 
-function IconOccupier() {
+function IconTitleConveyancing() {
   return (
-    <svg viewBox="0 0 48 48" className="h-10 w-10 shrink-0" aria-hidden>
-      <rect
-        x="17"
-        y="8"
-        width="14"
-        height="22"
-        rx="1.5"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
-      <path
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        d="M13 26h4M31 26h4M10 38c8 5 20 5 28 0M24 30v8M18 42l6-3 6 3"
-      />
-    </svg>
+    <Image
+      src="/images/title.png"
+      alt=""
+      width={60}
+      height={60}
+      className="w-[clamp(40px,8vw,60px)] h-[clamp(40px,8vw,60px)] shrink-0 object-contain"
+      aria-hidden
+    />
   );
 }
 
-function IconLandlord() {
+function IconPropertyVetting() {
   return (
-    <svg viewBox="0 0 48 48" className="h-10 w-10 shrink-0" aria-hidden>
-      <circle cx="24" cy="18" r="6" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <path
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        d="M12 38c0-6.6 5.4-12 12-12s12 5.4 12 12M24 32v6"
-      />
-      <circle cx="24" cy="38" r="8" fill="none" stroke="currentColor" strokeWidth="1.5" />
-    </svg>
-  );
-}
-
-function IconProjectManagement() {
-  return (
-    <svg viewBox="0 0 48 48" className="h-10 w-10 shrink-0" aria-hidden>
-      <path
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        d="M10 36V14l10-4v26M20 10l12 4v22M20 18h12M20 24h8M20 30h10"
-      />
-      <circle cx="30" cy="8" r="3" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <path fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" d="M27 11l-4 4" />
-    </svg>
-  );
-}
-
-function IconResidential() {
-  return (
-    <svg viewBox="0 0 48 48" className="h-10 w-10 shrink-0" aria-hidden>
-      <path
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-        d="M12 40V18l12-8 12 8v22M18 40V26h12v14M22 40v-6h4v6"
-      />
-    </svg>
-  );
-}
-
-function IconTenant() {
-  return (
-    <svg viewBox="0 0 48 48" className="h-10 w-10 shrink-0" aria-hidden>
-      <circle cx="14" cy="16" r="4" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <circle cx="34" cy="16" r="4" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <circle cx="24" cy="12" r="3.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <path
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        d="M10 36c0-4 2.5-8 8-8M38 36c0-4-2.5-8-8-8M18 36c0-3 2-6 6-6s6 3 6 6M14 22l10 6M24 28l10-6M24 15v7"
-      />
-    </svg>
-  );
-}
-
-function IconManagement() {
-  return (
-    <svg viewBox="0 0 48 48" className="h-10 w-10 shrink-0" aria-hidden>
-      <path
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M8 28c4-8 12-10 16-10M14 38c2-6 6-8 10-8M22 40h14M28 18v14M28 18l6-4 6 4v18H28"
-      />
-    </svg>
-  );
-}
-
-function IconValuation() {
-  return (
-    <svg viewBox="0 0 48 48" className="h-10 w-10 shrink-0" aria-hidden>
-      <rect x="10" y="10" width="28" height="28" rx="2" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <path
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        d="M16 22h4M16 28h6M16 34h8M26 22h6M26 28h4M26 34h6"
-      />
-    </svg>
-  );
-}
-
-function IconResearch() {
-  return (
-    <svg viewBox="0 0 48 48" className="h-10 w-10 shrink-0" aria-hidden>
-      <path
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-        d="M14 8h16a4 4 0 014 4v28a2 2 0 01-2 2H16a2 2 0 01-2-2V8zM14 8v30h18"
-      />
-      <path fill="none" stroke="currentColor" strokeWidth="1.5" d="M22 12h6M22 18h10M22 24h8" />
-    </svg>
+    <Image
+      src="/images/vetting.png"
+      alt=""
+      width={60}
+      height={60}
+      className="w-[clamp(40px,8vw,60px)] h-[clamp(40px,8vw,60px)] shrink-0 object-contain"
+      aria-hidden
+    />
   );
 }
 
 const SERVICES: ServiceItem[] = [
   {
+    id: "tenant-representation",
+    title: "Tenant Representation",
+    description: "Find the right property, negotiate lease terms, secure the best space.",
+    href: "/services/tenant",
+    icon: <IconTenantRepresentation />,
+  },
+  {
+    id: "landlord-representation",
+    title: "Landlord Representation",
+    description: "List your property, attract qualified tenants, close profitable leases.",
+    href: "/services/landlord",
+    icon: <IconLandlordRepresentation />,
+  },
+  {
+    id: "residential-services",
+    title: "Residential Services",
+    description: "Buy or sell your home, lease with confidence, move hassle-free.",
+    href: "/services/residential-services",
+    icon: <IconResidentialServices />,
+  },
+  {
     id: "capital-markets",
-    label: "Capital Markets & Investment Services",
+    title: "Capital Markets & Investment Service",
+    description: "Identify opportunities, maximize returns, grow your real estate portfolio.",
     href: "/services/capital-markets-and-investment-services",
     icon: <IconCapitalMarkets />,
   },
   {
-    id: "occupier",
-    label: "Occupier Services",
-    href: "/services/occupier-services",
-    icon: <IconOccupier />,
+    id: "title-conveyancing",
+    title: "Title Conveyancing Service",
+    description: "Transfer ownership, complete legal documents, close transactions smoothly.",
+    href: "/services/title-conveyancing",
+    icon: <IconTitleConveyancing />,
   },
   {
-    id: "landlord",
-    label: "Landlord Representation",
-    href: "/services/landlord",
-    icon: <IconLandlord />,
-  },
-  {
-    id: "projects",
-    label: "Project Management",
-    href: "/services/projects",
-    icon: <IconProjectManagement />,
-  },
-  {
-    id: "residential",
-    label: "Residential",
-    href: "/services/residential-services",
-    icon: <IconResidential />,
-  },
-  {
-    id: "tenant",
-    label: "Tenant Representation",
-    href: "/services/tenant",
-    icon: <IconTenant />,
-  },
-  {
-    id: "management",
-    label: "Real Estate Management Services",
-    href: "/services/management",
-    icon: <IconManagement />,
-  },
-  {
-    id: "valuation",
-    label: "Valuation and Advisory Services",
-    href: "/services/valuation-and-advisory-services",
-    icon: <IconValuation />,
-  },
-  {
-    id: "research",
-    label: "Research Services",
-    href: "/blogs-and-news/reports",
-    icon: <IconResearch />,
+    id: "property-vetting",
+    title: "Property Vetting Service",
+    description: "Verify ownership, assess risks, ensure property legitimacy.",
+    href: "/services/property-vetting",
+    icon: <IconPropertyVetting />,
   },
 ];
 
+// Reveal order (top to bottom): label, underline, then each card left-to-right, top-to-bottom.
+const STAGGER_MS = 110;
+
+function delayFor(index: number) {
+  return index * STAGGER_MS;
+}
+
 export default function HomeServices() {
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [revealed, setRevealed] = useState(false);
+
+  useLayoutEffect(() => {
+    const el = contentRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setRevealed(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -10% 0px" },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  const revealClass = () =>
+    `transition-[opacity,transform] duration-700 ease-out motion-reduce:transition-none ${
+      revealed ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+    }`;
+  const revealStyle = (index: number) => ({
+    transitionDelay: `${delayFor(index)}ms`,
+  });
+
   return (
     <section
-      className="w-full bg-[#233d83] text-white"
+      className="relative w-full overflow-hidden bg-[#0c2749] py-22"
       aria-labelledby="home-services-heading"
     >
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-12 px-6 py-16 md:gap-14 md:py-20 lg:flex-row lg:items-center lg:gap-16 lg:px-10 lg:py-24">
-        <div className="flex min-w-0 flex-col justify-center lg:w-[38%] lg:max-w-xl lg:shrink-0">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-white/90 md:text-sm">
-            Industry-leading services
-          </p>
-          <h2
-            id="home-services-heading"
-            className="mt-4 font-serif text-2xl font-normal leading-snug text-white md:text-3xl md:leading-tight lg:text-[2rem] lg:leading-snug"
-          >
-            Learn more about how we can customize the right solutions for your property needs.
-          </h2>
-        </div>
+      <Image
+        src="/images/section3.jpg"
+        alt=""
+        fill
+        className="object-cover"
+        sizes="100vw"
+      />
+      <div className="absolute inset-0 bg-[#0c2749]/40" aria-hidden />
 
-        <div className="min-w-0 flex-1">
-          <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
-            {SERVICES.map((item) => (
-              <li key={item.id}>
-                <Link
-                  href={item.href}
-                  className="group flex items-center gap-4 rounded-lg px-4 py-3.5 text-left transition-colors hover:bg-white/10 focus-visible:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:px-5 md:py-4"
-                >
-                  <span className="text-white">{item.icon}</span>
-                  <span className="text-sm font-medium leading-snug text-white md:text-base">
-                    {item.label}
+      <div
+        ref={contentRef}
+        className="relative mx-auto flex w-full max-w-7xl flex-col items-center px-6 sm:px-8 lg:px-10"
+      >
+        <p
+          className={`font-gotham text-[12px] font-normal uppercase tracking-[0.32em] text-white sm:text-[13.5px] lg:text-[15.4px] ${revealClass()}`}
+          style={revealStyle(0)}
+        >
+          What We Do
+        </p>
+        <div
+          className={`mt-4 h-[3px] w-12 origin-center bg-red-600 transition-[opacity,transform] duration-700 ease-out motion-reduce:transition-none ${
+            revealed ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"
+          }`}
+          style={revealStyle(1)}
+          aria-hidden
+        />
+        <h2 id="home-services-heading" className="sr-only">
+          Industry-leading services
+        </h2>
+
+        <ul className="mt-14 grid w-full grid-cols-1 gap-6 sm:grid-cols-2 md:mt-16 lg:grid-cols-3">
+          {SERVICES.map((item, i) => (
+            <li key={item.id} className={revealClass()} style={revealStyle(2 + i)}>
+              <Link
+                href={item.href}
+                className="group grid h-full grid-cols-[auto_1fr] items-start gap-x-4 rounded-2xl bg-[#0c2749] p-8 text-left transition-colors duration-300 ease-out hover:bg-[#1a3a6e]/90 focus-visible:bg-[#1a3a6e]/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              >
+                <span className="col-start-1 row-start-1 row-span-3 self-start text-white">{item.icon}</span>
+                <span className="font-gotham col-start-2 row-start-1 self-start text-[12px] font-bold uppercase tracking-wide text-white sm:text-[13px] md:text-[14px] lg:text-[15px] xl:text-[16px]">
+                  {item.title}
+                </span>
+                <span className="font-gotham col-start-2 row-start-2 mt-1.5 text-[12px] font-normal leading-relaxed text-white/80 sm:text-[12.5px] md:text-[13px] lg:text-[13.5px]">
+                  {item.description}
+                </span>
+                <span className="font-gotham col-start-2 row-start-3 mt-3 inline-flex items-center gap-1.5 text-[11px] font-medium text-white sm:text-[12px] md:text-[12.5px] lg:text-[13px]">
+                  Learn More
+                  <span className="transition-transform duration-300 ease-out group-hover:translate-x-1">
+                    →
                   </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

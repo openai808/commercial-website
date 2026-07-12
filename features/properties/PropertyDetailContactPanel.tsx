@@ -547,7 +547,7 @@ function ContactSuccess() {
       <div className="flex min-w-0 flex-1 items-center justify-between gap-3">
         <span className="text-sm font-semibold text-[#000759]">Success!</span>
         <Image
-          src="/REMAX Commercial Logo.png"
+          src="/logo_black.png"
           alt="RE/MAX Commercial 8"
           width={100}
           height={24}

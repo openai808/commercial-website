@@ -343,7 +343,7 @@ function ApplicationSuccess({ onClose }: { onClose: () => void }) {
 
       <div className="mt-6 flex items-center gap-4">
         <Image
-          src="/REMAX Commercial Logo.png"
+          src="/logo_black.png"
           alt="RE/MAX Commercial 8"
           width={100}
           height={24}

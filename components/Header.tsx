@@ -13,6 +13,7 @@ import {
   type TransitionEvent,
 } from "react";
 import { createPortal } from "react-dom";
+import ContactModal from "@/components/ContactModal";
 
 type MegaIntroColumn = {
   kind: "intro";
@@ -37,17 +38,48 @@ type MegaLinkStackColumn = {
   viewAll?: { label: string; href: string };
 };
 
-const PROPERTIES_FOR_LEASE_HREF = "/properties?listing=for-lease";
-const PROPERTIES_FOR_SALE_HREF = "/properties?listing=for-sale";
-const PROPERTIES_INVESTMENT_HREF = "/properties?listing=investment";
-const PROPERTIES_DEVELOPER_PROJECTS_HREF = "/properties/developer-projects";
-
-type MegaMenu = {
-  /** Intro column plus two or more link stacks (desktop mega-menu layout). */
-  columns: [MegaIntroColumn, MegaLinkStackColumn, MegaLinkStackColumn, ...MegaLinkStackColumn[]];
+type MegaSimpleList = {
+  kind: "simple";
+  title: string;
+  items: { label: string; href: string }[];
 };
 
-type NavItem = { id: string; href: string; label: string; mega?: MegaMenu };
+type MegaSimpleGroup = {
+  heading: string;
+  headingHref: string;
+  items: { label: string; href: string }[];
+};
+
+type MegaSimpleGroups = {
+  kind: "simpleGroups";
+  title: string;
+  groups: [MegaSimpleGroup, MegaSimpleGroup, ...MegaSimpleGroup[]];
+};
+
+const PROPERTIES_FOR_LEASE_HREF = "/properties?listing=for-lease";
+const PROPERTIES_FOR_SALE_HREF = "/properties?listing=for-sale";
+
+type MegaMenu =
+  | {
+      /** Intro column plus two or more link stacks (desktop mega-menu layout). */
+      kind: "columns";
+      columns: [
+        MegaIntroColumn,
+        MegaLinkStackColumn,
+        MegaLinkStackColumn,
+        ...MegaLinkStackColumn[],
+      ];
+    }
+  | MegaSimpleList
+  | MegaSimpleGroups;
+
+type NavItem = {
+  id: string;
+  href: string;
+  label: string;
+  mega?: MegaMenu;
+  hidden?: boolean;
+};
 
 /** Edge Tools ARIA rule expects concrete "true" | "false" tokens, not boolean JSX props. */
 function ariaExpandedProps(expanded: boolean) {
@@ -58,170 +90,78 @@ function ariaExpandedProps(expanded: boolean) {
 
 const navConfig: NavItem[] = [
   {
-    id: "properties",
-    href: "/properties",
-    label: "Properties",
-    mega: {
-      columns: [
-        {
-          kind: "intro",
-          title: "Properties",
-          description:
-            "Find the ideal office, industrial or retail property for your team or source specialized spaces for multifamily, healthcare, technology and more. Let us guide you to your next investment or leasing opportunity.",
-          overviewLabel: "See Overview",
-          overviewHref: "/properties",
-        },
-        {
-          kind: "linkStack",
-          heading: "For Lease",
-          headingHref: PROPERTIES_FOR_LEASE_HREF,
-          items: [
-            {
-              label: "Properties for Lease",
-              href: PROPERTIES_FOR_LEASE_HREF,
-            },
-          ],
-          viewAll: {
-            label: "View all leases",
-            href: PROPERTIES_FOR_LEASE_HREF,
-          },
-        },
-        {
-          kind: "linkStack",
-          heading: "For Sale",
-          headingHref: PROPERTIES_FOR_SALE_HREF,
-          items: [
-            {
-              label: "Properties for Sale",
-              href: PROPERTIES_FOR_SALE_HREF,
-            },
-            {
-              label: "Investment Properties for Sale",
-              href: PROPERTIES_INVESTMENT_HREF,
-            },
-          ],
-          viewAll: {
-            label: "View all sales",
-            href: PROPERTIES_FOR_SALE_HREF,
-          },
-        },
-        {
-          kind: "linkStack",
-          heading: "Developer Projects",
-          headingHref: PROPERTIES_DEVELOPER_PROJECTS_HREF,
-          items: [
-            {
-              label: "Browse Developer Projects",
-              href: PROPERTIES_DEVELOPER_PROJECTS_HREF,
-            },
-          ],
-          viewAll: {
-            label: "View all projects",
-            href: PROPERTIES_DEVELOPER_PROJECTS_HREF,
-          },
-        },
-      ],
-    },
-  },
-  {
-    id: "people-offices",
-    href: "/people-and-offices",
-    label: "People & Offices",
-  },
-  {
     id: "services",
     href: "/services",
     label: "Services",
     mega: {
-      columns: [
+      kind: "simple",
+      title: "Services",
+      items: [
+        { label: "Tenant Representation", href: "/services/tenant" },
+        { label: "Landlord Representation", href: "/services/landlord" },
         {
-          kind: "intro",
-          title: "Services",
-          description:
-            "Unlock the value in every dimension of your real estate with integrated, data-led services that support your overall business strategy.",
-          overviewLabel: "See Overview",
-          overviewHref: "/services",
-          featured: {
-            imageSrc:
-              "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=320&q=80",
-            imageAlt: "Solar panels and sustainable energy",
-            title: "Energy & Sustainability",
-            href: "/services/sustainability-services",
-            linkLabel: "Learn more",
-          },
+          label: "Residential Services",
+          href: "/services/residential-services",
         },
         {
-          kind: "linkStack",
-          heading: "Needs",
+          label: "Capital Markets & Investment Service",
+          href: "/services/capital-markets-and-investment-services",
+        },
+        {
+          label: "Title Conveyancing Service",
+          href: "/services/title-conveyancing",
+        },
+        { label: "Property Vetting Service", href: "/services/property-vetting" },
+      ],
+    },
+  },
+  {
+    id: "properties",
+    href: "/properties",
+    label: "Properties",
+    mega: {
+      kind: "simpleGroups",
+      title: "Properties",
+      groups: [
+        {
+          heading: "For Sale",
+          headingHref: PROPERTIES_FOR_SALE_HREF,
           items: [
-            { label: "Capital Markets & Investment Services", href: "/services/capital-markets-and-investment-services" },
+            { label: "Office", href: `${PROPERTIES_FOR_SALE_HREF}&type=office` },
             {
-              label: "Occupier Services",
-              href: "/services/occupier-services",
+              label: "Industrial and Logistics",
+              href: `${PROPERTIES_FOR_SALE_HREF}&type=industrial-and-logistics`,
             },
             {
-              label: "Landlord Representation",
-              href: "/services/plan-lease-occupy",
+              label: "Hotels and Hospitality",
+              href: `${PROPERTIES_FOR_SALE_HREF}&type=hotels-and-hospitality`,
             },
-            { label: "Project Management", href: "/services/design-build" },
+            { label: "Retail", href: `${PROPERTIES_FOR_SALE_HREF}&type=retail` },
             {
               label: "Residential",
-              href: "/services/residential-services",
-            },
-            {
-              label: "Industrial Services",
-              href: "/services/industrial",
-            },
-            {
-              label: "Tenant Representation",
-              href: "/services/transform-outcomes",
-            },
-            {
-              label: "Real Estate Management Services",
-              href: "/services/real-estate-management-services",
-            }, {
-              label: "Valuation and Advisory Services",
-              href: "/services/valuation-and-advisory-services",
-            },
-            {
-              label: "Research Services",
-              href: "/services/transform-outcomes3",
+              href: `${PROPERTIES_FOR_SALE_HREF}&type=residential`,
             },
           ],
-          viewAll: { label: "View all services", href: "/services" },
         },
         {
-          kind: "linkStack",
-          heading: "Property types",
+          heading: "For Lease",
+          headingHref: PROPERTIES_FOR_LEASE_HREF,
           items: [
-            { label: "Office", href: "/properties/office" },
-            { label: "Retail", href: "/properties/retail" },
-            { label: "Industrial", href: "/properties/industrial" },
-            { label: "Multifamily", href: "/properties/multifamily" },
-            { label: "Hotels", href: "/properties/hospitality" },
+            { label: "Office", href: `${PROPERTIES_FOR_LEASE_HREF}&type=office` },
+            {
+              label: "Industrial and Logistics",
+              href: `${PROPERTIES_FOR_LEASE_HREF}&type=industrial-and-logistics`,
+            },
+            {
+              label: "Hotels and Hospitality",
+              href: `${PROPERTIES_FOR_LEASE_HREF}&type=hotels-and-hospitality`,
+            },
+            { label: "Retail", href: `${PROPERTIES_FOR_LEASE_HREF}&type=retail` },
+            {
+              label: "Residential",
+              href: `${PROPERTIES_FOR_LEASE_HREF}&type=residential`,
+            },
           ],
-          viewAll: { label: "See all property types", href: "/properties" },
-        },
-        {
-          kind: "linkStack",
-          heading: "Industries",
-          items: [
-            { label: "Data Center", href: "/services/industries/data-center" },
-            {
-              label: "Life Sciences",
-              href: "/services/industries/life-sciences",
-            },
-            {
-              label: "Banking & Financial Services",
-              href: "/services/industries/banking",
-            },
-            {
-              label: "Tech, Media & Telecommunications",
-              href: "/services/industries/tmt",
-            },
-            { label: "Healthcare", href: "/services/industries/healthcare" },
-          ],
-          viewAll: { label: "See all industries", href: "/services" },
         },
       ],
     },
@@ -229,80 +169,69 @@ const navConfig: NavItem[] = [
   {
     id: "blogs-and-news",
     href: "/blogs-and-news",
-    label: "Blogs & News",
+    label: "Insights",
     mega: {
-      columns: [
+      kind: "simpleGroups",
+      title: "Insights",
+      groups: [
         {
-          kind: "intro",
-          title: "Blogs & News",
-          description:
-            "Our unmatched research and thought leadership platform delivers actionable insights to help our clients make informed business decisions.",
-          overviewLabel: "Explore Blogs & News",
-          overviewHref: "/blogs-and-news",
-          featured: {
-            imageSrc:
-              "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=320&q=80",
-            imageAlt: "Newsletter and notebook on a desk",
-            title: "Our Take Newsletter",
-            href: "/blogs-and-news/our-take-newsletter",
-            linkLabel: "Learn More",
-          },
-        },
-        {
-          kind: "linkStack",
-          heading: "Latest Research",
+          heading: "Featured Content",
+          headingHref: "/blogs-and-news",
           items: [
-            { label: "Market Reports", href: "/blogs-and-news/reports" },
+            { label: "Research Reports", href: "/blogs-and-news/reports" },
+            { label: "REMAX Blog", href: "/blogs-and-news" },
           ],
         },
         {
-          kind: "linkStack",
-          heading: "Trending Topics",
+          heading: "Property Type",
+          headingHref: "/blogs-and-news",
           items: [
+            { label: "Office", href: "/blogs-and-news?type=office" },
             {
-              label: "The Weekly Take Podcast",
-              href: "/blogs-and-news/weekly-take-podcast",
+              label: "Industrial and Logistics",
+              href: "/blogs-and-news?type=industrial-and-logistics",
             },
             {
-              label: "Our Take Newsletter",
-              href: "/blogs-and-news/our-take-newsletter",
+              label: "Hotels and Hospitality",
+              href: "/blogs-and-news?type=hotels-and-hospitality",
             },
-            { label: "Sustainability", href: "/blogs-and-news/sustainability" },
-            {
-              label: "Total Cost of Occupancy",
-              href: "/blogs-and-news/total-cost-of-occupancy",
-            },
-            { label: "Data Center", href: "/blogs-and-news/data-center" },
-          ],
-        },
-        {
-          kind: "linkStack",
-          heading: "Featured Blogs & News",
-          items: [
-            {
-              label: "Intelligent Investment",
-              href: "/blogs-and-news/intelligent-investment",
-            },
-            { label: "Future Cities", href: "/blogs-and-news/future-cities" },
-            { label: "Adaptive Spaces", href: "/blogs-and-news/adaptive-spaces" },
-            {
-              label: "Evolving Workforces",
-              href: "/blogs-and-news/evolving-workforces",
-            },
-            {
-              label: "Creating Resilience",
-              href: "/blogs-and-news/creating-resilience",
-            },
+            { label: "Retail", href: "/blogs-and-news?type=retail" },
+            { label: "Residential", href: "/blogs-and-news?type=residential" },
           ],
         },
       ],
     },
   },
   {
+    id: "about-us",
+    href: "/about-us",
+    label: "About Us",
+    mega: {
+      kind: "simple",
+      title: "About Us",
+      items: [
+        { label: "Company", href: "/about-us" },
+        {
+          label: "Leadership",
+          href: "/about-us/global-executive-leadership",
+        },
+        { label: "REMAX News", href: "/news" },
+      ],
+    },
+  },
+  {
+    hidden: true,
+    id: "people-offices",
+    href: "/people-and-offices",
+    label: "People & Offices",
+  },
+  {
+    hidden: true,
     id: "careers",
     href: "/careers",
     label: "Careers",
     mega: {
+      kind: "columns",
       columns: [
         {
           kind: "intro",
@@ -348,7 +277,10 @@ const navConfig: NavItem[] = [
               label: "Building Operations & Management",
               href: "/careers/building-operations-management",
             },
-            { label: "Project Management", href: "/careers/project-management" },
+            {
+              label: "Project Management",
+              href: "/careers/project-management",
+            },
             { label: "Corporate", href: "/careers/corporate" },
             {
               label: "Investment Management",
@@ -372,63 +304,6 @@ const navConfig: NavItem[] = [
             { label: "Meet Our Leaders", href: "/careers/leaders" },
             { label: "Our Culture", href: "/careers/culture" },
             { label: "What We Do", href: "/careers/what-we-do" },
-          ],
-        },
-      ],
-    },
-  },
-  {
-    id: "about-us",
-    href: "/about-us",
-    label: "About Us",
-    mega: {
-      columns: [
-        {
-          kind: "intro",
-          title: "About Us",
-          description:
-            "With more than 155,000 professionals in over 100 countries, REMAX/8 is the global leader in commercial real estate services and investment and a premier provider of critical infrastructure services.",
-          overviewLabel: "Explore",
-          overviewHref: "/about-us",
-        },
-        {
-          kind: "linkStack",
-          heading: "",
-          items: [
-            {
-              label: "Global Executive Leadership",
-              href: "/about-us/global-executive-leadership",
-            },
-            {
-              label: "Board of Directors",
-              href: "/about-us/board-of-directors",
-              external: true,
-            },
-            { label: "Newsroom", href: "/news" },
-          ],
-        },
-        {
-          kind: "linkStack",
-          heading: "",
-          items: [
-            {
-              label: "Corporate Responsibility",
-              href: "/about-us/corporate-responsibility",
-            },
-            {
-              label: "Investor Relations",
-              href: "/about-us/investor-relations",
-              external: true,
-            },
-            { label: "Data & Technology", href: "/about-us/data-technology" },
-          ],
-        },
-        {
-          kind: "linkStack",
-          heading: "",
-          items: [
-            { label: "Culture & History", href: "/about-us/culture-history" },
-            { label: "Supply Chain", href: "/about-us/supply-chain" },
           ],
         },
       ],
@@ -566,7 +441,10 @@ function LinkStackMegaColumn({
       )}
       <ul className={column.heading ? "mt-5" : "mt-0"}>
         {column.items.map((item) => (
-          <li key={item.href} className="border-b border-zinc-200 first:border-t">
+          <li
+            key={item.href}
+            className="border-b border-zinc-200 first:border-t"
+          >
             <Link
               href={item.href}
               className="flex items-center justify-between gap-3 py-3.5 text-sm font-semibold text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f]"
@@ -684,6 +562,27 @@ function CloseSearchIcon({ className }: { className?: string }) {
   );
 }
 
+function ChevronDownIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      aria-hidden
+    >
+      <path
+        d="M6 9l6 6 6-6"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function MobileNavGroup({
   item,
   onNavigate,
@@ -696,7 +595,7 @@ function MobileNavGroup({
       <div className="border-b border-[#000759]/25">
         <Link
           href={item.href}
-          className="flex w-full items-center justify-between gap-4 py-5 text-left text-xl font-normal tracking-tight text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f] sm:py-6 sm:text-2xl"
+          className="flex w-full items-center justify-between gap-4 py-5 text-left font-montserrat text-xl font-normal tracking-tight text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f] sm:py-6 sm:text-2xl"
           onClick={onNavigate}
         >
           {item.label}
@@ -708,6 +607,105 @@ function MobileNavGroup({
 
   const [expanded, setExpanded] = useState(false);
   const mega = item.mega;
+
+  if (mega.kind === "simple") {
+    return (
+      <div className="border-b border-[#000759]/25">
+        <button
+          type="button"
+          className="flex w-full items-center justify-between gap-4 py-5 text-left font-montserrat text-xl font-normal tracking-tight text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f] sm:py-6 sm:text-2xl"
+          onClick={() => setExpanded((v) => !v)}
+          {...ariaExpandedProps(expanded)}
+          {...(expanded
+            ? { "aria-controls": `mobile-nav-section-${item.id}` }
+            : {})}
+        >
+          <span>{item.label}</span>
+          <MobileMenuRowArrow expanded={expanded} />
+        </button>
+        <div
+          className={`grid transition-[grid-template-rows] duration-300 ease-in-out motion-reduce:transition-none ${expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+        >
+          <div
+            id={`mobile-nav-section-${item.id}`}
+            className="min-h-0 overflow-hidden"
+          >
+            <ul className="space-y-1 pb-4 pl-1">
+              {mega.items.map((l) => (
+                <li key={l.href} className="border-b border-zinc-200 first:border-t">
+                  <Link
+                    href={l.href}
+                    className="flex items-center justify-between gap-2 py-3 text-base text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f]"
+                    onClick={onNavigate}
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (mega.kind === "simpleGroups") {
+    return (
+      <div className="border-b border-[#000759]/25">
+        <button
+          type="button"
+          className="flex w-full items-center justify-between gap-4 py-5 text-left font-montserrat text-xl font-normal tracking-tight text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f] sm:py-6 sm:text-2xl"
+          onClick={() => setExpanded((v) => !v)}
+          {...ariaExpandedProps(expanded)}
+          {...(expanded
+            ? { "aria-controls": `mobile-nav-section-${item.id}` }
+            : {})}
+        >
+          <span>{item.label}</span>
+          <MobileMenuRowArrow expanded={expanded} />
+        </button>
+        <div
+          className={`grid transition-[grid-template-rows] duration-300 ease-in-out motion-reduce:transition-none ${expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+        >
+          <div
+            id={`mobile-nav-section-${item.id}`}
+            className="min-h-0 overflow-hidden"
+          >
+            <div className="space-y-6 pb-4 pl-1">
+              {mega.groups.map((group) => (
+                <div key={group.heading}>
+                  <Link
+                    href={group.headingHref}
+                    className="block text-base font-semibold text-red-600 transition-colors duration-200 ease-in-out hover:text-red-700"
+                    onClick={onNavigate}
+                  >
+                    {group.heading}
+                  </Link>
+                  <ul className="mt-2">
+                    {group.items.map((l) => (
+                      <li
+                        key={l.href}
+                        className="border-b border-zinc-200 first:border-t"
+                      >
+                        <Link
+                          href={l.href}
+                          className="flex items-center justify-between gap-2 py-2.5 text-base text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f]"
+                          onClick={onNavigate}
+                        >
+                          {l.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const [intro, ...stacks] = mega.columns;
   if (
     intro?.kind !== "intro" ||
@@ -721,7 +719,7 @@ function MobileNavGroup({
     <div className="border-b border-[#000759]/25">
       <button
         type="button"
-        className="flex w-full items-center justify-between gap-4 py-5 text-left text-xl font-normal tracking-tight text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f] sm:py-6 sm:text-2xl"
+        className="flex w-full items-center justify-between gap-4 py-5 text-left font-montserrat text-xl font-normal tracking-tight text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f] sm:py-6 sm:text-2xl"
         onClick={() => setExpanded((v) => !v)}
         {...ariaExpandedProps(expanded)}
         {...(expanded
@@ -820,11 +818,106 @@ function MobileNavGroup({
                 </ul>
                 {col.viewAll && (
                   <div className="mt-3">
-                    <AccentRuleLink href={col.viewAll.href} onClick={onNavigate}>
+                    <AccentRuleLink
+                      href={col.viewAll.href}
+                      onClick={onNavigate}
+                    >
                       {col.viewAll.label}
                     </AccentRuleLink>
                   </div>
                 )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SimpleMegaPanel({
+  mega,
+  motionClass,
+}: {
+  mega: MegaSimpleList;
+  motionClass: string;
+}) {
+  return (
+    <div className="bg-[#f4f4f4] shadow-[0_24px_48px_-12px_rgba(0,0,0,0.12)]">
+      <div className="mx-auto w-full px-6">
+        <div className="mx-auto w-full max-w-6xl px-7 py-10 lg:py-12">
+          <div
+            className={`flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-8 lg:gap-12 ${motionClass}`}
+          >
+            <h2 className="shrink-0 font-gotham text-[28px] font-extrabold tracking-wide text-[#000759] sm:mr-4 sm:text-[34px] lg:mr-9 lg:text-[42px]">
+              {mega.title}
+            </h2>
+            <div
+              className="hidden w-[3px] shrink-0 self-stretch bg-black sm:block"
+              aria-hidden
+            />
+            <ul className="flex min-w-0 flex-col gap-3">
+              {mega.items.map((item) => (
+                <li key={item.href} className="min-w-0">
+                  <Link
+                    href={item.href}
+                    className="block text-base text-[#000759]/85 transition-colors duration-200 ease-in-out hover:text-[#000759]"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SimpleGroupsMegaPanel({
+  mega,
+  motionClass,
+}: {
+  mega: MegaSimpleGroups;
+  motionClass: string;
+}) {
+  return (
+    <div className="bg-[#f4f4f4] shadow-[0_24px_48px_-12px_rgba(0,0,0,0.12)]">
+      <div className="mx-auto w-full px-6">
+        <div className="mx-auto w-full max-w-6xl px-7 py-10 lg:py-12">
+          <div
+            className={`flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-8 lg:gap-12 ${motionClass}`}
+          >
+            <h2 className="shrink-0 font-gotham text-[28px] font-extrabold tracking-wide text-[#000759] sm:self-center sm:text-[34px] lg:text-[42px]">
+              {mega.title}
+            </h2>
+            {mega.groups.map((group, index) => (
+              <div key={group.heading} className="flex gap-6 min-w-0 sm:contents">
+                <div
+                  className={`hidden w-[3px] shrink-0 self-stretch bg-black sm:block ${index > 0 ? "sm:ml-[30px] md:ml-[50px] lg:ml-[70px] xl:ml-[90px]" : ""}`}
+                  aria-hidden
+                />
+                <ul className="flex min-w-0 flex-col gap-3">
+                  <li>
+                    <Link
+                      href={group.headingHref}
+                      className="block text-base font-semibold text-red-600 transition-colors duration-200 ease-in-out hover:text-red-700"
+                    >
+                      {group.heading}
+                    </Link>
+                  </li>
+                  {group.items.map((item) => (
+                    <li key={item.href} className="min-w-0">
+                      <Link
+                        href={item.href}
+                        className="block text-base text-[#000759]/85 transition-colors duration-200 ease-in-out hover:text-[#000759]"
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
@@ -841,16 +934,34 @@ function MegaMenuPanel({
   mega: MegaMenu;
   subReveal?: boolean;
 }) {
-  const [intro, ...stacks] = mega.columns;
-  if (intro?.kind !== "intro" || stacks.length < 2) {
-    return null;
-  }
-
   const colMotion =
     "transition-[opacity,transform] duration-200 ease-in-out motion-reduce:transition-none motion-reduce:translate-y-0 motion-reduce:opacity-100";
 
   const colClass = (delayClass: string) =>
     `${colMotion} ${subReveal ? `translate-y-0 opacity-100 ${delayClass}` : "translate-y-2 opacity-0 delay-0 lg:[transition-delay:0ms]"}`;
+
+  if (mega.kind === "simple") {
+    return (
+      <SimpleMegaPanel
+        mega={mega}
+        motionClass={colClass("delay-0 lg:[transition-delay:0ms]")}
+      />
+    );
+  }
+
+  if (mega.kind === "simpleGroups") {
+    return (
+      <SimpleGroupsMegaPanel
+        mega={mega}
+        motionClass={colClass("delay-0 lg:[transition-delay:0ms]")}
+      />
+    );
+  }
+
+  const [intro, ...stacks] = mega.columns;
+  if (intro?.kind !== "intro" || stacks.length < 2) {
+    return null;
+  }
 
   return (
     <div className="bg-white shadow-[0_24px_48px_-12px_rgba(0,0,0,0.12)]">
@@ -937,6 +1048,7 @@ function DesktopHeaderSection({
   onCloseMega,
   onOpenSearch,
   onCloseSearch,
+  onOpenContact,
 }: {
   openId: string | null;
   desktopSearchOpen: boolean;
@@ -946,6 +1058,7 @@ function DesktopHeaderSection({
   onCloseMega: () => void;
   onOpenSearch: () => void;
   onCloseSearch: () => void;
+  onOpenContact: () => void;
 }) {
   if (desktopSearchOpen && !hideSearch) {
     return (
@@ -956,7 +1069,7 @@ function DesktopHeaderSection({
           onClick={onCloseMega}
         >
           <Image
-            src="/REMAX Commercial Logo.png"
+            src="/logo_black.png"
             alt="RE/MAX"
             width={200}
             height={200}
@@ -1003,64 +1116,73 @@ function DesktopHeaderSection({
   }
 
   return (
-    <div className="flex min-w-0 flex-1 items-center gap-6 lg:gap-12">
-      <div className="flex min-w-0 flex-1 items-center gap-6 lg:gap-12">
-        <Link
-          href="/"
-          className="shrink-0 text-lg font-semibold tracking-tight"
-          onClick={onCloseMega}
-        >
-          <Image
-            src="/REMAX Commercial Logo.png"
-            alt="RE/MAX"
-            width={200}
-            height={200}
-            className="h-8 w-auto sm:h-9 lg:h-12"
-            priority
-          />
-        </Link>
+    <div className="flex min-w-0 flex-1 items-center justify-between gap-6 lg:gap-12">
+      <Link
+        href="/"
+        className="shrink-0 text-lg font-semibold tracking-tight"
+        onClick={onCloseMega}
+      >
+        <Image
+          src="/logo_black.png"
+          alt="RE/MAX"
+          width={200}
+          height={200}
+          className="h-8 w-auto sm:h-9 lg:h-12"
+          priority
+        />
+      </Link>
 
+      <div className="hidden min-w-0 items-center gap-6 lg:flex xl:gap-10">
         <nav
           aria-label="Main navigation"
-          className={`hidden min-w-0 lg:block ${desktopSearchOpen ? "lg:hidden" : ""}`}
+          className={`min-w-0 ${desktopSearchOpen ? "lg:hidden" : ""}`}
         >
-          <ul className="flex flex-wrap items-center gap-x-6 gap-y-2 text-base font-medium text-[#000759] xl:gap-x-10 xl:text-xl">
-            {navConfig.map((item) => (
-              <li
-                key={item.id}
-                onMouseEnter={() => {
-                  if (item.mega) onOpenMega(item.id);
-                  else onCloseMega();
-                }}
-                className="relative"
-              >
-                <Link
-                  id={`nav-trigger-${item.id}`}
-                  href={item.href}
-                  onClick={onCloseMega}
-                  onFocus={() => {
+          <ul className="flex flex-wrap items-center gap-x-6 gap-y-2 font-montserrat text-[10.2px] font-bold uppercase tracking-[0.314em] text-[#000e35] xl:gap-x-10 xl:text-[11.5px] 2xl:text-[13px]">
+            {navConfig
+              .filter((item) => !item.hidden)
+              .map((item) => (
+                <li
+                  key={item.id}
+                  onMouseEnter={() => {
                     if (item.mega) onOpenMega(item.id);
                     else onCloseMega();
                   }}
-                  aria-haspopup={item.mega ? "true" : undefined}
-                  aria-expanded={
-                    item.mega ? (openId === item.id ? "true" : "false") : undefined
-                  }
-                  className={`no-underline transition-colors duration-300 ease-in-out ${openId === item.id ? "font-semibold text-[#000759]" : "text-[#000759]"} after:absolute after:left-0 after:-bottom-1
-                  after:h-[2px] after:w-0 after:bg-[#000759]
-                  after:transition-all after:duration-300 after:ease-in-out
-                  hover:after:w-full hover:font-bold`}
+                  className="relative"
                 >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
+                  <Link
+                    id={`nav-trigger-${item.id}`}
+                    href={item.href}
+                    onClick={onCloseMega}
+                    onFocus={() => {
+                      if (item.mega) onOpenMega(item.id);
+                      else onCloseMega();
+                    }}
+                    aria-haspopup={item.mega ? "true" : undefined}
+                    aria-expanded={
+                      item.mega
+                        ? openId === item.id
+                          ? "true"
+                          : "false"
+                        : undefined
+                    }
+                    className={`inline-flex items-center gap-1.5 no-underline transition-colors duration-300 ease-in-out ${openId === item.id ? "font-bold text-[#000e35]" : "text-[#000e35]"} after:absolute after:left-0 after:-bottom-1
+                  after:h-[2px] after:w-0 after:bg-[#000e35]
+                  after:transition-all after:duration-300 after:ease-in-out
+                  hover:after:w-full`}
+                  >
+                    {item.label}
+                    {item.mega && (
+                      <ChevronDownIcon
+                        className={`h-3 w-3 shrink-0 transition-transform duration-300 ease-in-out ${openId === item.id ? "rotate-180" : ""}`}
+                      />
+                    )}
+                  </Link>
+                </li>
+              ))}
           </ul>
         </nav>
-      </div>
 
-      {!hideSearch && (
-        <div className="hidden shrink-0 items-center gap-3 lg:ml-auto lg:flex">
+        {!hideSearch && (
           <button
             type="button"
             className="cursor-pointer flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#c5d3f0] bg-white text-[#000759] shadow-sm transition-colors hover:border-[#000759] hover:bg-[#000759] hover:text-white dark:border-[#4a5a8a] dark:text-[#000759] dark:hover:border-[#000759] dark:hover:bg-[#000759] dark:hover:text-white"
@@ -1069,8 +1191,15 @@ function DesktopHeaderSection({
           >
             <MobileSearchIcon className="h-[22px] w-[22px]" />
           </button>
-        </div>
-      )}
+        )}
+        <button
+          type="button"
+          className="cursor-pointer shrink-0 bg-[#000759] px-2 rounded-sm text-[10.2px] font-bold uppercase tracking-[0.15em] text-white transition hover:bg-[#001a8f] xl:text-[11.5px] 2xl:text-[13px]"
+          onClick={onOpenContact}
+        >
+          Contact Us
+        </button>
+      </div>
     </div>
   );
 }
@@ -1083,6 +1212,7 @@ function MobileHeaderSection({
   hideSearch,
   closeMobile,
   toggleMobile,
+  onOpenContact,
 }: {
   mounted: boolean;
   mobileOpen: boolean;
@@ -1091,6 +1221,7 @@ function MobileHeaderSection({
   hideSearch: boolean;
   closeMobile: () => void;
   toggleMobile: () => void;
+  onOpenContact: () => void;
 }) {
   const [portalMounted, setPortalMounted] = useState(false);
   const [panelVisible, setPanelVisible] = useState(false);
@@ -1154,7 +1285,7 @@ function MobileHeaderSection({
               <div className="mx-auto flex w-full items-center justify-between gap-4 px-7 py-3 sm:py-5">
                 <Link href="/" className="shrink-0" onClick={closeMobile}>
                   <Image
-                    src="/REMAX Commercial Logo.png"
+                    src="/logo_black.png"
                     alt="RE/MAX"
                     width={120}
                     height={40}
@@ -1183,6 +1314,21 @@ function MobileHeaderSection({
                     </svg>
                   </button>
                 </div>
+              </div>
+            </div>
+
+            <div className="mx-auto w-full shrink-0 px-6 pb-2">
+              <div className="mx-auto w-full px-7">
+                <button
+                  type="button"
+                  className="cursor-pointer block w-full bg-[#000759] px-6 py-3 text-center text-sm font-bold uppercase tracking-[0.15em] text-white transition hover:bg-[#001a8f]"
+                  onClick={() => {
+                    closeMobile();
+                    onOpenContact();
+                  }}
+                >
+                  Contact Us
+                </button>
               </div>
             </div>
 
@@ -1225,13 +1371,15 @@ function MobileHeaderSection({
               aria-label="Mobile navigation"
             >
               <div className="mx-auto w-full px-7" key={pathname}>
-                {navConfig.map((item) => (
-                  <MobileNavGroup
-                    key={item.id}
-                    item={item}
-                    onNavigate={closeMobile}
-                  />
-                ))}
+                {navConfig
+                  .filter((item) => !item.hidden)
+                  .map((item) => (
+                    <MobileNavGroup
+                      key={item.id}
+                      item={item}
+                      onNavigate={closeMobile}
+                    />
+                  ))}
               </div>
             </nav>
           </div>,
@@ -1248,6 +1396,7 @@ export default function Header() {
   const [mounted, setMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [desktopSearchOpen, setDesktopSearchOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
   const [megaPanelMega, setMegaPanelMega] = useState<MegaMenu | null>(null);
   const [megaPanelOpen, setMegaPanelOpen] = useState(false);
   const [lastHoveredMenuId, setLastHoveredMenuId] = useState<string | null>(
@@ -1359,7 +1508,6 @@ export default function Header() {
     };
   }, [mobileOpen, closeMobile]);
 
-  const isPropertiesPage = pathname.startsWith("/properties");
   const megaMenuAnimId = openId ?? lastHoveredMenuId ?? "";
 
   return (
@@ -1386,7 +1534,9 @@ export default function Header() {
               openId={openId}
               desktopSearchOpen={desktopSearchOpen}
               desktopSearchInputRef={desktopSearchInputRef}
-              hideSearch={isPropertiesPage}
+              hideSearch={
+                true /* was: isPropertiesPage — search hidden site-wide per header redesign */
+              }
               onOpenMega={handleEnter}
               onCloseMega={closeDesktopMega}
               onOpenSearch={() => {
@@ -1394,6 +1544,7 @@ export default function Header() {
                 setDesktopSearchOpen(true);
               }}
               onCloseSearch={() => setDesktopSearchOpen(false)}
+              onOpenContact={() => setContactOpen(true)}
             />
 
             <div className="flex shrink-0 items-center gap-2 sm:gap-3">
@@ -1402,9 +1553,12 @@ export default function Header() {
                 mobileOpen={mobileOpen}
                 mobileSearchInputRef={mobileSearchInputRef}
                 pathname={pathname}
-                hideSearch={isPropertiesPage}
+                hideSearch={
+                  true /* was: isPropertiesPage — search hidden site-wide per header redesign */
+                }
                 closeMobile={closeMobile}
                 toggleMobile={() => setMobileOpen((o) => !o)}
+                onOpenContact={() => setContactOpen(true)}
               />
             </div>
           </div>
@@ -1428,6 +1582,8 @@ export default function Header() {
           </div>
         )}
       </div>
+
+      <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
     </header>
   );
 }
