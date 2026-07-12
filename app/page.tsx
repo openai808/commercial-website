@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import HomeHero from "@/features/home/HomeHero";
+import { getListingCityCounts } from "@/lib/properties/getListingCityCounts";
+import { getListingPropertyTypeCounts } from "@/lib/properties/getListingPropertyTypeCounts";
 
 function HomeBelowHeroFallback() {
   return (
@@ -33,11 +35,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
+export default async function Home() {
+  const [cityOptions, propertyTypeOptions] = await Promise.all([
+    getListingCityCounts(),
+    getListingPropertyTypeCounts(),
+  ]);
+
   return (
     <div className="flex min-h-screen min-w-0 flex-col bg-white font-sans">
       <main className="w-full min-w-0">
-        <HomeHero />
+        <HomeHero
+          cityOptions={cityOptions}
+          propertyTypeOptions={propertyTypeOptions}
+        />
         <HomeBelowHero />
       </main>
     </div>

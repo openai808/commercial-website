@@ -13,6 +13,9 @@
   --font-poppins: var(--font-poppins-loaded), "Poppins", sans-serif;
   --font-default: var(--font-poppins-loaded), "Poppins", sans-serif;
   --font-serif: var(--font-poppins-loaded), "Poppins", sans-serif;
+  --font-montserrat: var(--font-montserrat-loaded), "Montserrat", sans-serif;
+  --font-gotham: "Gotham", "Montserrat", sans-serif;
+  --font-gotham-condensed: "Gotham Condensed", var(--font-oswald-loaded), "Oswald", sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 

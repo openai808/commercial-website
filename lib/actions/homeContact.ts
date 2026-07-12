@@ -40,21 +40,24 @@ export async function submitHomeContactModal(formData: FormData) {
     .slice(0, MAX.message);
   const consentRequired = formData.get("consentRequired") === "on";
 
+  const rawReturnTo = String(formData.get("returnTo") ?? "");
+  const returnTo = rawReturnTo.startsWith("/") && !rawReturnTo.startsWith("//") ? rawReturnTo : "/";
+
   if (String(formData.get("website") ?? "").trim()) {
-    redirect("/");
+    redirect(returnTo);
   }
 
   if (!firstName || !lastName || !email || !locationOfInterest || !message || !consentRequired) {
-    redirect("/?contact=missing");
+    redirect(`${returnTo}?contact=missing`);
   }
 
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    redirect("/?contact=invalid-email");
+    redirect(`${returnTo}?contact=invalid-email`);
   }
 
   void phone;
   void company;
   void assetClass;
 
-  redirect("/contact?src=home");
+  redirect(`${returnTo}?contact=sent`);
 }

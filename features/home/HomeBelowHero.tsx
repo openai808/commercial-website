@@ -1,39 +1,23 @@
-import HomeBlogSlider from "@/features/home/HomeBlogSlider";
-import HomeContact from "@/features/home/HomeContact";
-import HomeNewsInsights from "@/features/home/HomeNewsInsights";
-import type { NewsInsightItem } from "@/features/home/HomeNewsInsights";
-import HomePillars from "@/features/home/HomePillars";
+import HomeAwards from "@/features/home/HomeAwards";
+import HomeGetInTouch from "@/features/home/HomeGetInTouch";
+import HomeOurClients from "@/features/home/HomeOurClients";
+import HomeOurPartners from "@/features/home/HomeOurPartners";
+import HomeProofInNumbers from "@/features/home/HomeProofInNumbers";
 import HomeServices from "@/features/home/HomeServices";
-import { getRecentBlogPosts } from "@/lib/blog/getBlogPosts";
+import HomeTrustedBy from "@/features/home/HomeTrustedBy";
+import HomeWhoWeAre from "@/features/home/HomeWhoWeAre";
 
-export default async function HomeBelowHero() {
-  const recentPosts = await getRecentBlogPosts(5);
-
-  const newsItems: NewsInsightItem[] = recentPosts.map((post) => ({
-    title: post.title,
-    date: new Date(post.published_at ?? post.created_at).toLocaleDateString(
-      "en-US",
-      { month: "short", day: "numeric", year: "numeric" },
-    ),
-    dateTime: (post.published_at ?? post.created_at).split("T")[0],
-    href: `/blogs-and-news/${post.slug}`,
-  }));
-
-  const sliderPosts = recentPosts.map((post) => ({
-    title: post.title,
-    category: post.category ?? "Insights",
-    excerpt: post.excerpt ?? "",
-    href: `/blogs-and-news/${post.slug}`,
-    image: post.cover_image_url ?? "",
-  }));
-
+export default function HomeBelowHero() {
   return (
     <>
-      <HomeNewsInsights items={newsItems} />
-      {sliderPosts.length > 0 && <HomeBlogSlider posts={sliderPosts} />}
+      <HomeProofInNumbers />
+      <HomeAwards />
       <HomeServices />
-      <HomePillars />
-      <HomeContact />
+      <HomeWhoWeAre />
+      <HomeTrustedBy />
+      <HomeOurPartners />
+      <HomeOurClients />
+      <HomeGetInTouch />
     </>
   );
 }

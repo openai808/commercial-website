@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Poppins, Montserrat, Oswald } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
@@ -8,6 +8,19 @@ const poppins = Poppins({
   variable: "--font-poppins-loaded",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
+});
+
+const montserrat = Montserrat({
+  variable: "--font-montserrat-loaded",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+});
+
+/** Free lookalike for Gotham Condensed, which isn't licensed/self-hosted in this repo. */
+const oswald = Oswald({
+  variable: "--font-oswald-loaded",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -31,7 +44,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${poppins.variable} h-full font-sans antialiased`}
+      className={`${poppins.variable} ${montserrat.variable} ${oswald.variable} h-full font-sans antialiased`}
     >
       <body className="flex min-h-full min-w-0 flex-col font-sans">
         <a
