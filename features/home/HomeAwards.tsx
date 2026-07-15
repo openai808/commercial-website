@@ -80,7 +80,7 @@ export default function HomeAwards() {
 
       <div
         ref={contentRef}
-        className="relative mx-auto flex w-full max-w-4xl flex-col items-center text-center"
+        className="relative mx-auto flex w-full max-w-4xl flex-col items-center px-6 text-center sm:px-8 lg:px-10"
       >
         <h2 id="home-awards-heading" className="sr-only">
           Global excellence, proven results
@@ -111,7 +111,7 @@ export default function HomeAwards() {
               >
                 {award.title}
               </h3>
-              <p className="mx-auto mt-3 max-w-2xl text-sm font-normal leading-relaxed text-white/85 md:text-base">
+              <p className="mx-auto mt-3 max-w-2xl text-[14px] font-normal leading-relaxed text-white/85 sm:text-[15px] md:text-[16px] lg:text-[17px]">
                 {award.description}
               </p>
             </div>
@@ -119,7 +119,7 @@ export default function HomeAwards() {
         </div>
 
         <p
-          className={`mt-16 max-w-xl text-base font-normal leading-relaxed text-white/90 md:mt-20 md:text-lg ${revealClass()}`}
+          className={`mt-16 max-w-xl text-[16px] font-normal leading-relaxed text-white/90 sm:text-[17px] md:mt-20 md:text-[18px] lg:text-[19px] ${revealClass()}`}
           style={revealStyle(2 + AWARDS.length)}
         >
           This isn&apos;t just an award. It&apos;s proof of our commitment to
