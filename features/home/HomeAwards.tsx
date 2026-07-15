@@ -107,7 +107,7 @@ export default function HomeAwards() {
               style={revealStyle(2 + i)}
             >
               <h3
-                className={`font-gotham-condensed text-[20px] font-extrabold leading-snug tracking-[0em] text-white sm:text-[24px] lg:text-[28px] ${i === 0 ? "whitespace-nowrap" : ""}`}
+                className="font-gotham-condensed text-[20px] font-extrabold leading-snug tracking-[0em] text-white sm:text-[24px] lg:text-[28px]"
               >
                 {award.title}
               </h3>

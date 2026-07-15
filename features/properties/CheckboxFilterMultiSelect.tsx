@@ -16,7 +16,7 @@ export type FilterOptionCount = {
 };
 
 const fieldLabelClass =
-  "text-[10px] font-semibold uppercase tracking-[0.14em] text-[#000759]";
+  "text-[10px] font-semibold uppercase tracking-[0.14em] text-[#000759] sm:text-[11px] lg:text-[12.5px]";
 
 const underlineFieldClass = "relative w-full border-b border-[#000759]";
 

@@ -9,20 +9,20 @@ export default function HomeTicker() {
     <section className="relative overflow-hidden border-y border-[#c7ccd7] bg-[#d9dee6]">
       <div className="overflow-hidden py-[17px]">
         <div
-          className={`marquee-track py-1 flex w-max items-center gap-8 whitespace-nowrap text-[13px] leading-none tracking-[0.01em] text-[#49546a] ${
+          className={`marquee-track py-1 flex w-max items-center gap-8 whitespace-nowrap text-[13px] leading-none tracking-[0.01em] text-[#49546a] sm:text-[14.5px] lg:text-[16px] ${
             isTickerPaused ? "paused" : ""
           }`}
           aria-label="Latest market headlines"
         >
-          <span className="text-[12px] font-semibold uppercase tracking-[0.14em] text-[#243768]">
+          <span className="text-[12px] font-semibold uppercase tracking-[0.14em] text-[#243768] sm:text-[13.5px] lg:text-[15.4px]">
             Insights
           </span>
           <span>Colliers Radar: Cebu Residential Market Is Primed For Rebound</span>
-          <span className="text-[12px] font-semibold uppercase tracking-[0.14em] text-[#243768]">
+          <span className="text-[12px] font-semibold uppercase tracking-[0.14em] text-[#243768] sm:text-[13.5px] lg:text-[15.4px]">
             Insights
           </span>
           <span>Colliers Radar: Cebu Residential Market Is Primed For Rebound</span>
-          <span className="text-[12px] font-semibold uppercase tracking-[0.14em] text-[#243768]">
+          <span className="text-[12px] font-semibold uppercase tracking-[0.14em] text-[#243768] sm:text-[13.5px] lg:text-[15.4px]">
             Insights
           </span>
           <span>Colliers Radar: Cebu Residential Market Is Primed For Rebound</span>
