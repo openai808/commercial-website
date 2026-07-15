@@ -149,7 +149,7 @@ export default function Footer() {
           <h3 className="font-gotham text-[length:clamp(10px,2vw,12px)] font-bold uppercase tracking-wide text-[#000759]">
             Quick Links
           </h3>
-          <ul className="mt-6 flex flex-col gap-5">
+          <ul className="mt-6 flex flex-col gap-3 md:gap-5">
             {quickLinks.map((item) => (
               <li key={item.label}>
                 <Link
@@ -167,7 +167,7 @@ export default function Footer() {
           <h3 className="font-gotham text-[length:clamp(10px,2vw,12px)] font-bold uppercase tracking-wide text-[#000759]">
             Get in Touch
           </h3>
-          <div className="font-gotham mt-6 flex flex-col gap-5 text-[length:clamp(10px,2vw,12px)] text-[#000759]">
+          <div className="font-gotham mt-6 flex flex-col gap-3 md:gap-5 text-[length:clamp(10px,2vw,12px)] text-[#000759]">
             <div>
               <p className="font-bold uppercase">Email</p>
               <Link href="mailto:8realtycorp.info@gmail.com" className="hover:underline">
