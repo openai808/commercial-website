@@ -37,7 +37,7 @@ const ASSET_CLASS_OPTIONS = [
 
 function FieldLabel({ children, required }: { children: ReactNode; required?: boolean }) {
   return (
-    <span className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.12em] text-neutral-700">
+    <span className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.12em] text-neutral-700 sm:text-[12.5px] lg:text-[14px]">
       {children}
       {required ? <span className="text-red-600"> *</span> : null}
     </span>
@@ -181,7 +181,7 @@ export default function ContactModal({
         <form action={submitHomeContactModal} className="px-6 py-6 sm:px-8 sm:py-8">
           <input type="hidden" name="returnTo" value={returnTo} />
 
-          <p className="mb-6 text-xs font-semibold tracking-wide">
+          <p className="mb-6 text-xs font-semibold tracking-wide sm:text-[13px]">
             <span className="text-red-600">*</span>
             <span className="text-[#000759]"> REQUIRED FIELD</span>
           </p>
@@ -351,7 +351,7 @@ export default function ContactModal({
             </div>
             <button
               type="submit"
-              className="sm:order-2 rounded-full border-2 border-[#000759] bg-white px-6 py-2.5 text-xs font-bold uppercase tracking-[0.14em] text-[#000759] transition hover:bg-[#000759]/5"
+              className="sm:order-2 rounded-full border-2 border-[#000759] bg-white px-6 py-2.5 text-xs font-bold uppercase tracking-[0.14em] text-[#000759] transition hover:bg-[#000759]/5 sm:text-[13.5px] lg:text-[15.4px]"
             >
               Send this email
             </button>

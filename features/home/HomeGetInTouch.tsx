@@ -82,7 +82,7 @@ export default function HomeGetInTouch() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className={`mt-10 inline-flex items-center justify-center rounded-none bg-[#0c2749] px-10 py-4 text-xs font-bold uppercase tracking-[0.18em] text-white transition-colors duration-300 ease-out hover:bg-[#0c2749]/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${revealClass()}`}
+          className={`mt-10 inline-flex items-center justify-center rounded-none bg-[#0c2749] px-10 py-4 text-xs font-bold uppercase tracking-[0.18em] text-white transition-colors duration-300 ease-out hover:bg-[#0c2749]/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:text-[13.5px] lg:text-[15.4px] ${revealClass()}`}
           style={revealStyle(3)}
         >
           Talk to Us

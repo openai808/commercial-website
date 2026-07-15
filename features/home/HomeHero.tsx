@@ -36,7 +36,7 @@ function SearchIcon({ className }: { className?: string }) {
 }
 
 const fieldLabelClass =
-  "text-[10px] font-semibold uppercase tracking-[0.14em] text-[#000759]";
+  "text-[10px] font-semibold uppercase tracking-[0.14em] text-[#000759] sm:text-[11px] lg:text-[12.5px]";
 
 type HomeHeroProps = {
   cityOptions: ListingCityCount[];
@@ -77,7 +77,7 @@ export default function HomeHero({
       <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center px-6 py-20 text-center sm:px-10 lg:px-16">
         <div className="max-w-4xl">
           <h1 className="font-gotham text-[32px] font-extrabold leading-tight text-white sm:text-[40px] lg:text-[48px] xl:text-[56px]">
-            <span className="whitespace-nowrap">Integrity in every transaction.</span>
+            <span>Integrity in every transaction.</span>
             <br />
             Excellence in every deal.
           </h1>

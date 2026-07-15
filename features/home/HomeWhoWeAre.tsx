@@ -68,7 +68,7 @@ export default function HomeWhoWeAre() {
 
         <div
           ref={contentRef}
-          className="mt-14 grid w-full grid-cols-1 items-start gap-12 md:mt-16 lg:grid-cols-2 lg:items-stretch lg:gap-16"
+          className="mt-14 grid w-full grid-cols-1 items-start gap-5 md:mt-16 lg:grid-cols-2 lg:items-stretch lg:gap-5"
         >
           <div className="flex min-w-0 flex-col items-start gap-6 text-left">
             <h2
@@ -91,7 +91,7 @@ export default function HomeWhoWeAre() {
 
             <Link
               href="/about-us"
-              className={`mt-2 inline-flex items-center rounded-full bg-[#000759] px-8 py-3.5 text-xs font-semibold uppercase tracking-[0.18em] text-white transition-colors duration-300 ease-out hover:bg-[#000759]/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#000759] ${revealClass()}`}
+              className={`mt-2 inline-flex items-center self-center rounded-md bg-[#000759] px-8 py-3.5 text-[8.3px] font-semibold uppercase tracking-[0.18em] text-white transition-colors duration-300 ease-out hover:bg-[#000759]/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#000759] sm:text-[9.1px] lg:self-start lg:text-[10.4px] ${revealClass()}`}
               style={revealStyle(3 + PARAGRAPHS.length)}
             >
               About RE/MAX 8 Philippines
