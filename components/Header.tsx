@@ -179,7 +179,7 @@ const navConfig: NavItem[] = [
           headingHref: "/blogs-and-news",
           items: [
             { label: "Research Reports", href: "/blogs-and-news/reports" },
-            { label: "REMAX Blog", href: "/blogs-and-news" },
+            { label: "RE/MAX Commercial Blog", href: "/blogs-and-news" },
           ],
         },
         {
