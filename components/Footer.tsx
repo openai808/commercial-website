@@ -170,8 +170,8 @@ export default function Footer() {
           <div className="font-gotham mt-6 flex flex-col gap-3 md:gap-5 text-[length:clamp(10px,2vw,12px)] text-[#000759]">
             <div>
               <p className="font-bold uppercase">Email</p>
-              <Link href="mailto:8realtycorp.info@gmail.com" className="hover:underline">
-                8realtycorp.info@gmail.com
+              <Link href="mailto:inquire@remaxcommercial.com.ph" className="hover:underline">
+                inquire@remaxcommercial.com.ph
               </Link>
             </div>
             <div>
