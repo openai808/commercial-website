@@ -66,7 +66,7 @@ export default function HomeHero({
   };
 
   return (
-    <section className="relative isolate flex min-h-[560px] w-full items-center overflow-hidden bg-slate-900 sm:min-h-[620px] md:min-h-[700px]">
+    <section className="relative isolate flex min-h-[560px] w-full items-center bg-slate-900 sm:min-h-[620px] md:min-h-[700px]">
       <img
         src={HERO_IMAGE_SRC}
         alt="Glass office building exterior"
@@ -87,13 +87,13 @@ export default function HomeHero({
           role="search"
           aria-label="Search properties"
           onSubmit={handleSubmit}
-          className="mt-10 w-full max-w-3xl overflow-hidden rounded-2xl text-left shadow-xl sm:mt-12"
+          className="mt-10 w-full max-w-3xl text-left shadow-xl sm:mt-12"
         >
           <div className="flex flex-col sm:flex-row">
             <button
               type="submit"
               aria-label="Search properties"
-              className="flex cursor-pointer items-center justify-center gap-2 bg-[#000759] px-6 py-4 text-white transition hover:bg-[#001a8f] sm:w-24 sm:py-0"
+              className="flex cursor-pointer items-center justify-center gap-2 rounded-t-2xl bg-[#000759] px-6 py-4 text-white transition hover:bg-[#001a8f] sm:w-24 sm:rounded-t-none sm:rounded-l-2xl sm:py-0"
             >
               <SearchIcon className="h-6 w-6" />
               <span className="text-sm font-bold uppercase tracking-wide sm:hidden">
@@ -101,7 +101,7 @@ export default function HomeHero({
               </span>
             </button>
 
-            <div className="grid flex-1 grid-cols-1 gap-6 bg-white px-6 py-5 sm:grid-cols-3 sm:gap-8 sm:px-8 sm:py-6">
+            <div className="grid flex-1 grid-cols-1 gap-6 rounded-b-2xl bg-white px-6 py-5 sm:grid-cols-3 sm:gap-8 sm:rounded-b-none sm:rounded-r-2xl sm:px-8 sm:py-6">
               <CheckboxFilterMultiSelect
                 label="Property Type"
                 placeholder="All"
