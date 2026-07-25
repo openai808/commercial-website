@@ -14,7 +14,7 @@ export default function ServicesPage() {
     <main className="bg-white text-[#1f2d57]">
       <ServicesHero />
       <ServiceLines />
-      <ContactUsForm />
+      <ContactUsForm theme="dark" />
     </main>
   );
 }

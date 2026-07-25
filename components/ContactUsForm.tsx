@@ -6,6 +6,7 @@ import Link from "next/link";
 type ContactUsFormProps = {
   title?: string;
   className?: string;
+  theme?: "light" | "dark";
 };
 
 type FormValues = {
@@ -24,7 +25,9 @@ type FormErrors = Partial<Record<keyof FormValues, string>>;
 export default function ContactUsForm({
   title = "How can we help you?",
   className = "",
+  theme = "light",
 }: ContactUsFormProps) {
+  const isDark = theme === "dark";
   const [values, setValues] = useState<FormValues>({
     firstName: "",
     lastName: "",
@@ -103,21 +106,28 @@ export default function ContactUsForm({
     // Submit handler can be wired to an API endpoint later.
   };
 
-  const inputBaseClass =
-    "border-b bg-transparent px-0 py-2 text-base normal-case placeholder:text-[#4f5d85] focus:border-[#223e83] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#223e83] focus-visible:ring-offset-2";
+  const sectionBgClass = isDark ? "bg-[#0c2749]" : "bg-[#e6ebf6]";
+  const containerTextClass = isDark ? "text-white" : "text-[#1f2d57]";
+  const requiredFieldTextClass = isDark ? "text-white/60" : "text-[#6f7896]";
+  const placeholderClass = isDark ? "placeholder:text-white/50" : "placeholder:text-[#4f5d85]";
+  const focusBorderClass = isDark
+    ? "focus:border-white focus-visible:ring-white"
+    : "focus:border-[#223e83] focus-visible:ring-[#223e83]";
+  const inputBaseClass = `border-b bg-transparent px-0 py-2 text-base normal-case ${placeholderClass} ${focusBorderClass} focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2`;
   const errorClass = "border-[#e07f91]";
-  const defaultBorderClass = "border-[#a4aec8]";
-  const fieldLabelClass = "flex flex-col gap-2 text-[11px] uppercase tracking-[0.12em] text-[#2d3a63]";
-  const errorTextClass =
-    "mt-1 text-right text-[11px] font-semibold uppercase tracking-[0.08em] text-[#b3435e]";
+  const defaultBorderClass = isDark ? "border-white/30" : "border-[#a4aec8]";
+  const fieldLabelClass = `flex flex-col gap-2 text-[11px] uppercase tracking-[0.12em] ${isDark ? "text-white/80" : "text-[#2d3a63]"}`;
+  const errorTextClass = `mt-1 text-right text-[11px] font-semibold uppercase tracking-[0.08em] ${isDark ? "text-red-300" : "text-[#b3435e]"}`;
+  const consentTextClass = isDark ? "text-white/90" : "text-[#2e3c66]";
+  const consentBorderClass = isDark ? "border-white/30" : "border-[#a4aec8]";
 
   return (
     <section
       id="contact-us"
       aria-labelledby="contact-us-title"
-      className={`relative isolate scroll-mt-24 bg-[#e6ebf6] py-16 ${className}`}
+      className={`relative isolate scroll-mt-24 ${sectionBgClass} py-16 ${className}`}
     >
-      <div className="mx-auto w-full max-w-6xl px-6 text-[#1f2d57] md:px-10">
+      <div className={`mx-auto w-full max-w-6xl px-6 md:px-10 ${containerTextClass}`}>
         <h2
           ref={titleRef}
           id="contact-us-title"
@@ -127,7 +137,7 @@ export default function ContactUsForm({
         </h2>
 
         <form className="space-y-8" noValidate onSubmit={handleSubmit}>
-          <p className="text-xs uppercase tracking-[0.2em] text-[#6f7896]">* Required field</p>
+          <p className={`text-xs uppercase tracking-[0.2em] ${requiredFieldTextClass}`}>* Required field</p>
 
           <div className="grid gap-6 md:grid-cols-2">
             <label className={fieldLabelClass}>
@@ -236,7 +246,7 @@ export default function ContactUsForm({
               }
               aria-invalid={hasSubmitted && errors.message ? "true" : "false"}
               aria-describedby={hasSubmitted && errors.message ? "message-error" : undefined}
-              className={`min-h-[110px] resize-y border bg-transparent px-4 py-3 text-base normal-case placeholder:text-[#4f5d85] focus:border-[#223e83] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#223e83] focus-visible:ring-offset-2 ${
+              className={`min-h-[110px] resize-y border bg-transparent px-4 py-3 text-base normal-case ${placeholderClass} ${focusBorderClass} focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
                 errors.message ? errorClass : defaultBorderClass
               }`}
             />
@@ -246,8 +256,8 @@ export default function ContactUsForm({
           </label>
 
           <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-start">
-            <div className="space-y-5 text-xs leading-5 text-[#2e3c66]">
-              <label className="flex items-start gap-3 border-b border-[#a4aec8] pb-4">
+            <div className={`space-y-5 text-xs leading-5 ${consentTextClass}`}>
+              <label className={`flex items-start gap-3 border-b pb-4 ${consentBorderClass}`}>
                 <input
                   type="checkbox"
                   name="consentRequired"
@@ -284,7 +294,7 @@ export default function ContactUsForm({
                 <p id="consentRequired-error" className={errorTextClass}>⚠ {errors.consentRequired}</p>
               ) : null}
 
-              <label className="flex items-start gap-3 border-b border-[#a4aec8] pb-4">
+              <label className={`flex items-start gap-3 border-b pb-4 ${consentBorderClass}`}>
                 <input
                   type="checkbox"
                   name="consentMarketing"

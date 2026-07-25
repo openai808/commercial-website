@@ -4,32 +4,50 @@ import type { ReactNode } from "react";
 export type ServiceIcon =
   | "capital"
   | "occupier"
-  | "management"
-  | "valuation"
   | "residential"
-  | "industrial"
-  | "sustainability";
+  | "tenant"
+  | "landlord"
+  | "wallet"
+  | "titleConveyancing"
+  | "propertyVetting";
 
-const serviceLines: { title: string; icon: ServiceIcon; href: string }[] = [
+const serviceLines: { title: string; description: string; icon: ServiceIcon; href: string }[] = [
   {
-    title: "Capital Markets & Investment Services",
-    icon: "capital",
+    title: "Tenant Representation",
+    description: "Find the right property, negotiate lease terms, secure the best space.",
+    icon: "tenant",
+    href: "/services/tenant",
+  },
+  {
+    title: "Landlord Representation",
+    description: "List your property, attract qualifies tenants, close profitable leases.",
+    icon: "landlord",
+    href: "/services/landlord",
+  },
+  {
+    title: "Residential Services",
+    description: "Buy or sell your home, lease with confidence move hassle-free.",
+    icon: "residential",
+    href: "/services/residential-services",
+  },
+  {
+    title: "Capital Markets & Investment Service",
+    description: "Identify opportunities, maximize returns, grow your real estate portfolio.",
+    icon: "wallet",
     href: "/services/capital-markets-and-investment-services",
   },
-  { title: "Occupier Services", icon: "occupier", href: "/services/occupier-services" },
   {
-    title: "Real Estate Management Services",
-    icon: "management",
-    href: "/services/real-estate-management-services",
+    title: "Title Conveyancing Service",
+    description: "Transfer ownership, complete legal documents, close transactions smoothly.",
+    icon: "titleConveyancing",
+    href: "/services/title-conveyancing",
   },
   {
-    title: "Valuation and Advisory Services",
-    icon: "valuation",
-    href: "/services/valuation-and-advisory-services",
+    title: "Property Vetting Service",
+    description: "Verify ownership, access risks, ensure property legitimacy.",
+    icon: "propertyVetting",
+    href: "/services/property-vetting",
   },
-  { title: "Residential", icon: "residential", href: "/services/residential-services" },
-  { title: "Industrial Services", icon: "industrial", href: "/services/industrial" },
-  { title: "Sustainability Services", icon: "sustainability", href: "/services/sustainability-services" },
 ];
 
 export function ServiceCardIcon({ icon }: { icon: ServiceIcon }) {
@@ -58,42 +76,53 @@ export function ServiceCardIcon({ icon }: { icon: ServiceIcon }) {
         <path {...strokeProps} d="M19 29h5M40 29h5M16 48c9 6 23 6 32 0M32 36v16M24 56l8-4 8 4" />
       </svg>
     ),
-    management: (
-      <svg viewBox="0 0 64 64" className={base} aria-hidden>
-        <path {...strokeProps} d="M14 40h16l10-10h10M50 30V14h-14" />
-        <path {...strokeProps} d="M6 46h18l6-6" />
-        <path {...strokeProps} d="M30 38h18l10-9" />
-      </svg>
-    ),
-    valuation: (
-      <svg viewBox="0 0 64 64" className={base} aria-hidden>
-        <rect {...strokeProps} x="8" y="10" width="24" height="30" rx="6" />
-        <path {...strokeProps} d="M15 20h10M15 30h10" />
-        <circle {...strokeProps} cx="20" cy="50" r="8" />
-        <path {...strokeProps} d="M17 50h6M20 47v6" />
-        <circle {...strokeProps} cx="43" cy="20" r="10" />
-        <path {...strokeProps} d="M38 20h10" />
-        <circle {...strokeProps} cx="44" cy="45" r="9" />
-        <path {...strokeProps} d="M39 45h10M41 43l6 4" />
-      </svg>
-    ),
     residential: (
       <svg viewBox="0 0 64 64" className={base} aria-hidden>
-        <path {...strokeProps} d="M10 28l22-12 22 12M14 26v24h36V26" />
-        <path {...strokeProps} d="M26 50V38h12v12M20 32h4M20 38h4M20 44h4M40 32h4M40 38h4M40 44h4" />
+        <path {...strokeProps} d="M10 30l22-16 22 16" />
+        <path {...strokeProps} d="M16 26v28h32V26" />
+        <path {...strokeProps} d="M26 54V40h12v14" />
+        <path {...strokeProps} d="M22 32h4M38 32h4" />
       </svg>
     ),
-    industrial: (
+    tenant: (
       <svg viewBox="0 0 64 64" className={base} aria-hidden>
-        <path {...strokeProps} d="M8 50h48M10 50V14h10M20 50V30l9-5v5l9-5v5l9-5v25" />
-        <path {...strokeProps} d="M23 40h2M31 38h2M39 36h2" />
+        <path {...strokeProps} d="M36 54V16l14-8 14 8v38" />
+        <path {...strokeProps} d="M42 54V32h8v22M46 24h4" />
+        <circle {...strokeProps} cx="14" cy="30" r="5" />
+        <path {...strokeProps} d="M6 54v-5c0-4.4 3.6-8 8-8s8 3.6 8 8v5" />
+        <circle {...strokeProps} cx="26" cy="26" r="4.5" />
+        <path {...strokeProps} d="M19 54v-4c0-4 3-7.3 7-7.3s7 3.3 7 7.3v4" />
       </svg>
     ),
-    sustainability: (
+    landlord: (
       <svg viewBox="0 0 64 64" className={base} aria-hidden>
-        <path {...strokeProps} d="M8 47c7-10 5-19 15-24M56 47c-7-10-5-19-15-24M18 47h28" />
-        <path {...strokeProps} d="M14 30c0-4 3-7 7-7s7 3 7 7M43 30h10M45 24h6M47 20h2" />
-        <path {...strokeProps} d="M31 52c5 0 10-4 10-9-5 0-10 4-10 9zM31 52c0-4-2-7-6-9" />
+        <circle {...strokeProps} cx="32" cy="18" r="9" />
+        <path {...strokeProps} d="M14 54c0-11 8-19 18-19s18 8 18 19" />
+      </svg>
+    ),
+    wallet: (
+      <svg viewBox="0 0 64 64" className={base} aria-hidden>
+        <path {...strokeProps} d="M8 18l6-6h30l6 6" />
+        <rect {...strokeProps} x="8" y="18" width="48" height="34" rx="5" />
+        <path {...strokeProps} d="M8 28h48" />
+        <circle {...strokeProps} cx="44" cy="38" r="4" />
+      </svg>
+    ),
+    titleConveyancing: (
+      <svg viewBox="0 0 64 64" className={base} aria-hidden>
+        <path {...strokeProps} d="M12 8h24l8 8v40H12z" />
+        <path {...strokeProps} d="M36 8v8h8" />
+        <path {...strokeProps} d="M18 28h16M18 36h10" />
+        <circle {...strokeProps} cx="44" cy="46" r="9" />
+        <path {...strokeProps} d="M50.5 52.5L57 59" />
+      </svg>
+    ),
+    propertyVetting: (
+      <svg viewBox="0 0 64 64" className={base} aria-hidden>
+        <path {...strokeProps} d="M8 14l16-6 16 6 16-6v42l-16 6-16-6-16 6z" />
+        <path {...strokeProps} d="M24 8v42M40 14v42" />
+        <path {...strokeProps} d="M46 22a8 8 0 018 8c0 6-8 14-8 14s-8-8-8-14a8 8 0 018-8z" />
+        <circle {...strokeProps} cx="46" cy="30" r="2.6" />
       </svg>
     ),
   };
@@ -105,32 +134,42 @@ export default function ServiceLines() {
   return (
     <section aria-labelledby="services-intro-title" className="px-6 py-14 md:py-16">
       <div className="mx-auto w-full max-w-5xl text-center">
-        <h2 id="services-intro-title" className="text-2xl font-normal text-[#2f3f74] md:text-3xl">
-          REMAX/8 professionals think differently
+        <h2
+          id="services-intro-title"
+          className="font-gotham text-[30.3px] font-bold italic text-[#0c2749]"
+        >
+          <span>REMAX Professionals</span>
+          <br />
+          <span className="text-[#aa1120]">Think Differently.</span>
         </h2>
-        <p className="mx-auto mt-3 max-w-4xl text-sm leading-relaxed text-[#3f4f80] md:text-base">
-          What sets REMAX/8 apart is not what we do, but how we do it. You&apos;ll
+        <p className="font-gotham mx-auto mt-3 max-w-4xl text-[14.5px] leading-relaxed text-[#3f4f80]">
+          What sets REMAX 8 apart is not what we do, but how we do it. You&apos;ll
           experience forward-looking expertise that elevates value every step of the way.
           We simply think differently and that produces innovative outcomes. Whether
           you&apos;re a developer, investor, landlord or tenant, we are a partner who is
           invested in seeing you succeed.
         </p>
 
-        <div className="mx-auto mt-10 grid max-w-4xl grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
-          {serviceLines.map((service, index) => (
+        <div className="mx-auto mt-10 grid max-w-5xl grid-cols-1 gap-6 text-left sm:grid-cols-2 lg:grid-cols-3">
+          {serviceLines.map((service) => (
             <Link
               key={service.title}
               href={service.href}
-              className={`group flex min-h-36 cursor-pointer flex-col items-center justify-center gap-4 border border-[#dde2ed] bg-white px-5 py-6 text-center transition-all duration-200 hover:shadow-[0_10px_24px_rgba(35,61,131,0.16)] ${
-                index === serviceLines.length - 1
-                  ? "sm:col-span-2 lg:col-span-1 lg:col-start-2"
-                  : ""
-              }`}
+              className="group flex cursor-pointer items-start gap-4 rounded-xl border border-[#0c2749] bg-white p-6 transition-all duration-200 hover:shadow-[0_10px_24px_rgba(12,39,73,0.16)]"
             >
-              <ServiceCardIcon icon={service.icon} />
-              <h3 className="text-sm font-normal leading-snug text-[#2d3c70] transition-colors duration-200 group-hover:text-[#59a8ff] group-hover:underline md:text-base">
-                {service.title}
-              </h3>
+              <div className="shrink-0">
+                <ServiceCardIcon icon={service.icon} />
+              </div>
+              <div className="flex flex-col gap-2">
+                <h3 className="font-gotham text-sm font-bold uppercase leading-snug text-[#0c2749] transition-colors duration-200 group-hover:text-[#1a3a63] md:text-base">
+                  {service.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-[#5f6b8a]">{service.description}</p>
+                <span className="mt-1 inline-flex items-center gap-1 text-sm font-medium text-[#0c2749] group-hover:underline">
+                  Learn More
+                  <span aria-hidden="true">→</span>
+                </span>
+              </div>
             </Link>
           ))}
         </div>
