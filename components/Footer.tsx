@@ -176,7 +176,7 @@ export default function Footer() {
             </div>
             <div>
               <p className="font-bold uppercase">Landline</p>
-              <p>(02) 7000 3221</p>
+              <p>(02) 8924 0652</p>
             </div>
             <div>
               <p className="font-bold uppercase">Mobile</p>
