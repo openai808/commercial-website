@@ -11,7 +11,6 @@ type FeaturedProperty = {
   tag: string;
   extraTags?: number;
   image: string;
-  href: string;
   status: "sale" | "lease";
 };
 
@@ -25,7 +24,6 @@ const SLIDES: FeaturedProperty[][] = [
       extraTags: 2,
       image:
         "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=80",
-      href: "/properties/industrial",
       status: "sale",
     },
     {
@@ -36,7 +34,6 @@ const SLIDES: FeaturedProperty[][] = [
       extraTags: 2,
       image:
         "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=900&q=80",
-      href: "/properties/industrial",
       status: "sale",
     },
     {
@@ -46,7 +43,6 @@ const SLIDES: FeaturedProperty[][] = [
       tag: "INDUSTRIAL",
       image:
         "https://images.unsplash.com/photo-1586528116311-ad8dde234ddb?auto=format&fit=crop&w=900&q=80",
-      href: "/properties/industrial",
       status: "lease",
     },
   ],
@@ -59,7 +55,6 @@ const SLIDES: FeaturedProperty[][] = [
       extraTags: 1,
       image:
         "https://images.unsplash.com/photo-1565514020161-6d943f9a99d3?auto=format&fit=crop&w=900&q=80",
-      href: "/properties/industrial",
       status: "lease",
     },
     {
@@ -70,7 +65,6 @@ const SLIDES: FeaturedProperty[][] = [
       extraTags: 3,
       image:
         "https://images.unsplash.com/photo-1448630360428-65456885c650?auto=format&fit=crop&w=900&q=80",
-      href: "/properties/industrial",
       status: "sale",
     },
     {
@@ -81,7 +75,6 @@ const SLIDES: FeaturedProperty[][] = [
       extraTags: 2,
       image:
         "https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?auto=format&fit=crop&w=900&q=80",
-      href: "/properties/industrial",
       status: "lease",
     },
   ],
@@ -93,7 +86,6 @@ const SLIDES: FeaturedProperty[][] = [
       tag: "INDUSTRIAL",
       image:
         "https://images.unsplash.com/photo-1565043589221-1a6fd9ae45c7?auto=format&fit=crop&w=900&q=80",
-      href: "/properties/industrial",
       status: "lease",
     },
     {
@@ -104,7 +96,6 @@ const SLIDES: FeaturedProperty[][] = [
       extraTags: 1,
       image:
         "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=900&q=80",
-      href: "/properties/industrial",
       status: "sale",
     },
     {
@@ -115,7 +106,6 @@ const SLIDES: FeaturedProperty[][] = [
       extraTags: 2,
       image:
         "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=900&q=80",
-      href: "/properties/industrial",
       status: "sale",
     },
   ],
@@ -181,7 +171,7 @@ export default function IndustrialServicesFeaturedProperties() {
               {items.map((property, index) => (
                 <Link
                   key={`${page}-${index}-${property.title}`}
-                  href={property.href}
+                  href={`/properties?listing=${property.status === "lease" ? "for-lease" : "for-sale"}&type=Industrial%20Lot,Warehouse%20or%20Storage%20Facility`}
                   className="group flex flex-col overflow-hidden border border-[#d9dce5] bg-white text-left transition-shadow hover:shadow-md"
                 >
                   <div className="relative aspect-[4/3] w-full overflow-hidden">
@@ -256,7 +246,7 @@ export default function IndustrialServicesFeaturedProperties() {
 
         <div className="mt-10 flex justify-center">
           <Link
-            href="/properties/industrial"
+            href="/properties?type=Industrial%20Lot,Warehouse%20or%20Storage%20Facility"
             className="rounded-full bg-[#23408e] px-8 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#1d3575]"
           >
             VIEW MORE

@@ -24,7 +24,7 @@ const SLIDES: FeaturedProperty[][] = [
       extraTags: 2,
       image:
         "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=80",
-      href: "/properties/for-sale",
+      href: "/properties?listing=for-sale",
     },
     {
       title: "Residential Lot with Mountain View",
@@ -34,7 +34,7 @@ const SLIDES: FeaturedProperty[][] = [
       extraTags: 1,
       image:
         "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=900&q=80",
-      href: "/properties/for-sale",
+      href: "/properties?listing=for-sale",
     },
     {
       title: "Corner Parcel near Business District",
@@ -44,7 +44,7 @@ const SLIDES: FeaturedProperty[][] = [
       extraTags: 3,
       image:
         "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=900&q=80",
-      href: "/properties/for-sale",
+      href: "/properties?listing=for-sale",
     },
   ],
   [
@@ -56,7 +56,7 @@ const SLIDES: FeaturedProperty[][] = [
       extraTags: 2,
       image:
         "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=900&q=80",
-      href: "/properties/for-sale",
+      href: "/properties?listing=for-sale",
     },
     {
       title: "Townhouse in Gated Community",
@@ -66,7 +66,7 @@ const SLIDES: FeaturedProperty[][] = [
       extraTags: 1,
       image:
         "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=80",
-      href: "/properties/for-sale",
+      href: "/properties?listing=for-sale",
     },
     {
       title: "Development Land with Road Frontage",
@@ -76,7 +76,7 @@ const SLIDES: FeaturedProperty[][] = [
       extraTags: 2,
       image:
         "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=900&q=80",
-      href: "/properties/for-sale",
+      href: "/properties?listing=for-sale",
     },
   ],
   [
@@ -88,7 +88,7 @@ const SLIDES: FeaturedProperty[][] = [
       extraTags: 1,
       image:
         "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?auto=format&fit=crop&w=900&q=80",
-      href: "/properties/for-sale",
+      href: "/properties?listing=for-sale",
     },
     {
       title: "High-Rise Studio for Sale",
@@ -98,7 +98,7 @@ const SLIDES: FeaturedProperty[][] = [
       extraTags: 2,
       image:
         "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=900&q=80",
-      href: "/properties/for-sale",
+      href: "/properties?listing=for-sale",
     },
     {
       title: "Estate Lot in Private Enclave",
@@ -108,7 +108,7 @@ const SLIDES: FeaturedProperty[][] = [
       extraTags: 2,
       image:
         "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80",
-      href: "/properties/for-sale",
+      href: "/properties?listing=for-sale",
     },
   ],
 ];
@@ -235,7 +235,7 @@ export default function ResidentialServicesFeaturedProperties() {
 
         <div className="mt-10 flex justify-center">
           <Link
-            href="/properties/for-sale"
+            href="/properties?listing=for-sale"
             className="rounded-full bg-[#23408e] px-8 py-3 text-xs font-semibold uppercase tracking-[0.16em] text-white transition-colors hover:bg-[#1d3575]"
           >
             VIEW MORE

@@ -127,19 +127,19 @@ const navConfig: NavItem[] = [
           heading: "For Sale",
           headingHref: PROPERTIES_FOR_SALE_HREF,
           items: [
-            { label: "Office", href: `${PROPERTIES_FOR_SALE_HREF}&type=office` },
+            { label: "Office", href: `${PROPERTIES_FOR_SALE_HREF}&type=Office%20Space` },
             {
               label: "Industrial and Logistics",
-              href: `${PROPERTIES_FOR_SALE_HREF}&type=industrial-and-logistics`,
+              href: `${PROPERTIES_FOR_SALE_HREF}&type=Industrial%20Lot,Warehouse%20or%20Storage%20Facility`,
             },
             {
               label: "Hotels and Hospitality",
-              href: `${PROPERTIES_FOR_SALE_HREF}&type=hotels-and-hospitality`,
+              href: PROPERTIES_FOR_SALE_HREF,
             },
-            { label: "Retail", href: `${PROPERTIES_FOR_SALE_HREF}&type=retail` },
+            { label: "Retail", href: `${PROPERTIES_FOR_SALE_HREF}&type=Commercial%20Space` },
             {
               label: "Residential",
-              href: `${PROPERTIES_FOR_SALE_HREF}&type=residential`,
+              href: `${PROPERTIES_FOR_SALE_HREF}&type=Commercial%20or%20Residential%20Building`,
             },
           ],
         },
@@ -147,19 +147,19 @@ const navConfig: NavItem[] = [
           heading: "For Lease",
           headingHref: PROPERTIES_FOR_LEASE_HREF,
           items: [
-            { label: "Office", href: `${PROPERTIES_FOR_LEASE_HREF}&type=office` },
+            { label: "Office", href: `${PROPERTIES_FOR_LEASE_HREF}&type=Office%20Space` },
             {
               label: "Industrial and Logistics",
-              href: `${PROPERTIES_FOR_LEASE_HREF}&type=industrial-and-logistics`,
+              href: `${PROPERTIES_FOR_LEASE_HREF}&type=Industrial%20Lot,Warehouse%20or%20Storage%20Facility`,
             },
             {
               label: "Hotels and Hospitality",
-              href: `${PROPERTIES_FOR_LEASE_HREF}&type=hotels-and-hospitality`,
+              href: PROPERTIES_FOR_LEASE_HREF,
             },
-            { label: "Retail", href: `${PROPERTIES_FOR_LEASE_HREF}&type=retail` },
+            { label: "Retail", href: `${PROPERTIES_FOR_LEASE_HREF}&type=Commercial%20Space` },
             {
               label: "Residential",
-              href: `${PROPERTIES_FOR_LEASE_HREF}&type=residential`,
+              href: `${PROPERTIES_FOR_LEASE_HREF}&type=Commercial%20or%20Residential%20Building`,
             },
           ],
         },

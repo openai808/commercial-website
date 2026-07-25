@@ -48,13 +48,13 @@ function RetailIcon() {
 }
 
 const assetClasses: { label: string; href: string; icon: ReactNode }[] = [
-  { label: "Office", href: "/properties/office", icon: <OfficeIcon /> },
+  { label: "Office", href: "/properties?type=Office%20Space", icon: <OfficeIcon /> },
   {
     label: "Residential",
-    href: "/properties/multifamily",
+    href: "/properties?type=Commercial%20or%20Residential%20Building",
     icon: <ResidentialIcon />,
   },
-  { label: "Retail", href: "/properties/retail", icon: <RetailIcon /> },
+  { label: "Retail", href: "/properties?type=Commercial%20Space", icon: <RetailIcon /> },
 ];
 
 export default function IndustrialServicesAssetClasses() {

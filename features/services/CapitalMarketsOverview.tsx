@@ -30,7 +30,7 @@ const FEATURED_PROPERTIES: PropertyCard[] = [
     price: "PHP 4.2 B",
     image:
       "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1200&q=80",
-    href: "/properties/industrial",
+    href: "/properties?listing=for-sale&type=Industrial%20Lot",
   },
   {
     title: "Commercial Lot for Sale in Cebu City",
@@ -39,7 +39,7 @@ const FEATURED_PROPERTIES: PropertyCard[] = [
     price: "PHP 1.8 B",
     image:
       "https://images.unsplash.com/photo-1482192596544-9eb780fc7f66?auto=format&fit=crop&w=1200&q=80",
-    href: "/properties/retail",
+    href: "/properties?listing=for-sale&type=Commercial%20Space",
   },
   {
     title: "Property for Sale near Tagaytay",
@@ -48,7 +48,7 @@ const FEATURED_PROPERTIES: PropertyCard[] = [
     price: "PHP 420 M",
     image:
       "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=80",
-    href: "/properties/office",
+    href: "/properties?listing=for-sale&type=Office%20Space",
   },
 ];
 
