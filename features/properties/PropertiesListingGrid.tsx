@@ -35,31 +35,46 @@ export default function PropertiesListingGrid({
     ? "blur-[2px] opacity-[0.72] pointer-events-none select-none motion-reduce:blur-none motion-reduce:opacity-80"
     : "";
 
-  if (listings.length === 0) {
-    return (
-      <div
-        className={`py-12 text-center transition-[filter,opacity] duration-200 ease-out motion-reduce:transition-none ${pendingClass}`}
-        {...(pending ? { "aria-busy": true as const } : {})}
-      >
-        <p className="text-sm text-[#4a5f9a]">
-          No active listings match your search right now.
-        </p>
-      </div>
-    );
-  }
-
   return (
-    <div
-      aria-label="Property listings"
-      {...(pending ? { "aria-busy": true as const } : {})}
-      className={`grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 md:grid-cols-3 lg:grid-cols-2 lg:gap-4 xl:grid-cols-3 xl:gap-4 2xl:grid-cols-4 min-[2000px]:grid-cols-4 min-[2000px]:gap-4 transition-[filter,opacity] duration-200 ease-out motion-reduce:transition-none ${pendingClass}`}
-    >
-      {listings.map((listing) => (
-        <PropertyListingCard
-          key={getListingIdentifier(listing) ?? getListingTitle(listing)}
-          listing={listing}
-        />
-      ))}
+    <div className="relative">
+      {listings.length === 0 ? (
+        <div
+          className={`py-12 text-center transition-[filter,opacity] duration-200 ease-out motion-reduce:transition-none ${pendingClass}`}
+          {...(pending ? { "aria-busy": true as const } : {})}
+        >
+          <p className="text-sm text-[#4a5f9a]">
+            No active listings match your search right now.
+          </p>
+        </div>
+      ) : (
+        <div
+          aria-label="Property listings"
+          {...(pending ? { "aria-busy": true as const } : {})}
+          className={`grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 md:grid-cols-3 lg:grid-cols-2 lg:gap-4 xl:grid-cols-3 xl:gap-4 2xl:grid-cols-4 min-[2000px]:grid-cols-4 min-[2000px]:gap-4 transition-[filter,opacity] duration-200 ease-out motion-reduce:transition-none ${pendingClass}`}
+        >
+          {listings.map((listing) => (
+            <PropertyListingCard
+              key={getListingIdentifier(listing) ?? getListingTitle(listing)}
+              listing={listing}
+            />
+          ))}
+        </div>
+      )}
+
+      {pending ? (
+        <div
+          className="pointer-events-none absolute inset-0 z-20 flex items-start justify-center pt-10"
+          role="status"
+          aria-live="polite"
+        >
+          <div className="flex items-center gap-2 rounded-full bg-[#000759] px-4 py-2 shadow-md">
+            <PropertyListingCardSpinner className="h-4 w-4" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-white">
+              Searching…
+            </span>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -184,10 +199,14 @@ function PropertyListingCard({ listing }: { listing: ListingWithAgent }) {
   );
 }
 
-function PropertyListingCardSpinner() {
+function PropertyListingCardSpinner({
+  className = "h-8 w-8",
+}: {
+  className?: string;
+}) {
   return (
     <svg
-      className="h-8 w-8 animate-spin text-white motion-reduce:animate-none"
+      className={`animate-spin text-white motion-reduce:animate-none ${className}`}
       viewBox="0 0 24 24"
       fill="none"
       aria-hidden
