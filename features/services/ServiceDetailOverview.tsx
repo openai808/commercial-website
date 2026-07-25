@@ -24,7 +24,9 @@ function DashedUnderline({
 }) {
   return (
     <div
-      className={`flex items-center ${reverse ? "flex-row-reverse" : "flex-row"} ${className}`}
+      className={`flex items-center ${
+        reverse ? "flex-row-reverse" : "flex-row"
+      } ${className}`}
       style={{ gap }}
       aria-hidden
     >
@@ -74,15 +76,17 @@ export default function ServiceDetailOverview({
               Overview
             </p>
             <DashedUnderline className="mt-4" />
-            <h2
-              id="service-detail-overview-heading"
-              className="font-gotham-condensed mt-8 text-[24px] font-extrabold uppercase leading-[1.1] tracking-tight text-[#0c2749] sm:text-[28px] md:text-[32px]"
-            >
-              {heading}
-            </h2>
-            <p className="font-gotham mt-6 text-[14px] font-normal leading-relaxed text-slate-600 md:text-[15px]">
-              {body}
-            </p>
+            <div className="ml-5">
+              <h2
+                id="service-detail-overview-heading"
+                className="font-gotham-condensed mt-8 text-[24px] font-extrabold uppercase leading-[1.1] tracking-tight text-[#0c2749] sm:text-[28px] md:text-[32px]"
+              >
+                {heading}
+              </h2>
+              <p className="font-gotham mt-6 text-[14px] font-normal leading-relaxed text-slate-600 md:text-[15px]">
+                {body}
+              </p>
+            </div>
           </div>
 
           <div className="flex flex-col items-end">

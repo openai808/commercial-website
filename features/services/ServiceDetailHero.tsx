@@ -67,10 +67,10 @@ export default function ServiceDetailHero({
           className="absolute inset-0 bg-gradient-to-t from-[#0c2749]/85 via-[#0c2749]/55 to-[#0c2749]/30"
           aria-hidden
         />
-        <div ref={containerRef} className="relative mx-auto flex max-w-2xl flex-col items-center">
+        <div ref={containerRef} className="relative mx-auto flex max-w-5xl flex-col items-center">
           <h1
             id="service-detail-hero-title"
-            className="whitespace-nowrap text-[clamp(1.75rem,4vw,47.95px)] font-extralight uppercase leading-tight tracking-[0.25em]"
+            className="text-[clamp(1.1rem,4.5vw,47.95px)] font-extralight uppercase leading-tight tracking-[0.08em] md:tracking-[0.18em] lg:tracking-[0.25em]"
           >
             {titleParts ? (
               <>

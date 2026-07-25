@@ -7,6 +7,7 @@ type ContactUsFormProps = {
   title?: string;
   className?: string;
   theme?: "light" | "dark";
+  showFab?: boolean;
 };
 
 type FormValues = {
@@ -26,6 +27,7 @@ export default function ContactUsForm({
   title = "How can we help you?",
   className = "",
   theme = "light",
+  showFab = true,
 }: ContactUsFormProps) {
   const isDark = theme === "dark";
   const [values, setValues] = useState<FormValues>({
@@ -347,43 +349,45 @@ export default function ContactUsForm({
         aria-hidden
       />
 
-      <button
-        type="button"
-        onClick={() => {
-          titleRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-        }}
-        className={`group bottom-6 right-6 inline-flex h-14 min-h-14 min-w-14 overflow-hidden rounded-full bg-[#000759] text-white shadow-lg ring-2 ring-white/20 transition-[max-width,box-shadow,padding,width] duration-300 ease-out hover:bg-[#000759]/92 hover:shadow-xl hover:ring-white/35 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white max-[480px]:bottom-4 max-[480px]:right-4 md:bottom-10 md:right-10 ${
-          dockContactFabInSection ? "absolute z-20" : "fixed z-40"
-        } ${
-          expandContactFab
-            ? "w-auto max-w-[min(18rem,calc(100vw-2rem))] pr-5"
-            : "w-14 max-w-14 pr-0 hover:w-auto hover:max-w-[min(18rem,calc(100vw-2rem))] hover:pr-5 focus-visible:w-auto focus-visible:max-w-[min(18rem,calc(100vw-2rem))] focus-visible:pr-5"
-        }`}
-        aria-label="Contact us — scroll to form"
-      >
-        <span
-          className="pointer-events-none absolute left-0 top-0 z-10 flex size-14 items-center justify-center"
-          aria-hidden
-        >
-          <img
-            src="/icon-phone-mail.svg"
-            alt=""
-            className="block size-8 object-contain"
-            width={32}
-            height={32}
-            decoding="async"
-          />
-        </span>
-        <span
-          className={`flex h-14 min-h-14 min-w-0 flex-1 items-center overflow-hidden whitespace-nowrap pl-14 pr-0.5 text-left text-xs font-bold uppercase tracking-[0.12em] transition-[opacity,transform] duration-300 ease-out ${
+      {showFab ? (
+        <button
+          type="button"
+          onClick={() => {
+            titleRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+          }}
+          className={`group bottom-6 right-6 inline-flex h-14 min-h-14 min-w-14 overflow-hidden rounded-full bg-[#000759] text-white shadow-lg ring-2 ring-white/20 transition-[max-width,box-shadow,padding,width] duration-300 ease-out hover:bg-[#000759]/92 hover:shadow-xl hover:ring-white/35 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white max-[480px]:bottom-4 max-[480px]:right-4 md:bottom-10 md:right-10 ${
+            dockContactFabInSection ? "absolute z-20" : "fixed z-40"
+          } ${
             expandContactFab
-              ? "translate-x-0 opacity-100"
-              : "pointer-events-none translate-x-1 opacity-0 group-hover:pointer-events-auto group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:pointer-events-auto group-focus-visible:translate-x-0 group-focus-visible:opacity-100"
+              ? "w-auto max-w-[min(18rem,calc(100vw-2rem))] pr-5"
+              : "w-14 max-w-14 pr-0 hover:w-auto hover:max-w-[min(18rem,calc(100vw-2rem))] hover:pr-5 focus-visible:w-auto focus-visible:max-w-[min(18rem,calc(100vw-2rem))] focus-visible:pr-5"
           }`}
+          aria-label="Contact us — scroll to form"
         >
-          Contact us
-        </span>
-      </button>
+          <span
+            className="pointer-events-none absolute left-0 top-0 z-10 flex size-14 items-center justify-center"
+            aria-hidden
+          >
+            <img
+              src="/icon-phone-mail.svg"
+              alt=""
+              className="block size-8 object-contain"
+              width={32}
+              height={32}
+              decoding="async"
+            />
+          </span>
+          <span
+            className={`flex h-14 min-h-14 min-w-0 flex-1 items-center overflow-hidden whitespace-nowrap pl-14 pr-0.5 text-left text-xs font-bold uppercase tracking-[0.12em] transition-[opacity,transform] duration-300 ease-out ${
+              expandContactFab
+                ? "translate-x-0 opacity-100"
+                : "pointer-events-none translate-x-1 opacity-0 group-hover:pointer-events-auto group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:pointer-events-auto group-focus-visible:translate-x-0 group-focus-visible:opacity-100"
+            }`}
+          >
+            Contact us
+          </span>
+        </button>
+      ) : null}
     </section>
   );
 }

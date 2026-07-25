@@ -611,18 +611,27 @@ function MobileNavGroup({
   if (mega.kind === "simple") {
     return (
       <div className="border-b border-[#000759]/25">
-        <button
-          type="button"
-          className="flex w-full items-center justify-between gap-4 py-5 text-left font-montserrat text-xl font-normal tracking-tight text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f] sm:py-6 sm:text-2xl"
-          onClick={() => setExpanded((v) => !v)}
-          {...ariaExpandedProps(expanded)}
-          {...(expanded
-            ? { "aria-controls": `mobile-nav-section-${item.id}` }
-            : {})}
-        >
-          <span>{item.label}</span>
-          <MobileMenuRowArrow expanded={expanded} />
-        </button>
+        <div className="flex w-full items-center justify-between gap-4 py-5 sm:py-6">
+          <Link
+            href={item.href}
+            className="flex-1 text-left font-montserrat text-xl font-normal tracking-tight text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f] sm:text-2xl"
+            onClick={onNavigate}
+          >
+            {item.label}
+          </Link>
+          <button
+            type="button"
+            className="shrink-0 rounded p-1 text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f]"
+            onClick={() => setExpanded((v) => !v)}
+            aria-label={expanded ? `Collapse ${item.label} menu` : `Expand ${item.label} menu`}
+            {...ariaExpandedProps(expanded)}
+            {...(expanded
+              ? { "aria-controls": `mobile-nav-section-${item.id}` }
+              : {})}
+          >
+            <MobileMenuRowArrow expanded={expanded} />
+          </button>
+        </div>
         <div
           className={`grid transition-[grid-template-rows] duration-300 ease-in-out motion-reduce:transition-none ${expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
         >
@@ -652,18 +661,27 @@ function MobileNavGroup({
   if (mega.kind === "simpleGroups") {
     return (
       <div className="border-b border-[#000759]/25">
-        <button
-          type="button"
-          className="flex w-full items-center justify-between gap-4 py-5 text-left font-montserrat text-xl font-normal tracking-tight text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f] sm:py-6 sm:text-2xl"
-          onClick={() => setExpanded((v) => !v)}
-          {...ariaExpandedProps(expanded)}
-          {...(expanded
-            ? { "aria-controls": `mobile-nav-section-${item.id}` }
-            : {})}
-        >
-          <span>{item.label}</span>
-          <MobileMenuRowArrow expanded={expanded} />
-        </button>
+        <div className="flex w-full items-center justify-between gap-4 py-5 sm:py-6">
+          <Link
+            href={item.href}
+            className="flex-1 text-left font-montserrat text-xl font-normal tracking-tight text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f] sm:text-2xl"
+            onClick={onNavigate}
+          >
+            {item.label}
+          </Link>
+          <button
+            type="button"
+            className="shrink-0 rounded p-1 text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f]"
+            onClick={() => setExpanded((v) => !v)}
+            aria-label={expanded ? `Collapse ${item.label} menu` : `Expand ${item.label} menu`}
+            {...ariaExpandedProps(expanded)}
+            {...(expanded
+              ? { "aria-controls": `mobile-nav-section-${item.id}` }
+              : {})}
+          >
+            <MobileMenuRowArrow expanded={expanded} />
+          </button>
+        </div>
         <div
           className={`grid transition-[grid-template-rows] duration-300 ease-in-out motion-reduce:transition-none ${expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
         >
@@ -717,18 +735,27 @@ function MobileNavGroup({
 
   return (
     <div className="border-b border-[#000759]/25">
-      <button
-        type="button"
-        className="flex w-full items-center justify-between gap-4 py-5 text-left font-montserrat text-xl font-normal tracking-tight text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f] sm:py-6 sm:text-2xl"
-        onClick={() => setExpanded((v) => !v)}
-        {...ariaExpandedProps(expanded)}
-        {...(expanded
-          ? { "aria-controls": `mobile-nav-section-${item.id}` }
-          : {})}
-      >
-        <span>{item.label}</span>
-        <MobileMenuRowArrow expanded={expanded} />
-      </button>
+      <div className="flex w-full items-center justify-between gap-4 py-5 sm:py-6">
+        <Link
+          href={item.href}
+          className="flex-1 text-left font-montserrat text-xl font-normal tracking-tight text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f] sm:text-2xl"
+          onClick={onNavigate}
+        >
+          {item.label}
+        </Link>
+        <button
+          type="button"
+          className="shrink-0 rounded p-1 text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f]"
+          onClick={() => setExpanded((v) => !v)}
+          aria-label={expanded ? `Collapse ${item.label} menu` : `Expand ${item.label} menu`}
+          {...ariaExpandedProps(expanded)}
+          {...(expanded
+            ? { "aria-controls": `mobile-nav-section-${item.id}` }
+            : {})}
+        >
+          <MobileMenuRowArrow expanded={expanded} />
+        </button>
+      </div>
       <div
         className={`grid transition-[grid-template-rows] duration-300 ease-in-out motion-reduce:transition-none ${expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
       >
