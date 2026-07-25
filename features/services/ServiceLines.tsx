@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
@@ -50,7 +51,30 @@ const serviceLines: { title: string; description: string; icon: ServiceIcon; hre
   },
 ];
 
+const SERVICE_ICON_IMAGE_SRC: Partial<Record<ServiceIcon, string>> = {
+  tenant: "/images/services-icon/tenant_representation.png",
+  landlord: "/images/services-icon/landlord_representation.png",
+  residential: "/images/services-icon/residential_services.png",
+  wallet: "/images/services-icon/capital_markets_&_investment_service.png",
+  titleConveyancing: "/images/services-icon/title_conveyancing_service.png",
+  propertyVetting: "/images/services-icon/property_vetting_service.png",
+};
+
 export function ServiceCardIcon({ icon }: { icon: ServiceIcon }) {
+  const imageSrc = SERVICE_ICON_IMAGE_SRC[icon];
+  if (imageSrc) {
+    return (
+      <Image
+        src={imageSrc}
+        alt=""
+        width={64}
+        height={64}
+        className="h-16 w-16 object-contain"
+        aria-hidden
+      />
+    );
+  }
+
   const base = "h-16 w-16 text-[#5f74ab]";
   const strokeProps = {
     fill: "none",
@@ -60,7 +84,7 @@ export function ServiceCardIcon({ icon }: { icon: ServiceIcon }) {
     strokeLinejoin: "round" as const,
   };
 
-  const icons: Record<ServiceIcon, ReactNode> = {
+  const icons: Record<"capital" | "occupier", ReactNode> = {
     capital: (
       <svg viewBox="0 0 64 64" className={base} aria-hidden>
         <ellipse {...strokeProps} cx="13" cy="15" rx="7" ry="2.8" />
@@ -76,58 +100,9 @@ export function ServiceCardIcon({ icon }: { icon: ServiceIcon }) {
         <path {...strokeProps} d="M19 29h5M40 29h5M16 48c9 6 23 6 32 0M32 36v16M24 56l8-4 8 4" />
       </svg>
     ),
-    residential: (
-      <svg viewBox="0 0 64 64" className={base} aria-hidden>
-        <path {...strokeProps} d="M10 30l22-16 22 16" />
-        <path {...strokeProps} d="M16 26v28h32V26" />
-        <path {...strokeProps} d="M26 54V40h12v14" />
-        <path {...strokeProps} d="M22 32h4M38 32h4" />
-      </svg>
-    ),
-    tenant: (
-      <svg viewBox="0 0 64 64" className={base} aria-hidden>
-        <path {...strokeProps} d="M36 54V16l14-8 14 8v38" />
-        <path {...strokeProps} d="M42 54V32h8v22M46 24h4" />
-        <circle {...strokeProps} cx="14" cy="30" r="5" />
-        <path {...strokeProps} d="M6 54v-5c0-4.4 3.6-8 8-8s8 3.6 8 8v5" />
-        <circle {...strokeProps} cx="26" cy="26" r="4.5" />
-        <path {...strokeProps} d="M19 54v-4c0-4 3-7.3 7-7.3s7 3.3 7 7.3v4" />
-      </svg>
-    ),
-    landlord: (
-      <svg viewBox="0 0 64 64" className={base} aria-hidden>
-        <circle {...strokeProps} cx="32" cy="18" r="9" />
-        <path {...strokeProps} d="M14 54c0-11 8-19 18-19s18 8 18 19" />
-      </svg>
-    ),
-    wallet: (
-      <svg viewBox="0 0 64 64" className={base} aria-hidden>
-        <path {...strokeProps} d="M8 18l6-6h30l6 6" />
-        <rect {...strokeProps} x="8" y="18" width="48" height="34" rx="5" />
-        <path {...strokeProps} d="M8 28h48" />
-        <circle {...strokeProps} cx="44" cy="38" r="4" />
-      </svg>
-    ),
-    titleConveyancing: (
-      <svg viewBox="0 0 64 64" className={base} aria-hidden>
-        <path {...strokeProps} d="M12 8h24l8 8v40H12z" />
-        <path {...strokeProps} d="M36 8v8h8" />
-        <path {...strokeProps} d="M18 28h16M18 36h10" />
-        <circle {...strokeProps} cx="44" cy="46" r="9" />
-        <path {...strokeProps} d="M50.5 52.5L57 59" />
-      </svg>
-    ),
-    propertyVetting: (
-      <svg viewBox="0 0 64 64" className={base} aria-hidden>
-        <path {...strokeProps} d="M8 14l16-6 16 6 16-6v42l-16 6-16-6-16 6z" />
-        <path {...strokeProps} d="M24 8v42M40 14v42" />
-        <path {...strokeProps} d="M46 22a8 8 0 018 8c0 6-8 14-8 14s-8-8-8-14a8 8 0 018-8z" />
-        <circle {...strokeProps} cx="46" cy="30" r="2.6" />
-      </svg>
-    ),
   };
 
-  return icons[icon];
+  return icons[icon as "capital" | "occupier"];
 }
 
 export default function ServiceLines() {
