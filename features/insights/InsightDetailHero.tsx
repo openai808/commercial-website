@@ -33,7 +33,7 @@ export default function InsightDetailHero({
             alt={title}
             fill
             priority
-            className="object-cover"
+            className="object-cover object-[center_30%]"
             sizes="100vw"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#000759] via-[#000759]/40 to-transparent" />
