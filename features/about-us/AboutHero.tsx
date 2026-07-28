@@ -1,28 +1,25 @@
+import Image from "next/image";
+
 type AboutHeroProps = {
-  eyebrow?: string;
   title: string;
-  description?: string;
 };
 
-export default function AboutHero({
-  eyebrow = "About",
-  title,
-  description,
-}: AboutHeroProps) {
+export default function AboutHero({ title }: AboutHeroProps) {
   return (
-    <section className="bg-[#000759] px-6 pb-8 pt-14 md:px-10 md:pt-20">
-      <div className="mx-auto max-w-[1400px]">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#6b8cbe] md:text-xs">
-          {eyebrow}
-        </p>
-        <h1 className="mt-3 font-serif text-3xl font-normal leading-snug text-white md:text-5xl md:leading-tight">
+    <section className="relative flex min-h-[420px] items-center overflow-hidden min-[861px]:min-h-[600px]">
+      <Image
+        src="/images/hero/hero-handshake.png"
+        alt=""
+        fill
+        preload
+        className="object-cover"
+        sizes="100vw"
+      />
+      <div className="absolute inset-0 bg-black/[0.28]" aria-hidden />
+      <div className="relative text-center mx-auto w-full max-w-[1400px] px-6 md:px-10">
+        <h1 className="text-[clamp(28px,4.4vw,56px)] font-bold leading-[1.15] text-white">
           {title}
         </h1>
-        {description ? (
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/70 md:text-base">
-            {description}
-          </p>
-        ) : null}
       </div>
     </section>
   );
