@@ -4,16 +4,23 @@ import type { BlogPost, BlogPostsPageResult } from "@/lib/blog/types";
 export async function getBlogPosts(
   page = 1,
   pageSize = 10,
+  category?: string,
 ): Promise<BlogPostsPageResult> {
   const from = (page - 1) * pageSize;
   const to = from + pageSize - 1;
 
   const supabase = createSupabaseServerClient();
 
-  const { data, error, count } = await supabase
+  let query = supabase
     .from("blog_posts")
     .select("*", { count: "exact" })
-    .eq("status", "published")
+    .eq("status", "published");
+
+  if (category) {
+    query = query.ilike("category", category);
+  }
+
+  const { data, error, count } = await query
     .order("created_at", { ascending: false })
     .range(from, to);
 

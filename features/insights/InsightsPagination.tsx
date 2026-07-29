@@ -8,12 +8,14 @@ type InsightsPaginationProps = {
   page: number;
   totalPages: number;
   className?: string;
+  basePath?: string;
 };
 
 export default function InsightsPagination({
   page,
   totalPages,
   className = "",
+  basePath = "/insights",
 }: InsightsPaginationProps) {
   const searchParams = useSearchParams();
 
@@ -25,7 +27,7 @@ export default function InsightsPagination({
     if (targetPage <= 1) params.delete("page");
     else params.set("page", String(targetPage));
     const qs = params.toString();
-    return `/blogs-and-news${qs.length > 0 ? `?${qs}` : ""}`;
+    return `${basePath}${qs.length > 0 ? `?${qs}` : ""}`;
   };
 
   return (

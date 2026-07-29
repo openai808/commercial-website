@@ -167,8 +167,8 @@ const navConfig: NavItem[] = [
     },
   },
   {
-    id: "blogs-and-news",
-    href: "/blogs-and-news",
+    id: "insights",
+    href: "/insights",
     label: "Insights",
     mega: {
       kind: "simpleGroups",
@@ -176,27 +176,27 @@ const navConfig: NavItem[] = [
       groups: [
         {
           heading: "Featured Content",
-          headingHref: "/blogs-and-news",
+          headingHref: "/insights",
           items: [
-            { label: "Research Reports", href: "/blogs-and-news/reports" },
-            { label: "RE/MAX Commercial Blog", href: "/blogs-and-news" },
+            { label: "Research Reports", href: "/insights/reports" },
+            { label: "REMAX Blog", href: "/blog" },
           ],
         },
         {
           heading: "Property Type",
-          headingHref: "/blogs-and-news",
+          headingHref: "/insights",
           items: [
-            { label: "Office", href: "/blogs-and-news?type=office" },
+            { label: "Office", href: "/insights?type=office" },
             {
               label: "Industrial and Logistics",
-              href: "/blogs-and-news?type=industrial-and-logistics",
+              href: "/insights?type=industrial-and-logistics",
             },
             {
               label: "Hotels and Hospitality",
-              href: "/blogs-and-news?type=hotels-and-hospitality",
+              href: "/insights?type=hotels-and-hospitality",
             },
-            { label: "Retail", href: "/blogs-and-news?type=retail" },
-            { label: "Residential", href: "/blogs-and-news?type=residential" },
+            { label: "Retail", href: "/insights?type=retail" },
+            { label: "Residential", href: "/insights?type=residential" },
           ],
         },
       ],
@@ -644,6 +644,7 @@ function MobileNavGroup({
                 <li key={l.href} className="border-b border-zinc-200 first:border-t">
                   <Link
                     href={l.href}
+                    prefetch={l.href === "/news" ? false : undefined}
                     className="flex items-center justify-between gap-2 py-3 text-base text-[#000759] transition-colors duration-200 ease-in-out hover:text-[#001a8f]"
                     onClick={onNavigate}
                   >
@@ -888,6 +889,7 @@ function SimpleMegaPanel({
                 <li key={item.href} className="min-w-0">
                   <Link
                     href={item.href}
+                    prefetch={item.href === "/news" ? false : undefined}
                     className="block text-base text-[#000759]/85 transition-colors duration-200 ease-in-out hover:text-[#000759]"
                   >
                     {item.label}

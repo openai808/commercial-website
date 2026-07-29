@@ -4,20 +4,18 @@ import InsightsListingGrid from "@/features/insights/InsightsListingGrid";
 import InsightsPagination from "@/features/insights/InsightsPagination";
 
 export const metadata: Metadata = {
-  title: "Insights",
+  title: "REMAX Blog",
   description:
     "Market insights, industry trends, and expert analysis from RE/MAX Philippines.",
 };
 
 const PAGE_SIZE = 9;
 
-type InsightsPageProps = {
+type BlogPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-export default async function InsightsPage({
-  searchParams,
-}: InsightsPageProps) {
+export default async function BlogPage({ searchParams }: BlogPageProps) {
   const params = await searchParams;
   const requestedPage = Number(
     Array.isArray(params.page) ? params.page[0] : params.page ?? "1",
@@ -62,6 +60,7 @@ export default async function InsightsPage({
         <InsightsPagination
           page={result.page}
           totalPages={result.totalPages}
+          basePath="/blog"
           className="mt-10"
         />
       </section>
