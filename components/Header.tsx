@@ -178,7 +178,7 @@ const navConfig: NavItem[] = [
           heading: "Featured Content",
           headingHref: "/insights",
           items: [
-            { label: "Research Reports", href: "/insights/reports" },
+            { label: "Research Reports", href: "/insights/research-reports" },
             { label: "REMAX Blog", href: "/blog" },
           ],
         },

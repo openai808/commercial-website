@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
-        source: "/insights/:path+",
+        source: "/insights/:path((?!research-reports$).+)",
         destination: "/blog/:path*",
         permanent: true,
       },
