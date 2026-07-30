@@ -91,6 +91,12 @@ export const LEADERSHIP_TEAM: LeadershipMember[] = [
     name: "Coby Suarez",
     role: "Apprentice / Real Estate Agent",
     imageTransform: { translateX: 0, translateY: 29.3632, rotate: 0, scale: 1.3 },
+    details: {
+      license: "Under REBL No. 0028067",
+      bio: "Coby Suarez believes real estate decisions should be grounded in facts—not sales pitches. If a property has flaws or downsides, he'll point them out. If something doesn't represent good value, he'll tell you. His role isn't to convince you to buy or sell—it's to help you make an informed decision. With a background in architecture, Coby brings a more discerning perspective to real estate, one that considers both the technical and design aspects of a property. He can evaluate everything from construction quality and layouts to the design choices that may shape its long-term value and livability. Whether you're searching for a home, selling a property, or building an investment portfolio, Coby's approach is straightforward: honest advice, thoughtful analysis, and a focus on finding the best value rather than simply closing the next transaction.",
+      phone: "+63 917 147 2204",
+      email: "jsuarez.8realty@gmail.com",
+    },
   },
   {
     id: "cristina-morales",
@@ -109,7 +115,12 @@ export const LEADERSHIP_TEAM: LeadershipMember[] = [
     name: "Lisa Gatuslao",
     role: "Apprentice / Real Estate Agent",
     imageTransform: { translateX: -6, translateY: 20.3632, rotate: 0, scale: 1.1 },
-
+    details: {
+      license: "Under REBL No. 0028067",
+      bio: "Lisa Gatuslao is a dedicated real estate agent at REMAX 8 Philippines, committed to helping clients navigate the property market with confidence and clarity. Her commitment to growth, excellence, and mastery in real estate—Lisa brings fresh energy, sharpened skills, and a client-first mindset to every transaction. Whether you're buying your first home, selling a property, or looking for the right investment opportunity, Lisa's approach is grounded in honesty, integrity, and a genuine desire to help you make informed decisions. She takes the time to understand your unique needs and works tirelessly to find the best fit—not just the fastest deal.",
+      phone: "+63 917 508 5506",
+      email: "lisagatuslao.8realty@gmail.com",
+    },
   },
   {
     id: "martina-babia",
@@ -153,12 +164,24 @@ export const LEADERSHIP_TEAM: LeadershipMember[] = [
     role: "Apprentice / Real Estate Agent",
     offset: true,
     imageTransform: { translateX: -2, translateY: 18.3632, rotate: 0, scale: 1.1 },
+    details: {
+      license: "Under REBL No. 0028067",
+      bio: "A medical practitioner turned real estate professional, Jay brings the same precision and care assisting clients find their perfect home. Behind that high-spirited, easygoing charm is a sharp and serious negotiator ready to close deals. Specializing in residential luxury homes, Jay combines market expertise with genuine concern, guiding clients in every step of the way through life's biggest investment.",
+      phone: "+63 999 882 4851",
+      email: "jayduran.8realty@gmail.com",
+    },
   },
   {
     id: "karl-mendoza",
     name: "Karl Mendoza",
     role: "Associate / Licensed Real Estate Broker",
     imageTransform: { translateX: -1, translateY: 20.3632, rotate: 0, scale: 1.3 },
+    details: {
+      license: "REBL No. 0036712",
+      bio: "Karl Mendoza is a licensed Real Estate Broker with REMAX 8 Philippines, specializing in luxury residential properties and investment opportunities. Backed by a strong foundation in sales, finance, and client relations, he is committed to providing personalized service, strategic guidance, and a seamless real estate experience. Karl believes every property decision is an opportunity to build long-term value and lasting relationships.",
+      phone: "+63 915 267 0628",
+      email: "kmendoza.8realty@gmail.com",
+    },
   },
   {
     id: "philip-pardilla",
