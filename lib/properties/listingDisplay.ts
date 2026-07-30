@@ -522,14 +522,6 @@ function getListingPricePerSqmFloor(listing: ListingWithAgent): string | null {
   return null;
 }
 
-function getListingListingType(listing: ListingWithAgent): string | null {
-  return (
-    asString(listing.listing_type) ??
-    asString(listing.contract_type) ??
-    null
-  );
-}
-
 function getListingOccupancy(listing: ListingWithAgent): string | null {
   return (
     asString(listing.occupancy) ??
@@ -598,7 +590,6 @@ export function getListingPropertyDetails(
   );
   addListingDetailItem(items, "Parking", listing.parking);
   addListingDetailItem(items, "Turnover", getListingTurnover(listing));
-  addListingDetailItem(items, "Listing Type", getListingListingType(listing));
   addListingDetailItem(items, "Occupancy", getListingOccupancy(listing));
   addListingDetailItem(items, "Showing Notes", getListingShowingNotes(listing));
 
