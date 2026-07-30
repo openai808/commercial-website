@@ -1,44 +1,23 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 
 type AwardItem = {
   id: string;
-  variant: "laurel" | "building";
-  caption: string;
-  subtitle?: string;
+  src: string;
+  alt: string;
 };
 
-/**
- * Placeholder badge artwork (laurel wreath, building silhouette) — replace
- * with the real exported RE/MAX award graphics once available.
- */
 const AWARDS: AwardItem[] = [
-  { id: "top8-medium-team", variant: "laurel", caption: "MEDIUM TEAM" },
-  {
-    id: "platinum-club-team",
-    variant: "building",
-    caption: "PLATINUM CLUB",
-    subtitle: "TEAM",
-  },
-  {
-    id: "executive-club-individual",
-    variant: "building",
-    caption: "EXECUTIVE CLUB",
-    subtitle: "INDIVIDUAL",
-  },
-  {
-    id: "100-club-team",
-    variant: "building",
-    caption: "100% CLUB",
-    subtitle: "TEAM",
-  },
-  {
-    id: "100-club-individual",
-    variant: "building",
-    caption: "100% CLUB",
-    subtitle: "INDIVIDUAL",
-  },
+  { id: "award-9", src: "/images/awards/9.png", alt: "RE/MAX 8 Philippines award 9" },
+  { id: "award-8", src: "/images/awards/8.png", alt: "RE/MAX 8 Philippines award 8" },
+  { id: "award-7", src: "/images/awards/7.png", alt: "RE/MAX 8 Philippines award 7" },
+  { id: "award-5", src: "/images/awards/5.png", alt: "RE/MAX 8 Philippines award 5" },
+  { id: "award-4", src: "/images/awards/4.png", alt: "RE/MAX 8 Philippines award 4" },
+  { id: "award-3", src: "/images/awards/3.png", alt: "RE/MAX 8 Philippines award 3" },
+  { id: "award-2", src: "/images/awards/2.png", alt: "RE/MAX 8 Philippines award 2" },
+  { id: "award-1", src: "/images/awards/1.png", alt: "RE/MAX 8 Philippines award 1" },
 ];
 
 const PER_PAGE = 5;
@@ -68,86 +47,16 @@ function IconChevron({
   );
 }
 
-function IconBuilding({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 80 56"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M6 34c14-13 54-13 68 0" />
-      <rect x="10" y="30" width="14" height="22" />
-      <rect x="28" y="14" width="16" height="38" />
-      <rect x="48" y="22" width="14" height="30" />
-    </svg>
-  );
-}
-
-function IconLaurel({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 120 120"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      aria-hidden
-    >
-      <path d="M50 104C28 94 15 72 17 46C18 30 26 17 37 10" />
-      <path d="M20 52c6 2 12 0 16-5" />
-      <path d="M22 67c6 2 12 0 16-6" />
-      <path d="M27 82c6 1 11-1 15-6" />
-      <path d="M34 95c5 1 10-1 13-5" />
-      <path d="M70 104C92 94 105 72 103 46C102 30 94 17 83 10" />
-      <path d="M100 52c-6 2-12 0-16-5" />
-      <path d="M98 67c-6 2-12 0-16-6" />
-      <path d="M93 82c-6 1-11-1-15-6" />
-      <path d="M86 95c-5 1-10-1-13-5" />
-    </svg>
-  );
-}
-
 function AwardBadge({ award }: { award: AwardItem }) {
   return (
-    <div className="flex w-[180px] flex-col items-center text-center">
-      {award.variant === "laurel" ? (
-        <div className="relative h-24 w-24">
-          <IconLaurel className="absolute inset-0 h-full w-full text-white" />
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-            <span className="text-[9px] font-bold uppercase tracking-[0.15em]">
-              Top
-            </span>
-            <span className="text-3xl font-extrabold leading-none">8</span>
-            <span className="mt-1 text-[7px] font-semibold uppercase leading-tight">
-              Commercial
-              <br />
-              Producer
-              <br />
-              Global
-            </span>
-          </div>
-        </div>
-      ) : (
-        <IconBuilding className="h-14 w-20 text-white" />
-      )}
-
-      <p className="mt-4 text-sm font-bold uppercase tracking-[0.08em] text-white">
-        {award.caption}
-      </p>
-      {award.subtitle ? (
-        <>
-          <div className="mt-1.5 h-px w-16 bg-white/40" aria-hidden />
-          <p className="mt-1.5 text-[11px] uppercase tracking-[0.1em] text-white/70">
-            {award.subtitle}
-          </p>
-        </>
-      ) : null}
+    <div className="flex w-[180px] items-center justify-center">
+      <Image
+        src={award.src}
+        alt={award.alt}
+        width={160}
+        height={160}
+        className="h-28 w-28 object-contain md:h-32 md:w-32"
+      />
     </div>
   );
 }
