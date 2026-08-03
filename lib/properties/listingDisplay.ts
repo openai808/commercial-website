@@ -44,6 +44,7 @@ function asNumber(value: unknown): number | null {
 const LOT_PRIMARY_PROPERTY_TYPES = new Set([
   "Commercial Lot",
   "Industrial Lot",
+  "Residential Lot",
 ]);
 
 const WAREHOUSE_PROPERTY_TYPES = new Set([

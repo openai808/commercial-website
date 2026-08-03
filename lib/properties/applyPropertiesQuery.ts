@@ -1,4 +1,5 @@
 import { listingCategoryOrFilter } from "@/lib/properties/listingCategoryFilters";
+import { propertyTypeOrFilter } from "@/lib/properties/propertyTypeFilter";
 import type { AreaUnit, PropertiesQuery } from "@/lib/properties/searchParams";
 import { expandCityFilterVariantsList } from "@/lib/text/expandCityFilterVariants";
 import { expandDbTextVariantsList } from "@/lib/text/fixUtf8Mojibake";
@@ -87,7 +88,7 @@ export function applyPropertiesQuery(
   }
 
   if (filters.propertyTypes.length > 0) {
-    next = next.in("property_type", filters.propertyTypes);
+    next = next.or(propertyTypeOrFilter(filters.propertyTypes));
   }
 
   if (filters.agentIds.length > 0) {

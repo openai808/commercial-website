@@ -3,6 +3,10 @@ import {
   PUBLIC_LISTING_STATUSES,
   type ListingPropertyTypeCount,
 } from "@/lib/properties/types";
+import {
+  canonicalizePropertyType,
+  propertyTypeOrFilter,
+} from "@/lib/properties/propertyTypeFilter";
 import { fixUtf8Mojibake } from "@/lib/text/fixUtf8Mojibake";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -28,7 +32,7 @@ export async function getListingPropertyTypeCounts(): Promise<
       .from("listings_secure")
       .select("property_type")
       .in("status", [...PUBLIC_LISTING_STATUSES])
-      .in("property_type", [...ALLOWED_LISTING_PROPERTY_TYPES])
+      .or(propertyTypeOrFilter(ALLOWED_LISTING_PROPERTY_TYPES))
       .not("property_type", "is", null)
       .order("property_type", { ascending: true })
       .range(from, to);
@@ -39,7 +43,11 @@ export async function getListingPropertyTypeCounts(): Promise<
     for (const row of rows) {
       const propertyType = normalizePropertyType(row.property_type);
       if (!propertyType) continue;
-      counts.set(propertyType, (counts.get(propertyType) ?? 0) + 1);
+      const canonical = canonicalizePropertyType(
+        propertyType,
+        ALLOWED_LISTING_PROPERTY_TYPES,
+      );
+      counts.set(canonical, (counts.get(canonical) ?? 0) + 1);
     }
 
     if (rows.length < PAGE_SIZE) break;

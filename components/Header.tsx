@@ -139,7 +139,7 @@ const navConfig: NavItem[] = [
             { label: "Retail", href: `${PROPERTIES_FOR_SALE_HREF}&type=Commercial%20Space` },
             {
               label: "Residential",
-              href: `${PROPERTIES_FOR_SALE_HREF}&type=Commercial%20or%20Residential%20Building`,
+              href: `${PROPERTIES_FOR_SALE_HREF}&type=Commercial%20or%20Residential%20Building,Condominium%20or%20Apartment,House%20and%20Lot,Residential%20Lot,Townhouse`,
             },
           ],
         },
@@ -159,7 +159,7 @@ const navConfig: NavItem[] = [
             { label: "Retail", href: `${PROPERTIES_FOR_LEASE_HREF}&type=Commercial%20Space` },
             {
               label: "Residential",
-              href: `${PROPERTIES_FOR_LEASE_HREF}&type=Commercial%20or%20Residential%20Building`,
+              href: `${PROPERTIES_FOR_LEASE_HREF}&type=Commercial%20or%20Residential%20Building,Condominium%20or%20Apartment,House%20and%20Lot,Residential%20Lot,Townhouse`,
             },
           ],
         },

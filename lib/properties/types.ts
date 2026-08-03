@@ -6,6 +6,10 @@ export const ALLOWED_LISTING_PROPERTY_TYPES = [
   "Industrial Lot",
   "Office Space",
   "Warehouse or Storage Facility",
+  "Condominium or Apartment",
+  "House and Lot",
+  "Residential Lot",
+  "Townhouse",
 ] as const;
 
 /** Status values treated as publicly visible on the properties pages. */

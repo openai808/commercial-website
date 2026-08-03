@@ -1,5 +1,6 @@
 import { applyPropertiesQuery } from "@/lib/properties/applyPropertiesQuery";
 import { applyPropertiesSort } from "@/lib/properties/applyPropertiesSort";
+import { propertyTypeOrFilter } from "@/lib/properties/propertyTypeFilter";
 import type { PropertiesQuery } from "@/lib/properties/searchParams";
 import {
   DEFAULT_PROPERTIES_SORT,
@@ -33,7 +34,7 @@ export async function getProperties(
     .from("listings_secure")
     .select("*", { count: "exact" })
     .in("status", [...PUBLIC_LISTING_STATUSES])
-    .in("property_type", [...ALLOWED_LISTING_PROPERTY_TYPES]);
+    .or(propertyTypeOrFilter(ALLOWED_LISTING_PROPERTY_TYPES));
 
   let scopedQuery = (
     filters ? applyPropertiesQuery(baseQuery, filters) : baseQuery
@@ -89,7 +90,7 @@ export async function getListingBySlugOrId(
     .from("listings_secure")
     .select("*")
     .in("status", [...PUBLIC_LISTING_STATUSES])
-    .in("property_type", [...ALLOWED_LISTING_PROPERTY_TYPES]);
+    .or(propertyTypeOrFilter(ALLOWED_LISTING_PROPERTY_TYPES));
 
   // `listings_secure` exposes `listing_code`; `id` and `slug` are often null.
   query = isUuid
