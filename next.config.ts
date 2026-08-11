@@ -9,6 +9,17 @@ const nextConfig: NextConfig = {
         destination: "/blog/:path*",
         permanent: true,
       },
+      // Canonicalize the apex domain to www — Google Search Console was
+      // auto-selecting the apex as canonical (no user-declared canonical
+      // existed), splitting index signals across two hostnames for the
+      // same content. `value` is anchored so it only matches the bare
+      // apex, not `www.remaxcommercial.com.ph` itself (which would loop).
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "^remaxcommercial\\.com\\.ph$" }],
+        destination: "https://www.remaxcommercial.com.ph/:path*",
+        permanent: true,
+      },
     ];
   },
   devIndicators: false,

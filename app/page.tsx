@@ -33,6 +33,9 @@ export const metadata: Metadata = {
   title: {
     absolute: "RE/MAX Commercial 8 Philippines | Commercial Real Estate",
   },
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default async function Home() {

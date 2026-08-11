@@ -4,6 +4,7 @@ import "./globals.css";
 import ChatWidget from "@/components/ChatWidget";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import { SITE_URL } from "@/lib/siteUrl";
 
 const poppins = Poppins({
   variable: "--font-poppins-loaded",
@@ -25,6 +26,7 @@ const oswald = Oswald({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "RE/MAX Commercial 8 Philippines",
     template: "%s | RE/MAX Commercial 8 Philippines",
