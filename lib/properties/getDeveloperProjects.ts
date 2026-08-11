@@ -41,7 +41,7 @@ export async function getDeveloperProjectById(
 }
 
 const GRID_COLUMNS =
-  "id,project_name,location,thumbnail_url,created_at" as const;
+  "id,project_name,developer_name,location,thumbnail_url,created_at" as const;
 
 export async function getDeveloperProjects(
   page = 1,

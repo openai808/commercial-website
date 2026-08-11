@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins, Montserrat, Oswald } from "next/font/google";
 import "./globals.css";
+import ChatWidget from "@/components/ChatWidget";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 
@@ -61,6 +62,7 @@ export default function RootLayout({
           {children}
         </div>
         <Footer />
+        <ChatWidget />
       </body>
     </html>
   );
