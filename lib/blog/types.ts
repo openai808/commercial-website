@@ -8,6 +8,8 @@ export type BlogPost = {
   content: string | null;
   cover_image_url: string | null;
   category: string | null;
+  location: string | null;
+  property_type: string | null;
   author: string | null;
   status: "draft" | "published" | "archived";
   published_at: string | null;

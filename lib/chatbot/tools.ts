@@ -1,6 +1,8 @@
 import { tool } from "ai";
 import { z } from "zod";
+import { captureLead } from "@/lib/chatbot/captureLead";
 import { getProperties, getListingBySlugOrId } from "@/lib/properties/getProperties";
+import { getListingAgentCounts } from "@/lib/properties/getListingAgentCounts";
 import { getDeveloperProjects } from "@/lib/properties/getDeveloperProjects";
 import { getCareers } from "@/lib/careers/getCareers";
 import { getFeaturedLeaders, getLeadershipTeam } from "@/lib/people/leadershipTeam";
@@ -26,6 +28,38 @@ function listingUrl(l: ListingWithAgent): string {
   return `/properties/${l.slug ?? l.listing_code ?? l.id}`;
 }
 
+const COMBINING_DIACRITICS = new RegExp("[\\u0300-\\u036f]", "g");
+
+/** Lowercases and strips diacritics (e.g. "Oreña" -> "orena") so accent-less typing still matches. */
+function normalizeForMatch(value: string): string {
+  return value.normalize("NFD").replace(COMBINING_DIACRITICS, "").toLowerCase().trim();
+}
+
+/**
+ * Scores an agent name against a query name so a wrong first name doesn't block a match
+ * on a correct last name (or vice versa): a full-string match wins outright, otherwise
+ * agents are ranked by how many individual name words they share with the query.
+ */
+function matchAgentName<T extends { name: string }>(query: string, agents: T[]): T[] {
+  const needle = normalizeForMatch(query);
+  const needleWords = needle.split(/\s+/).filter((w) => w.length > 1);
+
+  const scored = agents
+    .map((agent) => {
+      const name = normalizeForMatch(agent.name);
+      if (name.includes(needle)) return { agent, score: needleWords.length + 1 };
+      const nameWords = name.split(/\s+/);
+      const score = needleWords.filter((nw) => nameWords.some((w) => w.includes(nw) || nw.includes(w))).length;
+      return { agent, score };
+    })
+    .filter((s) => s.score > 0)
+    .sort((a, b) => b.score - a.score);
+
+  if (scored.length === 0) return [];
+  const topScore = scored[0].score;
+  return scored.filter((s) => s.score === topScore).map((s) => s.agent);
+}
+
 /** Trims internal-only fields (agent_id, raw status, created_at, photo URLs) — keeps slug/listing_code so the model can build real links. */
 function trimListing(l: ListingWithAgent) {
   return {
@@ -46,8 +80,8 @@ function trimListing(l: ListingWithAgent) {
 
 export const searchProperties = tool({
   description:
-    "Search property listings (for sale, for lease, or investment) by city, property type, keywords, and area range. " +
-    "Only returns listings that actually exist on the website — never invent results.",
+    "Search property listings (for sale, for lease, or investment) by city, property type, keywords, area range, " +
+    "or the agent handling them. Only returns listings that actually exist on the website — never invent results.",
   inputSchema: z.object({
     listing: z.enum(["for-sale", "for-lease", "investment"]).optional(),
     cities: z.array(z.string()).optional().describe("Philippine cities, e.g. Makati City"),
@@ -56,6 +90,10 @@ export const searchProperties = tool({
     areaMin: z.number().optional(),
     areaMax: z.number().optional(),
     areaUnit: z.enum(["sqft", "sqm"]).optional(),
+    agentName: z
+      .string()
+      .optional()
+      .describe("Filter to listings handled by one agent, matched by name, e.g. 'Joanna Cielo' or just 'Cielo'."),
     limit: z.number().int().min(1).max(MAX_RESULTS).optional(),
   }),
   execute: async (input) => {
@@ -69,6 +107,19 @@ export const searchProperties = tool({
       areaMax: input.areaMax ?? null,
       areaUnit: input.areaUnit ?? "sqft",
     };
+
+    if (input.agentName) {
+      const agentCounts = await getListingAgentCounts();
+      const matches = matchAgentName(input.agentName, agentCounts);
+      if (matches.length === 0) {
+        return { total: 0, listings: [], agentMatch: "none" as const };
+      }
+      if (matches.length > 1) {
+        return { total: 0, listings: [], agentMatch: "ambiguous" as const, candidates: matches.map((m) => m.name) };
+      }
+      filters.agentIds = [matches[0].agentId];
+    }
+
     const result = await getProperties(1, input.limit ?? MAX_RESULTS, filters, DEFAULT_PROPERTIES_SORT);
     return { total: result.total, listings: result.data.map(trimListing) };
   },
@@ -90,9 +141,12 @@ export const getPropertyDetails = tool({
       description: (remarks ?? seoDescription)?.slice(0, 800) ?? null,
       // Agent name/position/phone/email are already public on the listing detail
       // page (visitors see them there today), so surfacing them here is the same
-      // trust boundary.
+      // trust boundary. `id` is internal-only — never shown or linked to the
+      // visitor, it only exists so a later captureLead call can route the lead
+      // to this agent.
       agent: listing.agent
         ? {
+            id: listing.agent.id,
             name: [listing.agent.first_name, listing.agent.last_name].filter(Boolean).join(" ") || null,
             position: listing.agent.position ?? null,
             email: listing.agent.email ?? null,
@@ -193,4 +247,5 @@ export const chatbotTools = {
   searchCareers,
   searchAgents,
   getCompanyInfo,
+  captureLead,
 };

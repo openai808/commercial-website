@@ -1,3 +1,4 @@
+import { isInsightsCategory } from "@/lib/insights/isInsightsCategory";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -24,6 +25,9 @@ export default function InsightDetailHero({
       })
     : null;
 
+  const parentHref = isInsightsCategory(category) ? "/insights" : "/blog";
+  const parentLabel = isInsightsCategory(category) ? "Insights" : "Blogs & News";
+
   return (
     <section className="bg-[#000759]">
       {coverImageUrl && (
@@ -46,8 +50,8 @@ export default function InsightDetailHero({
         <nav aria-label="Breadcrumb" className="mb-6">
           <ol className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/60">
             <li>
-              <Link href="/blog" className="transition hover:text-white">
-                Blogs & News
+              <Link href={parentHref} className="transition hover:text-white">
+                {parentLabel}
               </Link>
             </li>
             <li aria-hidden>

@@ -43,7 +43,7 @@ export default async function InsightDetailPage({
         publishedAt={post.published_at}
         author={post.author}
       />
-      <InsightDetailContent content={post.content} />
+      <InsightDetailContent content={post.content} category={post.category} />
     </main>
   );
 }

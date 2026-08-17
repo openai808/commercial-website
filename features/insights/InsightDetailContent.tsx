@@ -1,12 +1,20 @@
+import { isInsightsCategory } from "@/lib/insights/isInsightsCategory";
 import Link from "next/link";
 
 type InsightDetailContentProps = {
   content: string | null;
+  category?: string | null;
 };
 
 export default function InsightDetailContent({
   content,
+  category,
 }: InsightDetailContentProps) {
+  const parentHref = isInsightsCategory(category) ? "/insights" : "/blog";
+  const parentLabel = isInsightsCategory(category)
+    ? "Back to insights"
+    : "Back to all blogs & news";
+
   return (
     <section className="border-t border-[#e8ebf2] bg-white">
       <div className="mx-auto max-w-[900px] px-5 py-10 md:px-8 lg:px-10 lg:py-14">
@@ -23,11 +31,11 @@ export default function InsightDetailContent({
 
         <div className="mt-12 border-t border-[#e8ebf2] pt-8">
           <Link
-            href="/blog"
+            href={parentHref}
             className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-[#23408e] transition hover:text-[#1d3575]"
           >
             <span aria-hidden className="h-px w-5 bg-current" />
-            Back to all blogs & news
+            {parentLabel}
           </Link>
         </div>
       </div>
