@@ -32,7 +32,7 @@ export default function InsightsListingRows({
 }
 
 function InsightRow({ post }: { post: BlogPost }) {
-  const href = `/blog/${post.slug}`;
+  const href = `/insights/${post.slug}`;
   const formattedDate = post.published_at
     ? new Date(post.published_at).toLocaleDateString("en-US", {
         year: "numeric",

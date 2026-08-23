@@ -5,8 +5,13 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
-        source: "/insights/:path((?!research-reports$).+)",
-        destination: "/blog/:path*",
+        source: "/blog/:slug",
+        destination: "/insights/:slug",
+        permanent: true,
+      },
+      {
+        source: "/blog",
+        destination: "/insights",
         permanent: true,
       },
       // Canonicalize the apex domain to www — Google Search Console was

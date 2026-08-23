@@ -13,7 +13,7 @@ export default function TitleConveyancingServicePage() {
     <main className="bg-white text-[#1f2d57]">
       <ServiceDetailHero
         title="Title Conveyancing Service"
-        tagline="List your property, attract qualifies tenants, close profitable leases."
+        tagline="List your property, attract qualified tenants, close profitable leases."
         imageSrc="/images/services/title-conveyancing-hero.jpg"
       />
       <ServiceDetailOverview

@@ -3,7 +3,7 @@ import ServiceDetailHero from "@/features/services/ServiceDetailHero";
 import ServiceDetailOverview from "@/features/services/ServiceDetailOverview";
 
 export const metadata: Metadata = {
-  title: "Capital Markets & Investment Service",
+  title: "Capital Markets & Investment Services",
   description:
     "RE/MAX 8 Commercial capital markets & investment services: identify opportunities, maximize returns, grow your real estate portfolio.",
 };
@@ -12,7 +12,7 @@ export default function CapitalMarketsAndInvestmentServicesPage() {
   return (
     <main className="bg-white text-[#1f2d57]">
       <ServiceDetailHero
-        title="Capital Markets & Investment Service"
+        title="Capital Markets & Investment Services"
         tagline="Identify opportunities, maximize returns, grow your real estate portfolio."
         imageSrc="/images/services/capital-markets-and-investment-services-hero.jpg"
       />

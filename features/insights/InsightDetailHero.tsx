@@ -1,4 +1,3 @@
-import { isInsightsCategory } from "@/lib/insights/isInsightsCategory";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -25,8 +24,8 @@ export default function InsightDetailHero({
       })
     : null;
 
-  const parentHref = isInsightsCategory(category) ? "/insights" : "/blog";
-  const parentLabel = isInsightsCategory(category) ? "Insights" : "Blogs & News";
+  const parentHref = "/insights";
+  const parentLabel = "Insights";
 
   return (
     <section className="bg-[#000759]">

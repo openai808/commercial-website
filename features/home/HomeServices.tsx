@@ -102,20 +102,20 @@ const SERVICES: ServiceItem[] = [
   {
     id: "landlord-representation",
     title: "Landlord Representation",
-    description: "List your property, attract qualifies tenants, close profitable leases.",
+    description: "List your property, attract qualified tenants, close profitable leases.",
     href: "/services/landlord",
     icon: <IconLandlordRepresentation />,
   },
   {
     id: "residential-services",
     title: "Residential Services",
-    description: "Buy or sell your home, lease with confidence move hassle-free.",
+    description: "Buy or sell your home, lease with confidence, move hassle-free.",
     href: "/services/residential-services",
     icon: <IconResidentialServices />,
   },
   {
     id: "capital-markets",
-    title: "Capital Markets & Investment Service",
+    title: "Capital Markets & Investment Services",
     description: "Identify opportunities, maximize returns, grow your real estate portfolio.",
     href: "/services/capital-markets-and-investment-services",
     icon: <IconCapitalMarkets />,
@@ -130,7 +130,7 @@ const SERVICES: ServiceItem[] = [
   {
     id: "property-vetting",
     title: "Property Vetting Service",
-    description: "Verify ownership, access risks, ensure property legitimacy.",
+    description: "Verify ownership, assess risks, ensure property legitimacy.",
     href: "/services/property-vetting",
     icon: <IconPropertyVetting />,
   },

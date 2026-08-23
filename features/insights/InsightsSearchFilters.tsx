@@ -258,7 +258,7 @@ export default function InsightsSearchFilters({
               value={category}
               onChange={handleCategoryChange}
             >
-              <option value="">All Insights</option>
+              <option value="">All Categories</option>
               {categoryOptions.map((option) => (
                 <option key={option.category} value={option.category}>
                   {option.category}

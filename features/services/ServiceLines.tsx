@@ -21,18 +21,18 @@ const serviceLines: { title: string; description: string; icon: ServiceIcon; hre
   },
   {
     title: "Landlord Representation",
-    description: "List your property, attract qualifies tenants, close profitable leases.",
+    description: "List your property, attract qualified tenants, close profitable leases.",
     icon: "landlord",
     href: "/services/landlord",
   },
   {
     title: "Residential Services",
-    description: "Buy or sell your home, lease with confidence move hassle-free.",
+    description: "Buy or sell your home, lease with confidence, move hassle-free.",
     icon: "residential",
     href: "/services/residential-services",
   },
   {
-    title: "Capital Markets & Investment Service",
+    title: "Capital Markets & Investment Services",
     description: "Identify opportunities, maximize returns, grow your real estate portfolio.",
     icon: "wallet",
     href: "/services/capital-markets-and-investment-services",
@@ -45,7 +45,7 @@ const serviceLines: { title: string; description: string; icon: ServiceIcon; hre
   },
   {
     title: "Property Vetting Service",
-    description: "Verify ownership, access risks, ensure property legitimacy.",
+    description: "Verify ownership, assess risks, ensure property legitimacy.",
     icon: "propertyVetting",
     href: "/services/property-vetting",
   },

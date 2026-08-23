@@ -5,7 +5,7 @@ import ServiceDetailOverview from "@/features/services/ServiceDetailOverview";
 export const metadata: Metadata = {
   title: "Property Vetting Service",
   description:
-    "RE/MAX 8 Commercial property vetting services: verify ownership, access risks, ensure property legitimacy.",
+    "RE/MAX 8 Commercial property vetting services: verify ownership, assess risks, ensure property legitimacy.",
 };
 
 export default function PropertyVettingServicePage() {
@@ -13,7 +13,7 @@ export default function PropertyVettingServicePage() {
     <main className="bg-white text-[#1f2d57]">
       <ServiceDetailHero
         title="Property Vetting Service"
-        tagline="List your property, attract qualifies tenants, close profitable leases."
+        tagline="List your property, attract qualified tenants, close profitable leases."
         imageSrc="/images/services/property-vetting-hero.jpg"
       />
       <ServiceDetailOverview

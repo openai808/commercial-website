@@ -5,7 +5,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 
 const PARAGRAPHS = [
   "REMAX 8 Philippines is a premier real estate brokerage firm specializing in Commercial, Residential, and Industrial properties across Metro Manila and beyond.",
-  "As part of the world’s most productive and trusted real estate network—REMAX, founded in 1973 in Denver, Colorado—we bring over 45 years of global expertise to every transaction.",
+  "As part of the world’s most productive and trusted real estate network—REMAX, founded in 1973 in Denver, Colorado—we bring over 50 years of global expertise to every transaction.",
   "But we don’t just sell properties. We go Beyond Real Estate.",
   "Whether you’re buying, selling, or leasing, our team of highly trained professionals is committed to delivering excellent customer service with Integrity, Collaboration, and Excellence—the core values that define everything we do.",
   "With more than 155,000 professionals in over 100 countries, RE/MAX 8 Philippines is the global leader in commercial real estate services and investment and a premier provider of critical infrastructure services.",

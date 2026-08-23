@@ -5,9 +5,6 @@ import {
   type InsightsSort,
 } from "@/lib/insights/sortParams";
 
-/** Default category scope when no Research Type is selected. */
-const DEFAULT_CATEGORY_SCOPE = "%insights%";
-
 function escapeIlike(value: string): string {
   return value.replace(/[%_\\]/g, "\\$&");
 }
@@ -42,9 +39,9 @@ export async function getInsightsPosts(
     .select("*", { count: "exact" })
     .eq("status", "published");
 
-  query = category
-    ? query.ilike("category", category)
-    : query.ilike("category", DEFAULT_CATEGORY_SCOPE);
+  if (category) {
+    query = query.ilike("category", category);
+  }
 
   if (location) {
     query = query.ilike("location", location);

@@ -13,7 +13,7 @@ export default function LandlordRepresentationPage() {
     <main className="bg-white text-[#1f2d57]">
       <ServiceDetailHero
         title="Landlord Representation"
-        tagline="List your property, attract qualifies tenants, close profitable leases."
+        tagline="List your property, attract qualified tenants, close profitable leases."
         imageSrc="/images/services/landlord-hero.jpg"
       />
       <ServiceDetailOverview

@@ -13,14 +13,13 @@ const MAX_DYNAMIC_ENTRIES = 1000;
 
 // Static, non-redirecting, indexable pages. `/news` is excluded (marked
 // `robots: { index: false }` — it just redirects to the legacy site) and
-// `/insights/[slug]` is excluded (redirects to `/blog/[slug]`, see
-// next.config.ts) in favor of the real `/blog/[slug]` URLs below.
+// `/blog` is excluded (redirects to `/insights`, see next.config.ts) in
+// favor of the real `/insights/[slug]` URLs below.
 const STATIC_PATHS = [
   "",
   "/about-us",
   "/about-us/global-executive-leadership",
   "/accessibility-statement",
-  "/blog",
   "/careers",
   "/cookie-policy",
   "/insights",
@@ -83,7 +82,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const blogEntries: MetadataRoute.Sitemap = blogPosts.data.map((post) => ({
-    url: `${SITE_URL}/blog/${post.slug}`,
+    url: `${SITE_URL}/insights/${post.slug}`,
     lastModified: post.updated_at ?? post.published_at ?? post.created_at,
   }));
 

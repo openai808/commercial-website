@@ -1,19 +1,14 @@
-import { isInsightsCategory } from "@/lib/insights/isInsightsCategory";
 import Link from "next/link";
 
 type InsightDetailContentProps = {
   content: string | null;
-  category?: string | null;
 };
 
 export default function InsightDetailContent({
   content,
-  category,
 }: InsightDetailContentProps) {
-  const parentHref = isInsightsCategory(category) ? "/insights" : "/blog";
-  const parentLabel = isInsightsCategory(category)
-    ? "Back to insights"
-    : "Back to all blogs & news";
+  const parentHref = "/insights";
+  const parentLabel = "Back to insights";
 
   return (
     <section className="border-t border-[#e8ebf2] bg-white">

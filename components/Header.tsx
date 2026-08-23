@@ -104,7 +104,7 @@ const navConfig: NavItem[] = [
           href: "/services/residential-services",
         },
         {
-          label: "Capital Markets & Investment Service",
+          label: "Capital Markets & Investment Services",
           href: "/services/capital-markets-and-investment-services",
         },
         {
@@ -179,7 +179,6 @@ const navConfig: NavItem[] = [
           headingHref: "/insights",
           items: [
             { label: "Research Reports", href: "/insights/research-reports" },
-            { label: "REMAX Blog", href: "/blog" },
           ],
         },
         {

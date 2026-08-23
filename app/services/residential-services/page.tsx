@@ -13,7 +13,7 @@ export default function ResidentialServicesPage() {
     <main className="bg-white text-[#1f2d57]">
       <ServiceDetailHero
         title="Residential Services"
-        tagline="Buy or sell your home, lease with confidence move hassle-free."
+        tagline="Buy or sell your home, lease with confidence, move hassle-free."
         imageSrc="/images/services/residential-services-hero.jpg"
       />
       <ServiceDetailOverview
