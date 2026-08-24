@@ -1,5 +1,6 @@
 import { listingCategoryOrFilter } from "@/lib/properties/listingCategoryFilters";
 import { propertyTypeOrFilter } from "@/lib/properties/propertyTypeFilter";
+import { matchPropertyTypeSynonyms } from "@/lib/properties/propertyTypeSynonyms";
 import type { AreaUnit, PropertiesQuery } from "@/lib/properties/searchParams";
 import { expandCityFilterVariantsList } from "@/lib/text/expandCityFilterVariants";
 import { expandDbTextVariantsList } from "@/lib/text/fixUtf8Mojibake";
@@ -37,6 +38,11 @@ function appendKeywordFilter(query: ListingsQuery, keywords: string): ListingsQu
     "location_search",
   ].flatMap((column) =>
     patterns.map((pattern) => `${column}.ilike.${pattern}`),
+  );
+
+  const synonymTypes = matchPropertyTypeSynonyms(keywords);
+  clauses.push(
+    ...synonymTypes.map((type) => `property_type.ilike.${escapeIlike(type)}`),
   );
 
   return query.or(clauses.join(","));

@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import CheckboxFilterMultiSelect from "@/features/properties/CheckboxFilterMultiSelect";
+import { matchCitiesInKeywords } from "@/lib/properties/keywordLocationMatch";
 import {
   buildPropertiesSearchParams,
   EMPTY_PROPERTIES_QUERY,
@@ -54,10 +55,14 @@ export default function HomeHero({
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const matchedCities = matchCitiesInKeywords(
+      keywords,
+      cityOptions.map((option) => option.city),
+    );
     const query = {
       ...EMPTY_PROPERTIES_QUERY,
       propertyTypes,
-      cities,
+      cities: [...new Set([...cities, ...matchedCities])],
       keywords: keywords.trim(),
     };
     const params = buildPropertiesSearchParams(query);

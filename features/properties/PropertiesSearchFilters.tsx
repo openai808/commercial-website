@@ -1,6 +1,7 @@
 "use client";
 
 import CheckboxFilterMultiSelect from "@/features/properties/CheckboxFilterMultiSelect";
+import { matchCitiesInKeywords } from "@/lib/properties/keywordLocationMatch";
 import {
   formStateToPropertiesQuery,
   propertiesQueryToFormState,
@@ -171,7 +172,14 @@ export default function PropertiesSearchFilters({
 
   const applyForm = (nextForm: PropertiesQueryFormState) => {
     setForm(nextForm);
-    const query = formStateToPropertiesQuery(nextForm);
+    const matchedCities = matchCitiesInKeywords(
+      nextForm.keywords,
+      cityOptions.map((option) => option.city),
+    );
+    const query = {
+      ...formStateToPropertiesQuery(nextForm),
+      cities: [...new Set([...nextForm.cities, ...matchedCities])],
+    };
     const sort = parsePropertiesSortParams(
       Object.fromEntries(searchParams.entries()),
     );
