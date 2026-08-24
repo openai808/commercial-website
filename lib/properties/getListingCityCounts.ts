@@ -10,7 +10,7 @@ import {
 import { fixUtf8Mojibake } from "@/lib/text/fixUtf8Mojibake";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-const PAGE_SIZE = 1000;
+const RPC_TIMEOUT_MS = 8000;
 
 function normalizeCity(value: unknown): string | null {
   if (typeof value !== "string") return null;
@@ -18,44 +18,43 @@ function normalizeCity(value: unknown): string | null {
   return city.length > 0 ? city : null;
 }
 
+type CityCountRow = { city: string | null; count: number | null };
+
 export async function getListingCityCounts(): Promise<ListingCityCount[]> {
   const supabase = createSupabaseServerClient();
-  const groups = new Map<string, Map<string, number>>();
-  let from = 0;
 
-  while (true) {
-    const to = from + PAGE_SIZE - 1;
-
+  let rows: CityCountRow[];
+  try {
     const { data, error } = await supabase
-      .from("listings_secure")
-      .select("city")
-      .in("status", [...PUBLIC_LISTING_STATUSES])
-      .in("property_type", [...ALLOWED_LISTING_PROPERTY_TYPES])
-      .not("city", "is", null)
-      .order("city", { ascending: true })
-      .range(from, to);
+      .rpc("get_listing_city_counts", {
+        p_statuses: [...PUBLIC_LISTING_STATUSES],
+        p_property_types: [...ALLOWED_LISTING_PROPERTY_TYPES],
+      })
+      .abortSignal(AbortSignal.timeout(RPC_TIMEOUT_MS));
 
     if (error) throw error;
+    rows = (data ?? []) as CityCountRow[];
+  } catch (error) {
+    console.error("getListingCityCounts: RPC failed, returning empty list", error);
+    return [];
+  }
 
-    const rows = data ?? [];
-    for (const row of rows) {
-      const city = normalizeCity(row.city);
-      if (!city) continue;
+  const groups = new Map<string, Map<string, number>>();
 
-      const groupKey = canonicalCityGroupKey(city);
-      if (!groupKey) continue;
+  for (const row of rows) {
+    const city = normalizeCity(row.city);
+    if (!city) continue;
 
-      let labelCounts = groups.get(groupKey);
-      if (!labelCounts) {
-        labelCounts = new Map();
-        groups.set(groupKey, labelCounts);
-      }
+    const groupKey = canonicalCityGroupKey(city);
+    if (!groupKey) continue;
 
-      labelCounts.set(city, (labelCounts.get(city) ?? 0) + 1);
+    let labelCounts = groups.get(groupKey);
+    if (!labelCounts) {
+      labelCounts = new Map();
+      groups.set(groupKey, labelCounts);
     }
 
-    if (rows.length < PAGE_SIZE) break;
-    from += PAGE_SIZE;
+    labelCounts.set(city, (labelCounts.get(city) ?? 0) + (row.count ?? 0));
   }
 
   return [...groups.values()]
