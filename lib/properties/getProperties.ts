@@ -34,7 +34,8 @@ export async function getProperties(
     .from("listings_secure")
     .select("*", { count: "exact" })
     .in("status", [...PUBLIC_LISTING_STATUSES])
-    .or(propertyTypeOrFilter(ALLOWED_LISTING_PROPERTY_TYPES));
+    .or(propertyTypeOrFilter(ALLOWED_LISTING_PROPERTY_TYPES))
+    .eq("post_to_remax_website", true);
 
   let scopedQuery = (
     filters ? applyPropertiesQuery(baseQuery, filters) : baseQuery
@@ -90,7 +91,8 @@ export async function getListingBySlugOrId(
     .from("listings_secure")
     .select("*")
     .in("status", [...PUBLIC_LISTING_STATUSES])
-    .or(propertyTypeOrFilter(ALLOWED_LISTING_PROPERTY_TYPES));
+    .or(propertyTypeOrFilter(ALLOWED_LISTING_PROPERTY_TYPES))
+    .eq("post_to_remax_website", true);
 
   // `listings_secure` exposes `listing_code`; `id` and `slug` are often null.
   query = isUuid

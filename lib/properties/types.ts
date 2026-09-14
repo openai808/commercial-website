@@ -32,6 +32,7 @@ export type ListingWithAgent = {
   id: string;
   created_at: string;
   status: string;
+  post_to_remax_website?: boolean | null;
   agent_id?: string | null;
   slug?: string | null;
   listing_code?: string | null;

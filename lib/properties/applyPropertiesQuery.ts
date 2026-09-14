@@ -22,7 +22,7 @@ function toSqm(value: number, unit: AreaUnit): number {
 }
 
 function appendKeywordFilter(query: ListingsQuery, keywords: string): ListingsQuery {
-  const term = escapeIlike(keywords.trim());
+  const term = keywords.trim();
   if (!term) return query;
 
   const patterns = expandDbTextVariantsList([term]).map(

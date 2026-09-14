@@ -70,6 +70,7 @@ export async function getListingAgentCounts(): Promise<ListingAgentCount[]> {
       .select("agent_id")
       .in("status", [...PUBLIC_LISTING_STATUSES])
       .in("property_type", [...ALLOWED_LISTING_PROPERTY_TYPES])
+      .eq("post_to_remax_website", true)
       .not("agent_id", "is", null)
       .range(from, to);
 
