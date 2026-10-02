@@ -44,7 +44,7 @@ export const LEADERSHIP_TEAM: LeadershipMember[] = [
     role: "Junior Partner / Licensed Real Estate Broker",
     imageTransform: { translateX: 10, translateY: 35.3632, rotate: 0, scale: 2 },
     details: {
-      license: "Under REBL No. 0026555",
+      license: "Under REBL No. 0035961",
       bio: "Joanna Cielo brings over a decade of industry experience to the table, specializing in commercial property leasing and sales. With a keen eye for market trends and a strategic approach, Joanna excels in guiding clients through the intricacies of commercial real estate transactions. Her commitment to client satisfaction and her depth of expertise make her a trusted partner in achieving their property goals.",
       phone: "+63 917 775 1780",
       email: "joannacielo.8realty@gmail.com",
