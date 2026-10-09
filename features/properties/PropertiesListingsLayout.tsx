@@ -2,7 +2,7 @@
 
 import { PropertiesListingHighlightProvider } from "@/features/properties/PropertiesListingHighlightContext";
 import PropertiesMapPanel from "@/features/properties/PropertiesMapPanel";
-import type { ListingMapMarkerSource } from "@/lib/properties/mapMarkers";
+import type { ListingCityCount } from "@/lib/properties/types";
 import {
   useCallback,
   useEffect,
@@ -19,7 +19,8 @@ const LG_PX = 1024;
 const FALLBACK_HEADER_STICKY_PX = 112;
 
 type PropertiesListingsLayoutProps = {
-  markerSources: ListingMapMarkerSource[];
+  cityOptions: ListingCityCount[];
+  listingIds: string[];
   leftColumn: ReactNode;
   /** Content rendered directly below the map container. */
   belowMap?: ReactNode;
@@ -28,7 +29,8 @@ type PropertiesListingsLayoutProps = {
 };
 
 export default function PropertiesListingsLayout({
-  markerSources,
+  cityOptions,
+  listingIds,
   leftColumn,
   belowMap,
   belowColumns,
@@ -119,8 +121,6 @@ export default function PropertiesListingsLayout({
     "lg:h-[calc(100dvh-var(--listing-map-top)-1.5rem)] " +
     (releasedFromSticky ? "lg:relative" : "lg:sticky lg:top-[var(--listing-map-top)]");
 
-  const listingIds = markerSources.map((source) => source.id);
-
   return (
     <PropertiesListingHighlightProvider listingIds={listingIds}>
       <section
@@ -145,7 +145,7 @@ export default function PropertiesListingsLayout({
           <div ref={mapOuterRef} className={mapOuterClass}>
             <div className="relative min-h-[min(52vh,420px)] w-full flex-1 lg:min-h-0">
               <div className="absolute inset-0">
-                <PropertiesMapPanel markerSources={markerSources} />
+                <PropertiesMapPanel cityOptions={cityOptions} />
               </div>
             </div>
             {belowMap ? <div className="shrink-0">{belowMap}</div> : null}

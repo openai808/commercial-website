@@ -39,14 +39,11 @@ export default async function PropertiesPage({
       ? Math.floor(requestedPage)
       : 1;
 
+  const isFiltered = hasActivePropertiesQuery(filters);
+
   const [result, cityOptions, propertyTypeOptions, agentOptions] =
     await Promise.all([
-      getProperties(
-        page,
-        PAGE_SIZE,
-        hasActivePropertiesQuery(filters) ? filters : undefined,
-        sort,
-      ),
+      getProperties(page, PAGE_SIZE, isFiltered ? filters : undefined, sort),
       getListingCityCounts(),
       getListingPropertyTypeCounts(),
       getListingAgentCounts(),
@@ -71,6 +68,7 @@ export default async function PropertiesPage({
         />
         <PropertiesListingsSection
           listings={result.data}
+          cityOptions={cityOptions}
           page={result.page}
           totalPages={result.totalPages}
         />
