@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import {
   submitPropertyContact,
   type PropertyContactState,
@@ -84,41 +84,8 @@ export default function PropertyDetailContactPanel({
 }: PropertyDetailContactPanelProps) {
   const [state, setState] = useState<PropertyContactState>(initialState);
   const [pending, startTransition] = useTransition();
-  const [contactRevealed, setContactRevealed] = useState(false);
-  const [contactModalOpen, setContactModalOpen] = useState(false);
-  const formRef = useRef<HTMLFormElement>(null);
-  const contactDialogRef = useRef<HTMLDialogElement>(null);
 
   const hasAgentContact = Boolean(agentPhone || agentEmail);
-
-  const openContactModal = useCallback(() => {
-    setContactModalOpen(true);
-  }, []);
-
-  const closeContactModal = useCallback(() => {
-    setContactModalOpen(false);
-  }, []);
-
-  useEffect(() => {
-    if (contactModalOpen) {
-      contactDialogRef.current?.showModal();
-    } else {
-      contactDialogRef.current?.close();
-    }
-  }, [contactModalOpen]);
-
-  useEffect(() => {
-    const dialog = contactDialogRef.current;
-    if (!dialog) return;
-
-    function handleCancel(e: Event) {
-      e.preventDefault();
-      closeContactModal();
-    }
-
-    dialog.addEventListener("cancel", handleCancel);
-    return () => dialog.removeEventListener("cancel", handleCancel);
-  }, [closeContactModal]);
 
   function submitForm(form: HTMLFormElement) {
     const formData = new FormData(form);
@@ -127,10 +94,6 @@ export default function PropertyDetailContactPanel({
       setState(result);
       if (result.ok) {
         form.reset();
-        if (hasAgentContact) {
-          setContactRevealed(true);
-          openContactModal();
-        }
       }
     });
   }
@@ -138,40 +101,6 @@ export default function PropertyDetailContactPanel({
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     submitForm(e.currentTarget);
-  }
-
-  function handleShowContactClick() {
-    const form = formRef.current;
-    if (!form) return;
-
-    const consent = form.querySelector<HTMLInputElement>(
-      'input[name="consentRequired"]',
-    );
-    if (!consent?.checked) {
-      setState({
-        ok: false,
-        error: "Please complete all required fields and agree to the terms.",
-      });
-      consent?.focus();
-      return;
-    }
-
-    if (!form.checkValidity()) {
-      setState({ ok: false, error: "Please complete all required fields." });
-      form.reportValidity();
-      return;
-    }
-
-    setState(initialState);
-    submitForm(form);
-  }
-
-  function handleContactDialogBackdrop(
-    e: React.MouseEvent<HTMLDialogElement>,
-  ) {
-    if (e.target === contactDialogRef.current) {
-      closeContactModal();
-    }
   }
 
   return (
@@ -206,43 +135,24 @@ export default function PropertyDetailContactPanel({
             <p className="mt-0.5 text-sm text-[#000759]/85">{agentLocation}</p>
 
             {hasAgentContact ? (
-              <div className="relative mt-3">
-                {!contactRevealed ? (
-                  <>
-                    <div
-                      className="flex flex-wrap gap-4 blur-sm select-none pointer-events-none"
-                      aria-hidden="true"
-                    >
-                      {agentPhone ? (
-                        <span className="inline-flex items-center gap-2 text-sm font-medium text-[#23408e]">
-                          <PhoneIcon />
-                          Call Now
-                        </span>
-                      ) : null}
-                      {agentEmail ? (
-                        <span className="text-sm font-medium text-[#23408e] underline underline-offset-2">
-                          Email
-                        </span>
-                      ) : null}
-                    </div>
-                    <button
-                      type="button"
-                      onClick={handleShowContactClick}
-                      disabled={pending}
-                      className="absolute inset-0 flex items-center justify-center bg-[#fafbfd]/75 text-sm font-semibold text-[#23408e] transition hover:bg-[#fafbfd]/90 hover:text-[#1d3575] disabled:cursor-not-allowed disabled:opacity-70"
-                    >
-                      {pending ? "Submitting…" : "Show number and email"}
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={openContactModal}
-                    className="text-sm font-semibold text-[#23408e] underline underline-offset-2 hover:text-[#1d3575]"
+              <div className="mt-3 flex flex-wrap gap-4">
+                {agentPhone ? (
+                  <a
+                    href={`tel:${agentPhone.replace(/\s/g, "")}`}
+                    className="inline-flex items-center gap-2 text-sm font-medium text-[#23408e] hover:text-[#1d3575]"
                   >
-                    View number and email
-                  </button>
-                )}
+                    <PhoneIcon />
+                    {agentPhone}
+                  </a>
+                ) : null}
+                {agentEmail ? (
+                  <a
+                    href={`mailto:${agentEmail}`}
+                    className="text-sm font-medium text-[#23408e] underline underline-offset-2 hover:text-[#1d3575]"
+                  >
+                    {agentEmail}
+                  </a>
+                ) : null}
               </div>
             ) : null}
           </div>
@@ -251,7 +161,6 @@ export default function PropertyDetailContactPanel({
       ) : null}
 
       <form
-        ref={formRef}
         onSubmit={handleSubmit}
         className="mt-6"
         aria-describedby={state.error ? "property-contact-error" : undefined}
@@ -367,92 +276,6 @@ export default function PropertyDetailContactPanel({
 
         <ContactSubmit pending={pending} success={state.ok} />
       </form>
-
-      {hasAgentContact ? (
-        <dialog
-          ref={contactDialogRef}
-          onClick={handleContactDialogBackdrop}
-          className="m-0 mx-auto my-auto w-full max-w-md rounded-none border-0 bg-transparent p-0 backdrop:bg-[#000759]/60 backdrop:backdrop-blur-sm open:flex open:items-center open:justify-center"
-        >
-          <div
-            className="relative w-full bg-white shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between border-b border-[#e8ebf2] px-6 py-4">
-              <h3 className="font-serif text-lg font-normal text-[#000759]">
-                Agent contact
-              </h3>
-              <button
-                type="button"
-                onClick={closeContactModal}
-                aria-label="Close contact details"
-                className="flex h-8 w-8 shrink-0 items-center justify-center text-[#6b8cbe] transition hover:text-[#000759]"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  className="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path
-                    d="M18 6L6 18M6 6l12 12"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
-            </div>
-
-            <div className="px-6 py-6">
-              <p className="text-sm text-[#000759]/80">
-                Thank you for your enquiry.
-                {agentName
-                  ? ` You can reach ${agentName} using the details below.`
-                  : " Contact details are below."}
-              </p>
-
-              <ul className="mt-5 space-y-4">
-                {agentPhone ? (
-                  <li>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#6b8cbe]">
-                      Phone
-                    </p>
-                    <a
-                      href={`tel:${agentPhone.replace(/\s/g, "")}`}
-                      className="mt-1 inline-flex items-center gap-2 text-base font-medium text-[#23408e] hover:text-[#1d3575]"
-                    >
-                      <PhoneIcon />
-                      {agentPhone}
-                    </a>
-                  </li>
-                ) : null}
-                {agentEmail ? (
-                  <li>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#6b8cbe]">
-                      Email
-                    </p>
-                    <a
-                      href={`mailto:${agentEmail}`}
-                      className="mt-1 block text-base font-medium text-[#23408e] underline underline-offset-2 hover:text-[#1d3575]"
-                    >
-                      {agentEmail}
-                    </a>
-                  </li>
-                ) : null}
-              </ul>
-
-              <button
-                type="button"
-                onClick={closeContactModal}
-                className="mt-8 w-full bg-[#000759] px-6 py-3.5 text-xs font-bold uppercase tracking-[0.18em] text-white transition hover:bg-[#1d3575]"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </dialog>
-      ) : null}
     </>
   );
 }
