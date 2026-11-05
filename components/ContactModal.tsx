@@ -6,12 +6,17 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  useTransition,
+  type FormEvent,
   type ReactNode,
   type TransitionEvent,
 } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { submitHomeContactModal } from "@/lib/actions/homeContact";
+import { submitHomeContactModal, type HomeContactState } from "@/lib/actions/homeContact";
+import Turnstile, { type TurnstileHandle } from "@/components/security/Turnstile";
+
+const initialState: HomeContactState = { ok: false, error: null };
+const turnstileConfigured = Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
 
 const LOCATION_CHOICES = [
   { value: "metro-manila", label: "Metro Manila" },
@@ -58,13 +63,17 @@ export default function ContactModal({
   open: boolean;
   onClose: () => void;
 }) {
-  const pathname = usePathname();
   /** Keeps modal in the DOM until exit opacity transition finishes. */
   const [modalMounted, setModalMounted] = useState(false);
   const [modalEntered, setModalEntered] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
   const honeypotId = useId();
+
+  const [state, setState] = useState<HomeContactState>(initialState);
+  const [pending, startTransition] = useTransition();
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRef = useRef<TurnstileHandle>(null);
 
   useLayoutEffect(() => {
     if (!open) {
@@ -73,6 +82,8 @@ export default function ContactModal({
     }
     setModalMounted(true);
     setModalEntered(false);
+    setState(initialState);
+    setTurnstileToken(null);
   }, [open, setModalMounted]);
 
   useEffect(() => {
@@ -134,9 +145,23 @@ export default function ContactModal({
     if (!open) setModalMounted(false);
   }
 
-  if (!modalMounted) return null;
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    startTransition(async () => {
+      const result = await submitHomeContactModal(state, formData);
+      setState(result);
+      setTurnstileToken(null);
+      if (result.ok) {
+        form.reset();
+      } else {
+        turnstileRef.current?.reset();
+      }
+    });
+  }
 
-  const returnTo = pathname && pathname.startsWith("/") ? pathname : "/";
+  if (!modalMounted) return null;
 
   return (
     <div
@@ -178,9 +203,11 @@ export default function ContactModal({
           </button>
         </div>
 
-        <form action={submitHomeContactModal} className="px-6 py-6 sm:px-8 sm:py-8">
-          <input type="hidden" name="returnTo" value={returnTo} />
-
+        <form
+          onSubmit={handleSubmit}
+          className="px-6 py-6 sm:px-8 sm:py-8"
+          aria-describedby={state.error ? "home-contact-error" : undefined}
+        >
           <p className="mb-6 text-xs font-semibold tracking-wide sm:text-[13px]">
             <span className="text-red-600">*</span>
             <span className="text-[#000759]"> REQUIRED FIELD</span>
@@ -336,24 +363,39 @@ export default function ContactModal({
             </label>
           </div>
 
+          <Turnstile
+            ref={turnstileRef}
+            className="mt-6"
+            onVerify={setTurnstileToken}
+            onExpire={() => setTurnstileToken(null)}
+          />
+
+          {state.error ? (
+            <p id="home-contact-error" className="mt-4 text-sm text-red-600" role="alert">
+              {state.error}
+            </p>
+          ) : null}
+
           <div className="mt-8 flex flex-col items-stretch gap-4 sm:flex-row sm:items-end sm:justify-end">
-            <div
-              className="flex items-center gap-2 self-end rounded border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm text-green-800 sm:order-1"
-              role="status"
-            >
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-green-600 text-white" aria-hidden>
-                <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M3 8l3 3 7-7" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </span>
-              <span className="font-medium">Success!</span>
-              <span className="sr-only">Demo verification state. Replace with your captcha provider in production.</span>
-            </div>
+            {state.ok ? (
+              <div
+                className="flex items-center gap-2 self-end rounded border border-neutral-200 bg-neutral-50 px-3 py-2 text-sm text-green-800 sm:order-1"
+                role="status"
+              >
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-green-600 text-white" aria-hidden>
+                  <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M3 8l3 3 7-7" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+                <span className="font-medium">Message sent!</span>
+              </div>
+            ) : null}
             <button
               type="submit"
-              className="sm:order-2 rounded-full border-2 border-[#000759] bg-white px-6 py-2.5 text-xs font-bold uppercase tracking-[0.14em] text-[#000759] transition hover:bg-[#000759]/5 sm:text-[13.5px] lg:text-[15.4px]"
+              disabled={pending || (turnstileConfigured && !turnstileToken)}
+              className="sm:order-2 rounded-full border-2 border-[#000759] bg-white px-6 py-2.5 text-xs font-bold uppercase tracking-[0.14em] text-[#000759] transition hover:bg-[#000759]/5 sm:text-[13.5px] lg:text-[15.4px] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Send this email
+              {pending ? "Sending…" : "Send this email"}
             </button>
           </div>
         </form>

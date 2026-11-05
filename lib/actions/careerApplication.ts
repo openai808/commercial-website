@@ -1,6 +1,8 @@
 "use server";
 
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { checkRateLimit } from "@/lib/security/rateLimit";
+import { verifyTurnstileToken } from "@/lib/security/verifyTurnstile";
 
 export type CareerApplicationState = {
   ok: boolean;
@@ -22,6 +24,12 @@ const ALLOWED_RESUME_TYPES = [
 ];
 const MAX_RESUME_SIZE = 10 * 1024 * 1024; // 10 MB
 
+const RESUME_EXT_BY_TYPE: Record<string, string> = {
+  "application/pdf": "pdf",
+  "application/msword": "doc",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
+};
+
 const initialState: CareerApplicationState = { ok: false, error: null };
 
 export async function submitCareerApplication(
@@ -30,6 +38,11 @@ export async function submitCareerApplication(
 ): Promise<CareerApplicationState> {
   if (String(formData.get("website") ?? "").trim()) {
     return initialState;
+  }
+
+  const allowed = await checkRateLimit("career-application");
+  if (!allowed) {
+    return { ok: false, error: "Too many submissions. Please try again later." };
   }
 
   const careerId = String(formData.get("careerId") ?? "").trim();
@@ -52,6 +65,19 @@ export async function submitCareerApplication(
 
   if (!careerId) {
     return { ok: false, error: "Career information is missing." };
+  }
+
+  const supabase = createSupabaseServerClient();
+
+  const { data: careerRow, error: careerLookupError } = await supabase
+    .from("careers")
+    .select("id")
+    .eq("id", careerId)
+    .eq("status", "published")
+    .maybeSingle();
+
+  if (careerLookupError || !careerRow) {
+    return { ok: false, error: "This job posting is no longer available." };
   }
 
   if (!fullName || !email) {
@@ -84,9 +110,16 @@ export async function submitCareerApplication(
     return { ok: false, error: "Resume file must be under 10 MB." };
   }
 
-  const supabase = createSupabaseServerClient();
+  const turnstileToken = String(formData.get("cf-turnstile-response") ?? "");
+  const verified = await verifyTurnstileToken(turnstileToken);
+  if (!verified) {
+    return { ok: false, error: "Verification failed. Please try again." };
+  }
 
-  const ext = resumeFile.name.split(".").pop() || "pdf";
+  // resumeFile.type was already validated against ALLOWED_RESUME_TYPES above,
+  // so this lookup is always defined; resumeFile.name (attacker-controlled)
+  // is never used to build the storage key.
+  const ext = RESUME_EXT_BY_TYPE[resumeFile.type] ?? "pdf";
   const path = `${crypto.randomUUID()}/${Date.now()}.${ext}`;
 
   const { error: uploadError } = await supabase.storage

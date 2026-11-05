@@ -1,5 +1,10 @@
 "use server";
 
+import { getListingBySlugOrId } from "@/lib/properties/getProperties";
+import { getListingPropertyType, getListingStatus } from "@/lib/properties/listingDisplay";
+import { checkRateLimit } from "@/lib/security/rateLimit";
+import { verifyTurnstileToken } from "@/lib/security/verifyTurnstile";
+
 export type PropertyContactState = {
   ok: boolean;
   error: string | null;
@@ -26,6 +31,14 @@ export async function submitPropertyContact(
     return initialState;
   }
 
+  // Shared bucket with submitHomeContactModal: both write to the same CRM
+  // lead-ingest endpoint, so they must draw from one combined quota rather
+  // than two independent ones.
+  const allowed = await checkRateLimit("lead-ingest");
+  if (!allowed) {
+    return { ok: false, error: "Too many submissions. Please try again later." };
+  }
+
   const firstName = String(formData.get("firstName") ?? "")
     .trim()
     .slice(0, MAX.firstName);
@@ -44,11 +57,6 @@ export async function submitPropertyContact(
   const listingCode = String(formData.get("listingCode") ?? "")
     .trim()
     .slice(0, MAX.listingCode);
-  const agentId = String(formData.get("agentId") ?? "").trim();
-  const price = String(formData.get("price") ?? "").trim();
-  const propertyType = String(formData.get("propertyType") ?? "").trim();
-  const contractType = String(formData.get("contractType") ?? "").trim();
-  const city = String(formData.get("city") ?? "").trim();
   const consentRequired = formData.get("consentRequired") === "on";
 
   if (!firstName || !lastName || !email || !message || !consentRequired) {
@@ -63,6 +71,29 @@ export async function submitPropertyContact(
     return { ok: false, error: "Listing information is missing." };
   }
 
+  // Derive agent/price/property metadata from the real listing record rather
+  // than trusting the client-submitted hidden-field copies of this data —
+  // those fields are plain, unsigned <input type="hidden"> values and are
+  // not used for CRM attribution below.
+  const listing = await getListingBySlugOrId(listingCode).catch(() => null);
+  if (!listing) {
+    return { ok: false, error: "Listing information is missing." };
+  }
+
+  const agentId = listing.agent?.id ?? "";
+  const priceRaw = String(
+    listing.selling_price ?? listing.monthly_rental_price ?? listing.price ?? "",
+  );
+  const propertyType = getListingPropertyType(listing);
+  const contractType = getListingStatus(listing) === "lease" ? "Lease" : "Sale";
+  const city = listing.city ?? "";
+
+  const turnstileToken = String(formData.get("cf-turnstile-response") ?? "");
+  const verified = await verifyTurnstileToken(turnstileToken);
+  if (!verified) {
+    return { ok: false, error: "Verification failed. Please try again." };
+  }
+
   const endpoint = process.env.SUPABASE_LEADENPOINT;
   const apiKey = process.env.SUPABASE_LEAD_INGEST_API_KEY;
 
@@ -71,16 +102,20 @@ export async function submitPropertyContact(
   }
 
   const today = new Date().toISOString().split("T")[0];
+  const numericPrice = Number(priceRaw.replace(/,/g, ""));
 
   const body: Record<string, string | undefined> = {
     user_id: agentId || undefined,
     lead_name: `${firstName} ${lastName}`,
     lead_source: "Website",
-    budget: price ? Number(price.replace(/,/g, "")).toLocaleString("en-US") : undefined,
+    budget:
+      priceRaw && Number.isFinite(numericPrice)
+        ? numericPrice.toLocaleString("en-US")
+        : undefined,
     email,
     mobile: phone || undefined,
     notes: message || undefined,
-    listing_code: listingCode,
+    listing_code: listing.listing_code ?? listingCode,
     property_type: propertyType || undefined,
     contract_type: contractType || undefined,
     city: city || undefined,

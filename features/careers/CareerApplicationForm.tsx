@@ -6,6 +6,7 @@ import {
   submitCareerApplication,
   type CareerApplicationState,
 } from "@/lib/actions/careerApplication";
+import Turnstile, { type TurnstileHandle } from "@/components/security/Turnstile";
 
 const initialState: CareerApplicationState = { ok: false, error: null };
 
@@ -42,6 +43,7 @@ export default function CareerApplicationForm({
   const [resumeName, setResumeName] = useState<string | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const turnstileRef = useRef<TurnstileHandle>(null);
 
   const openDialog = useCallback(() => {
     setOpen(true);
@@ -91,6 +93,8 @@ export default function CareerApplicationForm({
       if (result.ok) {
         formRef.current?.reset();
         setResumeName(null);
+      } else {
+        turnstileRef.current?.reset();
       }
     });
   }
@@ -286,6 +290,8 @@ export default function CareerApplicationForm({
                     </div>
                   </div>
                 </div>
+
+                <Turnstile ref={turnstileRef} className="mt-5" />
 
                 {state.error ? (
                   <p id="career-application-error" className="mt-4 text-sm text-red-600" role="alert">

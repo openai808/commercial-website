@@ -1,6 +1,12 @@
 "use server";
 
-import { redirect } from "next/navigation";
+import { checkRateLimit } from "@/lib/security/rateLimit";
+import { verifyTurnstileToken } from "@/lib/security/verifyTurnstile";
+
+export type HomeContactState = {
+  ok: boolean;
+  error: string | null;
+};
 
 const MAX = {
   firstName: 80,
@@ -13,7 +19,29 @@ const MAX = {
   message: 4000,
 } as const;
 
-export async function submitHomeContactModal(formData: FormData) {
+const initialState: HomeContactState = { ok: false, error: null };
+
+// General inquiries aren't tied to a listing or agent, but the lead-ingest
+// CRM requires both `user_id` and `budget` on every lead, so route them to
+// this agent so they aren't dropped by the CRM's validation.
+const DEFAULT_AGENT_ID = "b764efc7-051e-4650-9a2e-3904c8364a1a";
+
+export async function submitHomeContactModal(
+  _prev: HomeContactState,
+  formData: FormData,
+): Promise<HomeContactState> {
+  if (String(formData.get("website") ?? "").trim()) {
+    return initialState;
+  }
+
+  // Shared bucket with submitPropertyContact: both write to the same CRM
+  // lead-ingest endpoint, so they must draw from one combined quota rather
+  // than two independent ones.
+  const allowed = await checkRateLimit("lead-ingest");
+  if (!allowed) {
+    return { ok: false, error: "Too many submissions. Please try again later." };
+  }
+
   const firstName = String(formData.get("firstName") ?? "")
     .trim()
     .slice(0, MAX.firstName);
@@ -40,24 +68,71 @@ export async function submitHomeContactModal(formData: FormData) {
     .slice(0, MAX.message);
   const consentRequired = formData.get("consentRequired") === "on";
 
-  const rawReturnTo = String(formData.get("returnTo") ?? "");
-  const returnTo = rawReturnTo.startsWith("/") && !rawReturnTo.startsWith("//") ? rawReturnTo : "/";
-
-  if (String(formData.get("website") ?? "").trim()) {
-    redirect(returnTo);
-  }
-
   if (!firstName || !lastName || !email || !locationOfInterest || !message || !consentRequired) {
-    redirect(`${returnTo}?contact=missing`);
+    return { ok: false, error: "Please complete all required fields." };
   }
 
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    redirect(`${returnTo}?contact=invalid-email`);
+    return { ok: false, error: "Please enter a valid email address." };
   }
 
-  void phone;
-  void company;
-  void assetClass;
+  const turnstileToken = String(formData.get("cf-turnstile-response") ?? "");
+  const verified = await verifyTurnstileToken(turnstileToken);
+  if (!verified) {
+    return { ok: false, error: "Verification failed. Please try again." };
+  }
 
-  redirect(`${returnTo}?contact=sent`);
+  const endpoint = process.env.SUPABASE_LEADENPOINT;
+  const apiKey = process.env.SUPABASE_LEAD_INGEST_API_KEY;
+
+  if (!endpoint || !apiKey) {
+    return { ok: false, error: "Service configuration error. Please try again later." };
+  }
+
+  const today = new Date().toISOString().split("T")[0];
+
+  const body: Record<string, string | undefined> = {
+    user_id: DEFAULT_AGENT_ID,
+    lead_name: `${firstName} ${lastName}`,
+    lead_source: "Website - Contact Form",
+    budget: "Not specified",
+    email,
+    mobile: phone || undefined,
+    notes: message || undefined,
+    company: company || undefined,
+    city: locationOfInterest || undefined,
+    property_type: assetClass || undefined,
+    date_inquired: today,
+  };
+
+  Object.keys(body).forEach((key) => {
+    if (body[key] === undefined) delete body[key];
+  });
+
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      const errorMessage = errorData?.error ?? "Failed to submit. Please try again.";
+      return { ok: false, error: errorMessage };
+    }
+
+    const result = await response.json();
+
+    if (!result.success) {
+      return { ok: false, error: result.error ?? "Failed to submit. Please try again." };
+    }
+
+    return { ok: true, error: null };
+  } catch {
+    return { ok: false, error: "Network error. Please try again later." };
+  }
 }

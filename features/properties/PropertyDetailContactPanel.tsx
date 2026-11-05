@@ -2,11 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import {
   submitPropertyContact,
   type PropertyContactState,
 } from "@/lib/actions/propertyContact";
+import Turnstile, { type TurnstileHandle } from "@/components/security/Turnstile";
 
 const initialState: PropertyContactState = { ok: false, error: null };
 
@@ -84,6 +85,7 @@ export default function PropertyDetailContactPanel({
 }: PropertyDetailContactPanelProps) {
   const [state, setState] = useState<PropertyContactState>(initialState);
   const [pending, startTransition] = useTransition();
+  const turnstileRef = useRef<TurnstileHandle>(null);
 
   const hasAgentContact = Boolean(agentPhone || agentEmail);
 
@@ -94,6 +96,8 @@ export default function PropertyDetailContactPanel({
       setState(result);
       if (result.ok) {
         form.reset();
+      } else {
+        turnstileRef.current?.reset();
       }
     });
   }
@@ -267,6 +271,8 @@ export default function PropertyDetailContactPanel({
         </div>
 
         <ContactConsent />
+
+        <Turnstile ref={turnstileRef} className="mt-5" />
 
         {state.error ? (
           <p id="property-contact-error" className="mt-4 text-sm text-red-600" role="alert">

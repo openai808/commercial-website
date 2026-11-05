@@ -1,5 +1,6 @@
 import { tool } from "ai";
 import { z } from "zod";
+import { checkRateLimit } from "@/lib/security/rateLimit";
 
 const MAX = {
   name: 160,
@@ -66,6 +67,19 @@ export const captureLead = tool({
     }
     if (!trimmedAgentId) {
       return { success: false, error: "This lead needs to be tied to a specific listing before it can be submitted." };
+    }
+
+    // Shares the same CRM lead-ingest resource as the contact-form Server
+    // Actions (submitHomeContactModal / submitPropertyContact), so it draws
+    // from the same quota rather than being completely unthrottled — this
+    // tool has no CAPTCHA step of its own, so the rate limit is its only
+    // anti-abuse control.
+    const allowed = await checkRateLimit("lead-ingest").catch((err) => {
+      console.error("captureLead: rate-limit check threw, failing open", err);
+      return true;
+    });
+    if (!allowed) {
+      return { success: false, error: "Too many submissions right now. Please try again in a few minutes." };
     }
 
     const endpoint = process.env.SUPABASE_LEADENPOINT;
